@@ -75,9 +75,9 @@
 
 <!-- Sticky RSVP Button -->
 <div id="sticky-rsvp" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-40 opacity-0 pointer-events-none transition-all duration-300">
-    <button class="rsvp-scroll-btn bg-white/10 backdrop-blur-sm border border-white/30 text-white px-4 py-2 rounded-full text-xs font-light tracking-wider hover:bg-white/20 transition-all duration-300 flex items-center space-x-1">
+    <button class="rsvp-scroll-btn bg-white/10 backdrop-blur-sm border border-white/30 text-white px-6 py-3 rounded-full text-sm font-light tracking-wider hover:bg-white/20 transition-all duration-300 flex items-center space-x-2">
         <span>SCROLL TO RSVP</span>
-        <i class="fas fa-angle-down text-xs"></i>
+        <i class="fas fa-angle-down"></i>
     </button>
 </div>
 
@@ -510,30 +510,6 @@ input, select, textarea {
     
     .content-wrapper {
         position: absolute !important;
-    }
-}
-
-/* Safari-specific monogram positioning fixes */
-@media not all and (min-resolution:.001dpcm) { @supports (-webkit-appearance:none) {
-    .monogram-combined {
-        transform: translateX(-50%) !important;
-        left: 50% !important;
-    }
-}}
-
-/* Mobile monogram positioning fixes */
-@media screen and (max-width: 768px) {
-    .monogram-combined {
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        margin-left: 0 !important;
-        position: relative !important;
-    }
-    
-    /* Force center alignment on mobile */
-    .monogram-combined[style*="position: fixed"] {
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
     }
 }
 
@@ -987,12 +963,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 zIndex: 50,
                 opacity: 1
             })
-            // Step 3: Zoom out and move monogram to top with mobile-safe positioning
+            // Step 3: Zoom out and move monogram to top
             .to(heroMonogram, {
                 duration: 1.2,
                 scale: 0.6,
                 top: '0.5rem',
-                left: '50%',
                 transform: 'translateX(-50%)',
                 height: 'auto',
                 ease: "power2.out"
@@ -1319,34 +1294,21 @@ document.addEventListener('DOMContentLoaded', function() {
         .call(() => {
             // Get current position before moving
             const rect = heroMonogram.getBoundingClientRect();
-            const isMobileView = window.innerWidth <= 768;
-            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-            
-            // Calculate Y position only, always use 50% for X on mobile/Safari
+            const currentX = rect.left + rect.width / 2;
             const currentY = rect.top + rect.height / 2;
             
             // Move to body with exact same visual position
             document.body.appendChild(heroMonogram);
             
-            // Always use percentage-based positioning for mobile and Safari
+            // Set exact position to prevent jump
             gsap.set(heroMonogram, {
                 position: 'fixed',
-                left: '50%',
+                left: currentX,
                 top: currentY,
                 transform: 'translate(-50%, -50%) scale(0.6)',
                 zIndex: 50,
                 opacity: 1
             });
-            
-            // Force center positioning on mobile with a small delay to ensure DOM updates
-            if (isMobileView || isSafari) {
-                setTimeout(() => {
-                    gsap.set(heroMonogram, {
-                        left: '50%',
-                        transform: 'translate(-50%, -50%) scale(0.6)'
-                    });
-                }, 10);
-            }
         })
         // Step 5: Move monogram to final sticky position
         .to(heroMonogram, {
