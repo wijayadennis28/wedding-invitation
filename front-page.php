@@ -521,6 +521,22 @@ input, select, textarea {
     }
 }}
 
+/* Mobile monogram positioning fixes */
+@media screen and (max-width: 768px) {
+    .monogram-combined {
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        margin-left: 0 !important;
+        position: relative !important;
+    }
+    
+    /* Force center alignment on mobile */
+    .monogram-combined[style*="position: fixed"] {
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+    }
+}
+
 /* Hero Section Custom Typography */
 .hero-greeting-title {
     font-family: 'Montserrat', sans-serif;
@@ -1306,23 +1322,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const isMobileView = window.innerWidth <= 768;
             const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
             
-            // Calculate center position with mobile and Safari adjustments
-            let currentX, currentY;
-            
-            if (isMobileView || isSafari) {
-                // For mobile and Safari, use window center to prevent snapping
-                currentX = window.innerWidth / 2;
-                currentY = rect.top + rect.height / 2;
-            } else {
-                // For other desktop browsers, use element center
-                currentX = rect.left + rect.width / 2;
-                currentY = rect.top + rect.height / 2;
-            }
+            // Calculate Y position only, always use 50% for X on mobile/Safari
+            const currentY = rect.top + rect.height / 2;
             
             // Move to body with exact same visual position
             document.body.appendChild(heroMonogram);
             
-            // Set exact position to prevent jump - Safari-safe approach
+            // Always use percentage-based positioning for mobile and Safari
             gsap.set(heroMonogram, {
                 position: 'fixed',
                 left: '50%',
@@ -1331,6 +1337,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 zIndex: 50,
                 opacity: 1
             });
+            
+            // Force center positioning on mobile with a small delay to ensure DOM updates
+            if (isMobileView || isSafari) {
+                setTimeout(() => {
+                    gsap.set(heroMonogram, {
+                        left: '50%',
+                        transform: 'translate(-50%, -50%) scale(0.6)'
+                    });
+                }, 10);
+            }
         })
         // Step 5: Move monogram to final sticky position
         .to(heroMonogram, {
