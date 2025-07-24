@@ -670,6 +670,10 @@ document.addEventListener('DOMContentLoaded', function() {
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
     
+    // Prevent scrolling during hero section
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    
     // Check if GSAP is loaded
     if (typeof gsap === 'undefined') {
         console.error('GSAP is not loaded!');
@@ -845,6 +849,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!scrollEnabled) {
             scrollEnabled = true;
             document.body.style.overflow = 'auto';
+            document.documentElement.style.overflow = 'auto';
         }
     }
     
@@ -922,61 +927,62 @@ document.addEventListener('DOMContentLoaded', function() {
             // Mark as transformed to prevent duplicate animations
             monogramTransformed = true;
             
+            // Get current position BEFORE any changes
+            // Skip getBoundingClientRect for Safari mobile compatibility
+            
             // Hide all hero content first, then transform monogram
             const tl = gsap.timeline();
             
-            // Step 1: Immediately hide all hero content including background
-            tl.set('#hero-content', {
+            // Step 1: Fade out all other hero content but keep monogram
+            tl.to('.hero-greeting-title, .hero-invitation-message, .hero-open-invitation-btn', {
+                duration: 0.4,
                 opacity: 0,
-                display: 'none'
+                ease: "power2.out"
             })
-            .set('.dynamic-section', {
-                opacity: 0,
-                display: 'none'
-            })
-            // Step 2: Extract monogram from content wrapper and make it fixed positioned
+            // Step 2: Extract monogram and maintain center position
             .call(() => {
                 // Move monogram out of the content wrapper to body
                 document.body.appendChild(heroMonogram);
+                
+                // Use simple center positioning to avoid Safari viewport issues
+                gsap.set(heroMonogram, {
+                    position: 'fixed',
+                    left: '50%',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    zIndex: 50,
+                    opacity: 1,
+                    scale: 1
+                });
             })
-            .set(heroMonogram, {
-                position: 'fixed',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                zIndex: 50,
-                opacity: 1
-            })
-            // Step 3: Zoom out and move monogram to top (ensure it stays centered on mobile)
-            .to(heroMonogram, {
-                duration: 1.2,
-                scale: 0.6,
-                top: '0.5rem',
-                left: '50%',
-                transform: 'translate(-50%, 0)',
-                height: 'auto',
-                ease: "power2.out"
-            })
-            // Step 4: Completely hide the entire hero section
+            // Step 3: Hide the content wrapper
             .to(contentWrapper, {
                 duration: 0.3,
                 opacity: 0,
                 ease: "power2.out"
-            }, "-=0.8")
+            }, "-=0.2")
             .set(contentWrapper, {
                 display: 'none'
             })
-            // Hide the entire dynamic section to prevent overlap
             .set('.dynamic-section', {
                 display: 'none'
             })
-            // Step 5: Only after hero is completely hidden, start wedding details animation
+            // Step 4: Smoothly zoom out and move to final position
+            .to(heroMonogram, {
+                duration: 1.2,
+                scale: 0.6,
+                left: '50%',
+                top: '1.5rem',
+                transform: 'translate(-50%, 0)',
+                ease: "power2.inOut"
+            }, "+=0.2")
+            // Step 5: Start wedding details animation
             .to('#wedding-details .wedding-title', { 
                 duration: 1, 
                 opacity: 1, 
                 y: 0, 
                 ease: "power2.out" 
-            }, "+=0.5")
+            }, "+=0.3")
             .to('#wedding-details .wedding-couple-names', { 
                 duration: 1, 
                 opacity: 1, 
@@ -1247,13 +1253,23 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to smoothly transition to wedding details section
     function transitionToWeddingDetails() {
+        // Prevent scrolling during transition
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
+        
         const heroMonogram = document.querySelector('.monogram-combined');
         const heroContent = document.getElementById('hero-content');
         const contentWrapper = document.querySelector('.content-wrapper');
         const weddingDetailsSection = document.getElementById('wedding-details');
         
         // Create smooth transition timeline - simplified approach
-        const transitionTl = gsap.timeline();
+        const transitionTl = gsap.timeline({
+            onComplete: () => {
+                // Re-enable scrolling after transition
+                document.body.style.overflow = '';
+                document.documentElement.style.overflow = '';
+            }
+        });
         
         // Step 1: Start with a subtle zoom out while keeping position
         transitionTl.to(heroMonogram, {
@@ -1279,8 +1295,33 @@ document.addEventListener('DOMContentLoaded', function() {
         .call(() => {
             // Get current position before moving
             const rect = heroMonogram.getBoundingClientRect();
-            const currentX = rect.left + rect.width / 2;
-            const currentY = rect.top + rect.height / 2;
+            
+            // Detect device types
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+            const isRegularPhone = /Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            let currentXPercent;
+            let currentY;
+            
+            if (isIOS && !isSafari) {
+                // iOS devices (but not Safari): Specific positioning for iOS apps/Chrome
+                console.log('iOS firefox detected, adjusting monogram position');
+                currentXPercent = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
+                currentY = '30%';
+            } else if (isSafari) {
+                // Safari browser (desktop or mobile): Specific positioning for Safari
+                currentXPercent = ((rect.left + rect.width / 2) / window.innerWidth) * 100 - 10;
+                currentY = '25%';
+            } else if (isRegularPhone) {
+                // Regular phones (Android, etc.): Specific positioning for other mobile devices
+                currentXPercent = ((rect.left + rect.width / 2) / window.innerWidth) * 100 - 3;
+                currentY = rect.top + rect.height / 2 - 5;
+            } else {
+                // Desktop browsers: Standard calculation
+                currentXPercent = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
+                currentY = rect.top + rect.height / 2;
+            }
             
             // Move to body with exact same visual position
             document.body.appendChild(heroMonogram);
@@ -1288,7 +1329,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Set exact position to prevent jump
             gsap.set(heroMonogram, {
                 position: 'fixed',
-                left: currentX,
+                left: currentXPercent + '%',
                 top: currentY,
                 transform: 'translate(-50%, -50%) scale(0.6)',
                 zIndex: 50,
