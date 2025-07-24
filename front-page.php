@@ -9,7 +9,7 @@
     </div>
     
     <div class="content-wrapper fixed inset-0 flex items-center justify-center z-10">
-        <div class="w-full mx-auto px-4 text-center relative" style="position: fixed; top: 25%; left: 50%; transform: translate(-50%, -50%); width: 100%; max-width: none;">
+        <div class="w-full mx-auto px-4 text-center relative" style="position: fixed; top: 35%; left: 50%; transform: translate(-50%, -50%); width: 100%; max-width: none;">
             <?php 
             $groom_name = get_theme_mod('groom_name', 'Dennis');
             $bride_name = get_theme_mod('bride_name', 'Emilia');
@@ -75,9 +75,9 @@
 
 <!-- Sticky RSVP Button -->
 <div id="sticky-rsvp" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-40 opacity-0 pointer-events-none transition-all duration-300">
-    <button class="rsvp-scroll-btn bg-white/10 backdrop-blur-sm border border-white/30 text-white px-6 py-3 rounded-full text-sm font-light tracking-wider hover:bg-white/20 transition-all duration-300 flex items-center space-x-2">
+    <button class="rsvp-scroll-btn bg-white/10 backdrop-blur-sm border border-white/30 text-white px-4 py-2 rounded-full text-xs font-light tracking-wider hover:bg-white/20 transition-all duration-300 flex items-center space-x-1">
         <span>SCROLL TO RSVP</span>
-        <i class="fas fa-angle-down"></i>
+        <i class="fas fa-angle-down text-xs"></i>
     </button>
 </div>
 
@@ -488,218 +488,6 @@ body {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    outline: none !important;
-}
-
-html {
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    outline: none !important;
-}
-
-/* Selective reset to eliminate borders and gaps while preserving content spacing */
-* {
-    box-sizing: border-box !important;
-}
-
-/* Only reset margins/padding/borders for layout containers that cause gray borders */
-html, body, div.background-container, div.content-wrapper,
-#page, #main, .site, .site-content, .site-main, .wp-site-blocks, .wp-block-group {
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    outline: none !important;
-}
-
-/* Aggressive fix for gray borders */
-html:before, html:after, body:before, body:after {
-    display: none !important;
-}
-
-* {
-    box-shadow: none !important;
-}
-
-/* Target the specific viewport and iframe elements that cause gray borders */
-html, body, #viewport, iframe, .wp-block-embed__wrapper {
-    border: none !important;
-    outline: none !important;
-    background: transparent !important;
-}
-
-/* Remove any potential browser chrome or viewport borders */
-@-moz-document url-prefix() {
-    html, body { border: none !important; }
-}
-
-/* Webkit specific border removal */
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-    html, body { border: none !important; outline: none !important; }
-}
-
-/* Override for specific elements that need their styling */
-.hero-open-invitation-btn,
-.open-invitation-btn,
-.rsvp-scroll-btn {
-    border: 1px solid white !important;
-    margin: 1rem 0 !important;
-    padding: 0.75rem 2rem !important;
-}
-
-/* Fix RSVP button specifically */
-#sticky-rsvp .rsvp-scroll-btn {
-    padding: 0.75rem 1.5rem !important;
-    font-size: 0.875rem !important;
-}
-
-.ceremony-divider {
-    border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
-    margin: 1.5rem 0 !important;
-}
-
-.play-icon {
-    border-left: 16px solid white !important;
-    border-top: 10px solid transparent !important;
-    border-bottom: 10px solid transparent !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-@media (min-width: 768px) {
-    .play-icon {
-        border-left: 20px solid white !important;
-        border-top: 12px solid transparent !important;
-        border-bottom: 12px solid transparent !important;
-    }
-}
-
-body, html {
-    overflow-x: hidden !important;
-}
-
-/* CSS Custom Properties for viewport heights */
-:root {
-    --vh: 1vh;
-    --full-height: 100vh;
-}
-
-/* Update viewport height on mobile */
-@supports (-webkit-touch-callout: none) {
-    :root {
-        --full-height: -webkit-fill-available;
-    }
-}
-
-/* Global section height rules - preserve natural section spacing */
-section {
-    min-height: var(--full-height) !important;
-    height: var(--full-height) !important;
-    border: none !important;
-}
-
-/* Remove borders only from layout containers that might cause gray borders */
-.dynamic-section,
-.wedding-details-section,
-.ceremony-reception-section,
-.love-story-section,
-.detailed-love-story-section,
-.final-love-story-section,
-.image-slider-section,
-.rsvp-section {
-    border: none !important;
-    outline: none !important;
-}
-
-.background-container,
-#background-image,
-#background-overlay {
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    outline: none !important;
-}
-
-/* Only reset borders for wrapper elements that might cause visual issues */
-.content-wrapper {
-    border: none !important;
-    outline: none !important;
-}
-
-/* WordPress and browser default overrides */
-#page,
-#main,
-.site,
-.site-content,
-.site-main,
-.page,
-.single,
-.archive,
-.home,
-body.home,
-body.single,
-body.page,
-.wp-site-blocks,
-.wp-block-group {
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-/* Mobile-specific webkit overrides */
-@supports (-webkit-touch-callout: none) {
-    * {
-        -webkit-appearance: none !important;
-        -webkit-border-radius: 0 !important;
-        border-radius: 0 !important;
-    }
-    
-    body {
-        -webkit-overflow-scrolling: touch !important;
-        -webkit-transform: translate3d(0,0,0) !important;
-    }
-}
-
-/* Ensure no default browser margins/padding for layout elements only - NOT sections */
-@media screen {
-    html, body, div.background-container, div.content-wrapper,
-    #page, #main, .site, .site-content, .site-main, .wp-site-blocks, .wp-block-group {
-        margin: 0 !important;
-        padding: 0 !important;
-        border: none !important;
-    }
-    
-    /* Keep essential borders for buttons and design elements */
-    .hero-open-invitation-btn,
-    .open-invitation-btn,
-    .rsvp-scroll-btn {
-        border: 1px solid white !important;
-        margin: 1rem 0 !important;
-        padding: 0.75rem 2rem !important;
-    }
-    
-    /* Fix RSVP button specifically */
-    #sticky-rsvp .rsvp-scroll-btn {
-        padding: 0.75rem 1.5rem !important;
-        font-size: 0.875rem !important;
-        margin: 0 !important;
-    }
-    
-    .ceremony-divider {
-        border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
-        margin: 1.5rem 0 !important;
-    }
-    
-    .play-icon {
-        border-left: 16px solid white !important;
-        border-top: 10px solid transparent !important;
-        border-bottom: 10px solid transparent !important;
-    }
 }
 
 /* Fix viewport issues on Safari iOS */
@@ -724,6 +512,14 @@ input, select, textarea {
         position: absolute !important;
     }
 }
+
+/* Safari-specific monogram positioning fixes */
+@media not all and (min-resolution:.001dpcm) { @supports (-webkit-appearance:none) {
+    .monogram-combined {
+        transform: translateX(-50%) !important;
+        left: 50% !important;
+    }
+}}
 
 /* Hero Section Custom Typography */
 .hero-greeting-title {
@@ -763,66 +559,15 @@ input, select, textarea {
 
 /* Responsive fixes for orientation changes */
 @media screen and (max-width: 768px) {
-    /* Fix content wrapper positioning on mobile */
-    .content-wrapper > div {
-        position: fixed !important;
-        top: 30% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        width: 100% !important;
-        max-width: none !important;
+    .dynamic-section {
+        min-height: 100vh;
+        min-height: -webkit-fill-available;
     }
     
-    /* Mobile-specific monogram positioning */
-    .monogram-combined {
-        display: inline-block !important;
-        width: auto !important;
-        height: auto !important;
-        transform-origin: center center !important;
-        will-change: transform !important;
-        backface-visibility: hidden !important;
-        -webkit-backface-visibility: hidden !important;
-        -webkit-transform-style: preserve-3d !important;
-        transform-style: preserve-3d !important;
-    }
-    
-    /* Prevent transform snapping on mobile */
-    @supports (-webkit-touch-callout: none) {
-        .monogram-combined {
-            -webkit-transform-origin: center center !important;
-            -webkit-will-change: transform !important;
-        }
-    }
-    
-    /* Ensure all sections take full height on mobile */
-    .dynamic-section,
-    .wedding-details-section,
-    .ceremony-reception-section,
-    .love-story-section,
-    .detailed-love-story-section,
-    .final-love-story-section,
-    .image-slider-section,
-    .rsvp-section {
-        min-height: 100vh !important;
-        min-height: -webkit-fill-available !important;
-        height: 100vh !important;
-        height: -webkit-fill-available !important;
-    }
-    
-    /* Content wrappers should also be full height */
-    .content-wrapper,
-    .wedding-details-section > div,
-    .ceremony-reception-section > div,
-    .love-story-section > div,
-    .detailed-love-story-section > div,
-    .final-love-story-section > div,
-    .image-slider-section > div,
-    .rsvp-section > div {
+    .content-wrapper {
         padding: 1rem;
-        height: 100vh !important;
-        height: -webkit-fill-available !important;
-        min-height: 100vh !important;
-        min-height: -webkit-fill-available !important;
+        height: 100vh;
+        height: -webkit-fill-available;
     }
     
     .content-container {
@@ -833,9 +578,9 @@ input, select, textarea {
     
     #hero-content {
         position: relative !important;
-        top: 0 !important;
+        top: 35% !important;
         left: 50% !important;
-        transform: translateX(-50%) !important;
+        transform: translate(-50%, -50%) !important;
         width: 100% !important;
         padding: 0 1rem;
     }
@@ -864,33 +609,17 @@ input, select, textarea {
 
 /* Landscape orientation fixes */
 @media screen and (max-width: 768px) and (orientation: landscape) {
-    /* Maintain full height in landscape */
-    .dynamic-section,
-    .wedding-details-section,
-    .ceremony-reception-section,
-    .love-story-section,
-    .detailed-love-story-section,
-    .final-love-story-section,
-    .image-slider-section,
-    .rsvp-section {
-        min-height: 100vh !important;
-        height: 100vh !important;
+    .dynamic-section {
+        min-height: 100vh;
     }
     
-    .content-wrapper,
-    .wedding-details-section > div,
-    .ceremony-reception-section > div,
-    .love-story-section > div,
-    .detailed-love-story-section > div,
-    .final-love-story-section > div,
-    .image-slider-section > div,
-    .rsvp-section > div {
-        height: 100vh !important;
+    .content-wrapper {
+        height: 100vh;
     }
     
     #hero-content {
-        top: 0 !important;
-        transform: translateX(-50%) !important;
+        top: 35% !important;
+        transform: translate(-50%, -50%) !important;
     }
     
     .hero-invitation-bottom {
@@ -900,21 +629,6 @@ input, select, textarea {
 
 /* Very small screens */
 @media screen and (max-width: 480px) {
-    /* Ensure full height on small phones */
-    .dynamic-section,
-    .wedding-details-section,
-    .ceremony-reception-section,
-    .love-story-section,
-    .detailed-love-story-section,
-    .final-love-story-section,
-    .image-slider-section,
-    .rsvp-section {
-        min-height: 100vh !important;
-        min-height: -webkit-fill-available !important;
-        height: 100vh !important;
-        height: -webkit-fill-available !important;
-    }
-    
     .hero-greeting-title {
         font-size: 0.75rem !important;
         letter-spacing: 2px !important;
@@ -928,75 +642,6 @@ input, select, textarea {
         font-size: 0.625rem !important;
         letter-spacing: 2px !important;
         padding: 0.625rem 1.25rem !important;
-    }
-}
-
-/* Extra CSS for specific phone models */
-@media screen and (max-width: 414px) {
-    /* iPhone 6/7/8 Plus, iPhone 11/12/13/14 Pro Max */
-    .dynamic-section,
-    .wedding-details-section,
-    .ceremony-reception-section,
-    .love-story-section,
-    .detailed-love-story-section,
-    .final-love-story-section,
-    .image-slider-section,
-    .rsvp-section {
-        min-height: 100vh !important;
-        min-height: -webkit-fill-available !important;
-        height: 100vh !important;
-        height: -webkit-fill-available !important;
-    }
-}
-
-@media screen and (max-width: 390px) {
-    /* iPhone 12/13/14 */
-    .dynamic-section,
-    .wedding-details-section,
-    .ceremony-reception-section,
-    .love-story-section,
-    .detailed-love-story-section,
-    .final-love-story-section,
-    .image-slider-section,
-    .rsvp-section {
-        min-height: 100vh !important;
-        min-height: -webkit-fill-available !important;
-        height: 100vh !important;
-        height: -webkit-fill-available !important;
-    }
-}
-
-@media screen and (max-width: 375px) {
-    /* iPhone 6/7/8, iPhone X/11/12/13 mini */
-    .dynamic-section,
-    .wedding-details-section,
-    .ceremony-reception-section,
-    .love-story-section,
-    .detailed-love-story-section,
-    .final-love-story-section,
-    .image-slider-section,
-    .rsvp-section {
-        min-height: 100vh !important;
-        min-height: -webkit-fill-available !important;
-        height: 100vh !important;
-        height: -webkit-fill-available !important;
-    }
-}
-
-/* Handle very tall phones */
-@media screen and (min-height: 800px) and (max-width: 768px) {
-    .dynamic-section,
-    .wedding-details-section,
-    .ceremony-reception-section,
-    .love-story-section,
-    .detailed-love-story-section,
-    .final-love-story-section,
-    .image-slider-section,
-    .rsvp-section {
-        min-height: 100vh !important;
-        min-height: -webkit-fill-available !important;
-        height: 100vh !important;
-        height: -webkit-fill-available !important;
     }
 }
 </style>
@@ -1018,22 +663,6 @@ document.addEventListener('DOMContentLoaded', function() {
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
-    
-    // Set viewport height for mobile devices
-    function setViewportHeight() {
-        let vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-        document.documentElement.style.setProperty('--full-height', `${window.innerHeight}px`);
-    }
-    
-    // Set initial viewport height
-    setViewportHeight();
-    
-    // Update viewport height on resize and orientation change
-    window.addEventListener('resize', setViewportHeight);
-    window.addEventListener('orientationchange', function() {
-        setTimeout(setViewportHeight, 100);
-    });
     
     // Check if GSAP is loaded
     if (typeof gsap === 'undefined') {
@@ -1074,22 +703,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 justifyContent: 'center'
             });
             
-            // Fix the inner wrapper positioning for mobile
-            gsap.set('.content-wrapper > div', {
-                position: 'relative',
-                top: 0,
-                left: 0,
-                transform: 'none',
-                width: '100%',
-                maxWidth: 'none'
-            });
-            
-            // Ensure hero content is properly centered on mobile
+            // Ensure hero content is properly positioned on mobile
             gsap.set('#hero-content', {
                 position: 'relative',
-                top: 0,
+                top: '35%',
                 left: '50%',
-                transform: 'translateX(-50%)',
+                transform: 'translate(-50%, -50%)',
                 width: '100%',
                 maxWidth: 'none'
             });
@@ -1350,22 +969,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
                 zIndex: 50,
-                opacity: 1,
-                width: 'auto',
-                height: 'auto',
-                transformOrigin: 'center center'
+                opacity: 1
             })
-            // Step 3: Zoom out and move monogram to top with smooth transform
+            // Step 3: Zoom out and move monogram to top with mobile-safe positioning
             .to(heroMonogram, {
                 duration: 1.2,
                 scale: 0.6,
-                top: '0.2rem',
+                top: '0.5rem',
                 left: '50%',
-                transform: isMobile ? 'translate(-50%, 0%)' : 'translate(-50%, 0%)',
+                transform: 'translateX(-50%)',
                 height: 'auto',
-                ease: "power2.out",
-                force3D: true,
-                transformOrigin: 'center center'
+                ease: "power2.out"
             })
             // Step 4: Completely hide the entire hero section
             .to(contentWrapper, {
@@ -1689,16 +1303,29 @@ document.addEventListener('DOMContentLoaded', function() {
         .call(() => {
             // Get current position before moving
             const rect = heroMonogram.getBoundingClientRect();
-            const currentX = rect.left + rect.width / 2;
-            const currentY = rect.top + rect.height / 2;
+            const isMobileView = window.innerWidth <= 768;
+            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+            
+            // Calculate center position with mobile and Safari adjustments
+            let currentX, currentY;
+            
+            if (isMobileView || isSafari) {
+                // For mobile and Safari, use window center to prevent snapping
+                currentX = window.innerWidth / 2;
+                currentY = rect.top + rect.height / 2;
+            } else {
+                // For other desktop browsers, use element center
+                currentX = rect.left + rect.width / 2;
+                currentY = rect.top + rect.height / 2;
+            }
             
             // Move to body with exact same visual position
             document.body.appendChild(heroMonogram);
             
-            // Set exact position to prevent jump
+            // Set exact position to prevent jump - Safari-safe approach
             gsap.set(heroMonogram, {
                 position: 'fixed',
-                left: currentX,
+                left: '50%',
                 top: currentY,
                 transform: 'translate(-50%, -50%) scale(0.6)',
                 zIndex: 50,
@@ -1709,7 +1336,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .to(heroMonogram, {
             duration: 1.0,
             left: '50%',
-            top: '1.5rem',
+            top: '1rem',
             transform: 'translateX(-50%) scale(0.6)',
             ease: "power2.inOut"
         }, "+=0.1")
@@ -1844,7 +1471,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (heroContent && heroContent.style.position !== 'fixed') {
                 gsap.set(heroContent, {
                     position: 'relative',
-                    top: '50%',
+                    top: '35%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
                     width: '100%'
