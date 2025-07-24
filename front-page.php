@@ -488,6 +488,97 @@ body {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    outline: none !important;
+}
+
+html {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    outline: none !important;
+}
+
+/* Selective reset to eliminate borders and gaps while preserving content spacing */
+* {
+    box-sizing: border-box !important;
+}
+
+/* Only reset margins/padding/borders for layout containers that cause gray borders */
+html, body, div.background-container, div.content-wrapper,
+#page, #main, .site, .site-content, .site-main, .wp-site-blocks, .wp-block-group {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    outline: none !important;
+}
+
+/* Aggressive fix for gray borders */
+html:before, html:after, body:before, body:after {
+    display: none !important;
+}
+
+* {
+    box-shadow: none !important;
+}
+
+/* Target the specific viewport and iframe elements that cause gray borders */
+html, body, #viewport, iframe, .wp-block-embed__wrapper {
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+}
+
+/* Remove any potential browser chrome or viewport borders */
+@-moz-document url-prefix() {
+    html, body { border: none !important; }
+}
+
+/* Webkit specific border removal */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    html, body { border: none !important; outline: none !important; }
+}
+
+/* Override for specific elements that need their styling */
+.hero-open-invitation-btn,
+.open-invitation-btn,
+.rsvp-scroll-btn {
+    border: 1px solid white !important;
+    margin: 1rem 0 !important;
+    padding: 0.75rem 2rem !important;
+}
+
+/* Fix RSVP button specifically */
+#sticky-rsvp .rsvp-scroll-btn {
+    padding: 0.75rem 1.5rem !important;
+    font-size: 0.875rem !important;
+}
+
+.ceremony-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
+    margin: 1.5rem 0 !important;
+}
+
+.play-icon {
+    border-left: 16px solid white !important;
+    border-top: 10px solid transparent !important;
+    border-bottom: 10px solid transparent !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+@media (min-width: 768px) {
+    .play-icon {
+        border-left: 20px solid white !important;
+        border-top: 12px solid transparent !important;
+        border-bottom: 12px solid transparent !important;
+    }
+}
+
+body, html {
+    overflow-x: hidden !important;
 }
 
 /* CSS Custom Properties for viewport heights */
@@ -503,10 +594,112 @@ body {
     }
 }
 
-/* Global section height rules */
+/* Global section height rules - preserve natural section spacing */
 section {
     min-height: var(--full-height) !important;
     height: var(--full-height) !important;
+    border: none !important;
+}
+
+/* Remove borders only from layout containers that might cause gray borders */
+.dynamic-section,
+.wedding-details-section,
+.ceremony-reception-section,
+.love-story-section,
+.detailed-love-story-section,
+.final-love-story-section,
+.image-slider-section,
+.rsvp-section {
+    border: none !important;
+    outline: none !important;
+}
+
+.background-container,
+#background-image,
+#background-overlay {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    outline: none !important;
+}
+
+/* Only reset borders for wrapper elements that might cause visual issues */
+.content-wrapper {
+    border: none !important;
+    outline: none !important;
+}
+
+/* WordPress and browser default overrides */
+#page,
+#main,
+.site,
+.site-content,
+.site-main,
+.page,
+.single,
+.archive,
+.home,
+body.home,
+body.single,
+body.page,
+.wp-site-blocks,
+.wp-block-group {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Mobile-specific webkit overrides */
+@supports (-webkit-touch-callout: none) {
+    * {
+        -webkit-appearance: none !important;
+        -webkit-border-radius: 0 !important;
+        border-radius: 0 !important;
+    }
+    
+    body {
+        -webkit-overflow-scrolling: touch !important;
+        -webkit-transform: translate3d(0,0,0) !important;
+    }
+}
+
+/* Ensure no default browser margins/padding for layout elements only - NOT sections */
+@media screen {
+    html, body, div.background-container, div.content-wrapper,
+    #page, #main, .site, .site-content, .site-main, .wp-site-blocks, .wp-block-group {
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+    }
+    
+    /* Keep essential borders for buttons and design elements */
+    .hero-open-invitation-btn,
+    .open-invitation-btn,
+    .rsvp-scroll-btn {
+        border: 1px solid white !important;
+        margin: 1rem 0 !important;
+        padding: 0.75rem 2rem !important;
+    }
+    
+    /* Fix RSVP button specifically */
+    #sticky-rsvp .rsvp-scroll-btn {
+        padding: 0.75rem 1.5rem !important;
+        font-size: 0.875rem !important;
+        margin: 0 !important;
+    }
+    
+    .ceremony-divider {
+        border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
+        margin: 1.5rem 0 !important;
+    }
+    
+    .play-icon {
+        border-left: 16px solid white !important;
+        border-top: 10px solid transparent !important;
+        border-bottom: 10px solid transparent !important;
+    }
 }
 
 /* Fix viewport issues on Safari iOS */
@@ -578,6 +771,27 @@ input, select, textarea {
         transform: translate(-50%, -50%) !important;
         width: 100% !important;
         max-width: none !important;
+    }
+    
+    /* Mobile-specific monogram positioning */
+    .monogram-combined {
+        display: inline-block !important;
+        width: auto !important;
+        height: auto !important;
+        transform-origin: center center !important;
+        will-change: transform !important;
+        backface-visibility: hidden !important;
+        -webkit-backface-visibility: hidden !important;
+        -webkit-transform-style: preserve-3d !important;
+        transform-style: preserve-3d !important;
+    }
+    
+    /* Prevent transform snapping on mobile */
+    @supports (-webkit-touch-callout: none) {
+        .monogram-combined {
+            -webkit-transform-origin: center center !important;
+            -webkit-will-change: transform !important;
+        }
     }
     
     /* Ensure all sections take full height on mobile */
@@ -1136,16 +1350,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
                 zIndex: 50,
-                opacity: 1
+                opacity: 1,
+                width: 'auto',
+                height: 'auto',
+                transformOrigin: 'center center'
             })
-            // Step 3: Zoom out and move monogram to top
+            // Step 3: Zoom out and move monogram to top with smooth transform
             .to(heroMonogram, {
                 duration: 1.2,
                 scale: 0.6,
                 top: '0.2rem',
-                transform: 'translateX(-50%)',
+                left: '50%',
+                transform: isMobile ? 'translate(-50%, 0%)' : 'translate(-50%, 0%)',
                 height: 'auto',
-                ease: "power2.out"
+                ease: "power2.out",
+                force3D: true,
+                transformOrigin: 'center center'
             })
             // Step 4: Completely hide the entire hero section
             .to(contentWrapper, {
