@@ -9,7 +9,7 @@
     </div>
     
     <div class="content-wrapper fixed inset-0 flex items-center justify-center z-10">
-        <div class="w-full mx-auto px-4 text-center relative" style="position: fixed; top: 20%; left: 50%; transform: translate(-50%, -50%); width: 100%; max-width: none;">
+        <div class="w-full mx-auto px-4 text-center relative" style="position: fixed; top: 25%; left: 50%; transform: translate(-50%, -50%); width: 100%; max-width: none;">
             <?php 
             $groom_name = get_theme_mod('groom_name', 'Dennis');
             $bride_name = get_theme_mod('bride_name', 'Emilia');
@@ -482,6 +482,56 @@
     }
 }
 
+/* Safari iOS fixes */
+body {
+    -webkit-text-size-adjust: 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* CSS Custom Properties for viewport heights */
+:root {
+    --vh: 1vh;
+    --full-height: 100vh;
+}
+
+/* Update viewport height on mobile */
+@supports (-webkit-touch-callout: none) {
+    :root {
+        --full-height: -webkit-fill-available;
+    }
+}
+
+/* Global section height rules */
+section {
+    min-height: var(--full-height) !important;
+    height: var(--full-height) !important;
+}
+
+/* Fix viewport issues on Safari iOS */
+.dynamic-section, .content-wrapper {
+    -webkit-overflow-scrolling: touch;
+    will-change: transform;
+}
+
+/* Prevent zoom on input focus (Safari iOS) */
+input, select, textarea {
+    font-size: 16px !important;
+}
+
+/* Fix fixed positioning on Safari iOS */
+@supports (-webkit-touch-callout: none) {
+    .fixed {
+        position: -webkit-sticky !important;
+        position: sticky !important;
+    }
+    
+    .content-wrapper {
+        position: absolute !important;
+    }
+}
+
 /* Hero Section Custom Typography */
 .hero-greeting-title {
     font-family: 'Montserrat', sans-serif;
@@ -502,6 +552,239 @@
     font-style: normal;
     letter-spacing: 5px;
 }
+
+/* Mobile-specific fixes */
+@supports (-webkit-touch-callout: none) {
+    /* iOS Safari specific fixes */
+    .dynamic-section {
+        position: relative !important;
+        height: 100vh !important;
+        height: -webkit-fill-available !important;
+    }
+    
+    .content-wrapper {
+        height: 100vh !important;
+        height: -webkit-fill-available !important;
+    }
+}
+
+/* Responsive fixes for orientation changes */
+@media screen and (max-width: 768px) {
+    /* Fix content wrapper positioning on mobile */
+    .content-wrapper > div {
+        position: fixed !important;
+        top: 30% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 100% !important;
+        max-width: none !important;
+    }
+    
+    /* Ensure all sections take full height on mobile */
+    .dynamic-section,
+    .wedding-details-section,
+    .ceremony-reception-section,
+    .love-story-section,
+    .detailed-love-story-section,
+    .final-love-story-section,
+    .image-slider-section,
+    .rsvp-section {
+        min-height: 100vh !important;
+        min-height: -webkit-fill-available !important;
+        height: 100vh !important;
+        height: -webkit-fill-available !important;
+    }
+    
+    /* Content wrappers should also be full height */
+    .content-wrapper,
+    .wedding-details-section > div,
+    .ceremony-reception-section > div,
+    .love-story-section > div,
+    .detailed-love-story-section > div,
+    .final-love-story-section > div,
+    .image-slider-section > div,
+    .rsvp-section > div {
+        padding: 1rem;
+        height: 100vh !important;
+        height: -webkit-fill-available !important;
+        min-height: 100vh !important;
+        min-height: -webkit-fill-available !important;
+    }
+    
+    .content-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 1rem;
+    }
+    
+    #hero-content {
+        position: relative !important;
+        top: 0 !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 100% !important;
+        padding: 0 1rem;
+    }
+    
+    .hero-greeting-title {
+        font-size: 0.875rem !important;
+        letter-spacing: 3px !important;
+    }
+    
+    .hero-invitation-message {
+        font-size: 0.875rem !important;
+        line-height: 1.5 !important;
+    }
+    
+    .hero-open-invitation-btn {
+        font-size: 0.75rem !important;
+        letter-spacing: 3px !important;
+        padding: 0.75rem 1.5rem !important;
+    }
+    
+    .couple-names {
+        font-size: 0.875rem !important;
+        letter-spacing: 0.2em !important;
+    }
+}
+
+/* Landscape orientation fixes */
+@media screen and (max-width: 768px) and (orientation: landscape) {
+    /* Maintain full height in landscape */
+    .dynamic-section,
+    .wedding-details-section,
+    .ceremony-reception-section,
+    .love-story-section,
+    .detailed-love-story-section,
+    .final-love-story-section,
+    .image-slider-section,
+    .rsvp-section {
+        min-height: 100vh !important;
+        height: 100vh !important;
+    }
+    
+    .content-wrapper,
+    .wedding-details-section > div,
+    .ceremony-reception-section > div,
+    .love-story-section > div,
+    .detailed-love-story-section > div,
+    .final-love-story-section > div,
+    .image-slider-section > div,
+    .rsvp-section > div {
+        height: 100vh !important;
+    }
+    
+    #hero-content {
+        top: 0 !important;
+        transform: translateX(-50%) !important;
+    }
+    
+    .hero-invitation-bottom {
+        bottom: -150px !important;
+    }
+}
+
+/* Very small screens */
+@media screen and (max-width: 480px) {
+    /* Ensure full height on small phones */
+    .dynamic-section,
+    .wedding-details-section,
+    .ceremony-reception-section,
+    .love-story-section,
+    .detailed-love-story-section,
+    .final-love-story-section,
+    .image-slider-section,
+    .rsvp-section {
+        min-height: 100vh !important;
+        min-height: -webkit-fill-available !important;
+        height: 100vh !important;
+        height: -webkit-fill-available !important;
+    }
+    
+    .hero-greeting-title {
+        font-size: 0.75rem !important;
+        letter-spacing: 2px !important;
+    }
+    
+    .hero-invitation-message {
+        font-size: 0.75rem !important;
+    }
+    
+    .hero-open-invitation-btn {
+        font-size: 0.625rem !important;
+        letter-spacing: 2px !important;
+        padding: 0.625rem 1.25rem !important;
+    }
+}
+
+/* Extra CSS for specific phone models */
+@media screen and (max-width: 414px) {
+    /* iPhone 6/7/8 Plus, iPhone 11/12/13/14 Pro Max */
+    .dynamic-section,
+    .wedding-details-section,
+    .ceremony-reception-section,
+    .love-story-section,
+    .detailed-love-story-section,
+    .final-love-story-section,
+    .image-slider-section,
+    .rsvp-section {
+        min-height: 100vh !important;
+        min-height: -webkit-fill-available !important;
+        height: 100vh !important;
+        height: -webkit-fill-available !important;
+    }
+}
+
+@media screen and (max-width: 390px) {
+    /* iPhone 12/13/14 */
+    .dynamic-section,
+    .wedding-details-section,
+    .ceremony-reception-section,
+    .love-story-section,
+    .detailed-love-story-section,
+    .final-love-story-section,
+    .image-slider-section,
+    .rsvp-section {
+        min-height: 100vh !important;
+        min-height: -webkit-fill-available !important;
+        height: 100vh !important;
+        height: -webkit-fill-available !important;
+    }
+}
+
+@media screen and (max-width: 375px) {
+    /* iPhone 6/7/8, iPhone X/11/12/13 mini */
+    .dynamic-section,
+    .wedding-details-section,
+    .ceremony-reception-section,
+    .love-story-section,
+    .detailed-love-story-section,
+    .final-love-story-section,
+    .image-slider-section,
+    .rsvp-section {
+        min-height: 100vh !important;
+        min-height: -webkit-fill-available !important;
+        height: 100vh !important;
+        height: -webkit-fill-available !important;
+    }
+}
+
+/* Handle very tall phones */
+@media screen and (min-height: 800px) and (max-width: 768px) {
+    .dynamic-section,
+    .wedding-details-section,
+    .ceremony-reception-section,
+    .love-story-section,
+    .detailed-love-story-section,
+    .final-love-story-section,
+    .image-slider-section,
+    .rsvp-section {
+        min-height: 100vh !important;
+        min-height: -webkit-fill-available !important;
+        height: 100vh !important;
+        height: -webkit-fill-available !important;
+    }
+}
 </style>
 
 <script>
@@ -521,6 +804,22 @@ document.addEventListener('DOMContentLoaded', function() {
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
+    
+    // Set viewport height for mobile devices
+    function setViewportHeight() {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        document.documentElement.style.setProperty('--full-height', `${window.innerHeight}px`);
+    }
+    
+    // Set initial viewport height
+    setViewportHeight();
+    
+    // Update viewport height on resize and orientation change
+    window.addEventListener('resize', setViewportHeight);
+    window.addEventListener('orientationchange', function() {
+        setTimeout(setViewportHeight, 100);
+    });
     
     // Check if GSAP is loaded
     if (typeof gsap === 'undefined') {
@@ -545,6 +844,46 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Set the correct image immediately to prevent flash
     backgroundImage.src = initialImageSrc;
+    
+    // Mobile-specific initialization
+    function initializeMobileLayout() {
+        if (isMobile) {
+            // Ensure content wrapper positioning is correct for mobile
+            gsap.set('.content-wrapper', {
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100vh',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            });
+            
+            // Fix the inner wrapper positioning for mobile
+            gsap.set('.content-wrapper > div', {
+                position: 'relative',
+                top: 0,
+                left: 0,
+                transform: 'none',
+                width: '100%',
+                maxWidth: 'none'
+            });
+            
+            // Ensure hero content is properly centered on mobile
+            gsap.set('#hero-content', {
+                position: 'relative',
+                top: 0,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '100%',
+                maxWidth: 'none'
+            });
+        }
+    }
+    
+    // Initialize mobile layout
+    initializeMobileLayout();
     
     // Disable scrolling initially
     let scrollEnabled = false;
@@ -1265,8 +1604,36 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Handle window resize for background image
+    // Handle window resize for background image and layout
     let resizeTimeout;
+    let orientationTimeout;
+    
+    // Function to refresh layout
+    function refreshLayout() {
+        // Refresh ScrollTrigger
+        ScrollTrigger.refresh();
+        
+        // Re-initialize mobile layout if needed
+        if (window.innerWidth <= 768) {
+            initializeMobileLayout();
+        }
+        
+        // Reset hero content positioning for mobile
+        if (window.innerWidth <= 768) {
+            const heroContent = document.getElementById('hero-content');
+            if (heroContent && heroContent.style.position !== 'fixed') {
+                gsap.set(heroContent, {
+                    position: 'relative',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: '100%'
+                });
+            }
+        }
+    }
+    
+    // Window resize handler
     window.addEventListener('resize', function() {
         // Debounce resize events
         clearTimeout(resizeTimeout);
@@ -1283,7 +1650,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Update the isMobile variable
                 isMobile = newIsMobile;
             }
-        }, 100);
+            
+            // Refresh layout
+            refreshLayout();
+        }, 150);
+    });
+    
+    // Orientation change handler (specific for mobile)
+    window.addEventListener('orientationchange', function() {
+        clearTimeout(orientationTimeout);
+        orientationTimeout = setTimeout(() => {
+            refreshLayout();
+        }, 300);
     });
 });
 </script>
