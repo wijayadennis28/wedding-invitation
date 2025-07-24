@@ -502,47 +502,6 @@
     font-style: normal;
     letter-spacing: 5px;
 }
-
-/* Ad Blocker / JavaScript Disabled Fallback Styles */
-.dynamic-section {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-.monogram-combined {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-    visibility: visible !important;
-}
-
-.couple-names {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-    visibility: visible !important;
-}
-
-#hero-content {
-    opacity: 1 !important;
-    visibility: visible !important;
-    display: block !important;
-}
-
-/* Ensure smooth scroll behavior */
-html {
-    scroll-behavior: smooth;
-}
-
-/* Progressive enhancement - hide animations if JS is disabled */
-noscript .monogram-combined,
-noscript .couple-names,
-noscript .hero-greeting-title,
-noscript .hero-invitation-message,
-noscript .hero-open-invitation-btn {
-    opacity: 1 !important;
-    transform: none !important;
-    visibility: visible !important;
-}
 </style>
 
 <script>
@@ -563,64 +522,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
     
-    // Ad blocker detection and fallback
-    let isGSAPBlocked = false;
-    let adBlockerDetected = false;
-    
-    // Check if GSAP is loaded or blocked by ad blocker
+    // Check if GSAP is loaded
     if (typeof gsap === 'undefined') {
-        console.warn('GSAP is not loaded - possibly blocked by ad blocker');
-        isGSAPBlocked = true;
-        adBlockerDetected = true;
-    }
-    
-    // Fallback for ad blockers - ensure first section is visible
-    if (adBlockerDetected || isGSAPBlocked) {
-        // Force show first section without animations
-        const dynamicSection = document.querySelector('.dynamic-section');
-        const heroContent = document.getElementById('hero-content');
-        const monogram = document.querySelector('.monogram-combined');
-        const coupleNames = document.querySelector('.couple-names');
-        
-        if (dynamicSection) {
-            dynamicSection.style.display = 'block';
-            dynamicSection.style.visibility = 'visible';
-        }
-        
-        if (heroContent) {
-            heroContent.style.opacity = '1';
-            heroContent.style.visibility = 'visible';
-            heroContent.style.display = 'block';
-        }
-        
-        // Show monogram and content immediately
-        if (monogram) {
-            monogram.style.opacity = '1';
-            monogram.style.transform = 'translateY(0)';
-            monogram.style.visibility = 'visible';
-        }
-        
-        if (coupleNames) {
-            coupleNames.style.opacity = '1';
-            coupleNames.style.transform = 'translateY(0)';
-            coupleNames.style.visibility = 'visible';
-        }
-        
-        // Enable scrolling
-        document.body.style.overflow = 'auto';
-        
-        // Set background image
-        const backgroundImage = document.getElementById('background-image');
-        if (backgroundImage) {
-            let isMobile = window.innerWidth <= 768;
-            const initialImageSrc = isMobile ? 
-                '<?php echo get_template_directory_uri(); ?>/assets/images/wedding.png' : 
-                '<?php echo get_template_directory_uri(); ?>/assets/images/wedding-landscape.png';
-            backgroundImage.src = initialImageSrc;
-        }
-        
-        // Add basic scroll behavior without GSAP
-        setupBasicScrollBehavior();
+        console.error('GSAP is not loaded!');
         return;
     }
     
@@ -1382,67 +1286,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     });
 });
-
-// Basic scroll behavior fallback for ad blockers
-function setupBasicScrollBehavior() {
-    console.log('Setting up basic scroll behavior for ad blocker compatibility');
-    
-    // Basic button click handlers without GSAP
-    const heroBtn = document.querySelector('.hero-open-invitation-btn');
-    if (heroBtn) {
-        heroBtn.style.pointerEvents = 'auto';
-        heroBtn.addEventListener('click', function() {
-            // Show invitation greeting elements
-            const greetingTitle = document.querySelector('.hero-greeting-title');
-            const invitationMessage = document.querySelector('.hero-invitation-message');
-            
-            if (greetingTitle) {
-                greetingTitle.style.opacity = '1';
-                greetingTitle.style.transform = 'translateY(0)';
-                greetingTitle.style.transition = 'all 0.5s ease';
-            }
-            
-            if (invitationMessage) {
-                invitationMessage.style.opacity = '1';
-                invitationMessage.style.transform = 'translateY(0)';
-                invitationMessage.style.transition = 'all 0.5s ease';
-            }
-            
-            // Smooth scroll to wedding details after a delay
-            setTimeout(() => {
-                const weddingDetails = document.getElementById('wedding-details');
-                if (weddingDetails) {
-                    weddingDetails.scrollIntoView({ behavior: 'smooth' });
-                }
-            }, 2000);
-        });
-    }
-    
-    // Show sticky RSVP on scroll
-    window.addEventListener('scroll', function() {
-        const stickyRSVP = document.getElementById('sticky-rsvp');
-        const weddingDetails = document.getElementById('wedding-details');
-        
-        if (stickyRSVP && weddingDetails) {
-            const rect = weddingDetails.getBoundingClientRect();
-            if (rect.top <= window.innerHeight) {
-                stickyRSVP.style.opacity = '1';
-                stickyRSVP.style.pointerEvents = 'auto';
-            }
-        }
-    });
-    
-    // RSVP button scroll handler
-    const rsvpBtn = document.querySelector('.rsvp-scroll-btn');
-    if (rsvpBtn) {
-        rsvpBtn.addEventListener('click', function() {
-            const rsvpSection = document.getElementById('rsvp');
-            if (rsvpSection) {
-                rsvpSection.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    }
-}
 </script>
 
 <?php get_footer(); ?>
