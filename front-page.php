@@ -9,7 +9,7 @@
     </div>
     
     <div class="content-wrapper fixed inset-0 flex items-center justify-center z-10">
-        <div class="w-full mx-auto px-4 text-center relative" style="position: fixed; top: 35%; left: 50%; transform: translate(-50%, -50%); width: 100%; max-width: none;">
+        <div class="w-full mx-auto px-4 text-center relative" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; max-width: none;">
             <?php 
             $groom_name = get_theme_mod('groom_name', 'Dennis');
             $bride_name = get_theme_mod('bride_name', 'Emilia');
@@ -635,6 +635,20 @@ input, select, textarea {
         letter-spacing: 2px !important;
         padding: 0.625rem 1.25rem !important;
     }
+    
+    /* Mobile RSVP button fixes */
+    #sticky-rsvp {
+        bottom: 1rem !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        z-index: 9999 !important;
+    }
+    
+    .rsvp-scroll-btn {
+        font-size: 0.75rem !important;
+        padding: 0.75rem 1.5rem !important;
+        border-radius: 2rem !important;
+    }
 }
 </style>
 
@@ -679,36 +693,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Set the correct image immediately to prevent flash
     backgroundImage.src = initialImageSrc;
-    
-    // Mobile-specific initialization
-    function initializeMobileLayout() {
-        if (isMobile) {
-            // Ensure content wrapper positioning is correct for mobile
-            gsap.set('.content-wrapper', {
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100vh',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-            });
-            
-            // Ensure hero content is properly positioned on mobile
-            gsap.set('#hero-content', {
-                position: 'relative',
-                top: '35%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: '100%',
-                maxWidth: 'none'
-            });
-        }
-    }
-    
-    // Initialize mobile layout
-    initializeMobileLayout();
     
     // Disable scrolling initially
     let scrollEnabled = false;
@@ -963,12 +947,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 zIndex: 50,
                 opacity: 1
             })
-            // Step 3: Zoom out and move monogram to top
+            // Step 3: Zoom out and move monogram to top (ensure it stays centered on mobile)
             .to(heroMonogram, {
                 duration: 1.2,
                 scale: 0.6,
                 top: '0.5rem',
-                transform: 'translateX(-50%)',
+                left: '50%',
+                transform: 'translate(-50%, 0)',
                 height: 'auto',
                 ease: "power2.out"
             })
@@ -1400,19 +1385,49 @@ document.addEventListener('DOMContentLoaded', function() {
     // Sticky RSVP Button functionality - Show from wedding details (2nd page) onwards
     const stickyRSVP = document.getElementById('sticky-rsvp');
     
+    // Force show RSVP on mobile with multiple triggers
+    function forceShowRSVP() {
+        if (stickyRSVP) {
+            console.log('Forcing RSVP button visible');
+            stickyRSVP.style.opacity = '1';
+            stickyRSVP.style.pointerEvents = 'auto';
+            stickyRSVP.style.display = 'block';
+            stickyRSVP.style.visibility = 'visible';
+            
+            // Double check with GSAP
+            gsap.set(stickyRSVP, { 
+                opacity: 1,
+                display: 'block',
+                visibility: 'visible'
+            });
+        }
+    }
+    
     // Show RSVP from wedding details section onwards - SIMPLE VERSION
     ScrollTrigger.create({
         trigger: "#wedding-details",
-        start: "top 90%",
+        start: "top 95%",
         onEnter: () => {
             console.log('Wedding details in view - ensuring RSVP button visible');
-            if (stickyRSVP) {
-                gsap.set(stickyRSVP, { opacity: 1 });
-                stickyRSVP.style.pointerEvents = 'auto';
-                stickyRSVP.style.display = 'flex';
-            }
+            forceShowRSVP();
         }
     });
+    
+    // Additional mobile trigger - force show RSVP after any scroll past hero
+    ScrollTrigger.create({
+        trigger: "#wedding-details",
+        start: "top 100%",
+        onEnter: () => {
+            forceShowRSVP();
+        }
+    });
+    
+    // Mobile specific - show RSVP after page transition
+    setTimeout(() => {
+        if (window.scrollY > window.innerHeight * 0.5) {
+            forceShowRSVP();
+        }
+    }, 3000);
     
     // Click handler for sticky RSVP button
     const rsvpScrollBtn = document.querySelector('.rsvp-scroll-btn');
@@ -1429,36 +1444,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Handle window resize for background image and layout
+    // Handle window resize for background image
     let resizeTimeout;
-    let orientationTimeout;
-    
-    // Function to refresh layout
-    function refreshLayout() {
-        // Refresh ScrollTrigger
-        ScrollTrigger.refresh();
-        
-        // Re-initialize mobile layout if needed
-        if (window.innerWidth <= 768) {
-            initializeMobileLayout();
-        }
-        
-        // Reset hero content positioning for mobile
-        if (window.innerWidth <= 768) {
-            const heroContent = document.getElementById('hero-content');
-            if (heroContent && heroContent.style.position !== 'fixed') {
-                gsap.set(heroContent, {
-                    position: 'relative',
-                    top: '35%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: '100%'
-                });
-            }
-        }
-    }
-    
-    // Window resize handler
     window.addEventListener('resize', function() {
         // Debounce resize events
         clearTimeout(resizeTimeout);
@@ -1475,18 +1462,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Update the isMobile variable
                 isMobile = newIsMobile;
             }
-            
-            // Refresh layout
-            refreshLayout();
-        }, 150);
-    });
-    
-    // Orientation change handler (specific for mobile)
-    window.addEventListener('orientationchange', function() {
-        clearTimeout(orientationTimeout);
-        orientationTimeout = setTimeout(() => {
-            refreshLayout();
-        }, 300);
+        }, 100);
     });
 });
 </script>
