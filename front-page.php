@@ -47,12 +47,6 @@
             
             <!-- Invitation Opening Content (Initially Hidden) -->
             <div id="invitation-content" class="content-container max-w-2xl mx-auto" style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 100%; opacity: 0; visibility: hidden;">
-                <div class="monogram-container mb-4 sm:mb-6 leading-none">
-                    <span class="monogram-combined">
-                        <span class="groom-initial"><?php echo strtolower(substr($groom_name, 0, 1)); ?></span><span class="bride-initial"><?php echo strtolower(substr($bride_name, 0, 1)); ?></span>
-                    </span>
-                </div>
-                
                 <div class="invitation-text text-center">
                     <h2 class="greeting-title text-sm md:text-2xl font-light text-white mb-4 md:mb-6 tracking-wide">
                         DEAR MR. JOHN AND MRS. JANE,
@@ -78,11 +72,6 @@
     </div>
     
 </section>
-
-<!-- Sticky Monogram for all sections after hero -->
-<div id="sticky-monogram" class="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 opacity-0 pointer-events-none">
-    <!-- This will be populated by the transformed hero monogram -->
-</div>
 
 <!-- Sticky RSVP Button -->
 <div id="sticky-rsvp" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-40 opacity-0 pointer-events-none transition-all duration-300">
@@ -133,7 +122,7 @@
             <div class="wedding-info-section mb-8 md:mb-12 text-center">
                 <div class="grid grid-cols-2 gap-6 md:gap-8 max-w-lg mx-auto">
                     <div class="groom-info">
-                        <h3 class="person-name text-base md:text-lg text-white font-medium mb-2">Dennis Wijaya</h3>
+                        <h3 class="person-name text-base md:text-lg text-white font-medium mb-2">Dennis <br>Wijaya</h3>
                         <p class="person-details text-xs md:text-sm text-white font-light">
                             First son of<br>
                             <b>Saleh Widjaja </b> and<br>
@@ -493,19 +482,6 @@
     }
 }
 
-/* Sticky monogram styling */
-.monogram-combined-sticky {
-    color: white;
-    font-family: serif;
-    font-weight: 300;
-    letter-spacing: 0.1em;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-}
-
-.groom-initial-sticky, .bride-initial-sticky {
-    font-style: italic;
-}
-
 /* Hero Section Custom Typography */
 .hero-greeting-title {
     font-family: 'Montserrat', sans-serif;
@@ -529,8 +505,23 @@
 </style>
 
 <script>
+// Force scroll to top on any page load (including refresh)
+window.addEventListener('beforeunload', function() {
+    window.scrollTo(0, 0);
+});
+
+// Also handle page refresh by storing scroll position
+if (history.scrollRestoration) {
+    history.scrollRestoration = 'manual';
+}
+
 // Multi-Section Wedding Invitation with GSAP ScrollTrigger
 document.addEventListener('DOMContentLoaded', function() {
+    // Force scroll to top on page load/refresh
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    
     // Check if GSAP is loaded
     if (typeof gsap === 'undefined') {
         console.error('GSAP is not loaded!');
@@ -544,7 +535,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const invitationContent = document.getElementById('invitation-content');
     const backgroundImage = document.getElementById('background-image');
     const backgroundOverlay = document.getElementById('background-overlay');
-    const stickyMonogram = document.getElementById('sticky-monogram');
     const dynamicSection = document.querySelector('.dynamic-section');
     
     // Check if mobile device and set initial background image immediately
@@ -567,8 +557,14 @@ document.addEventListener('DOMContentLoaded', function() {
     gsap.set('.hero-invitation-message', { opacity: 0, y: 30 });
     gsap.set('.hero-open-invitation-btn', { opacity: 0, y: 30 });
     
-    // Set initial position for sticky monogram (hidden)
-    gsap.set('#sticky-monogram', { opacity: 0 });
+    // Disable button interaction until fully visible
+    const openBtn = document.querySelector('.hero-open-invitation-btn');
+    if (openBtn) {
+        openBtn.style.pointerEvents = 'none';
+    }
+    
+    // Set initial position for hero monogram
+    gsap.set('.monogram-combined', { y: -window.innerHeight, opacity: 0 });
     
     // Set initial positions for invitation content (keep hidden)
     gsap.set('.greeting-title', { opacity: 0, y: 30 });
@@ -688,6 +684,12 @@ document.addEventListener('DOMContentLoaded', function() {
     .call(() => {
         scrollEnabled = true;
         document.body.style.overflow = 'auto';
+        
+        // Enable button clicking only after it's fully visible
+        const openBtn = document.querySelector('.hero-open-invitation-btn');
+        if (openBtn) {
+            openBtn.style.pointerEvents = 'auto';
+        }
     });
     
     // Function to enable scrolling
@@ -1064,22 +1066,31 @@ document.addEventListener('DOMContentLoaded', function() {
             // Prevent multiple clicks during animation
             if (monogramTransformed) return;
             
-            // Button press animation
+            // Disable button to prevent multiple clicks
+            e.target.style.pointerEvents = 'none';
+            
+            // Smooth button press animation - no stutter
             gsap.to(e.target, {
-                scale: 0.95,
-                duration: 0.15,
-                yoyo: true,
-                repeat: 1,
-                ease: "power1.inOut",
+                scale: 0.96,
+                duration: 0.1,
+                ease: "power1.out",
                 onComplete: () => {
-                    // Enable scrolling if not already enabled
-                    enableScrolling();
-                    
-                    // Mark as transformed to prevent ScrollTrigger conflicts
-                    monogramTransformed = true;
-                    
-                    // Start the smooth transition immediately (no pre-scroll)
-                    transitionToWeddingDetails();
+                    // Return to normal size smoothly
+                    gsap.to(e.target, {
+                        scale: 1,
+                        duration: 0.2,
+                        ease: "back.out(1.2)",
+                        onComplete: () => {
+                            // Enable scrolling if not already enabled
+                            enableScrolling();
+                            
+                            // Mark as transformed to prevent ScrollTrigger conflicts
+                            monogramTransformed = true;
+                            
+                            // Start the smooth transition immediately
+                            transitionToWeddingDetails();
+                        }
+                    });
                 }
             });
         });
@@ -1091,69 +1102,72 @@ document.addEventListener('DOMContentLoaded', function() {
         const heroContent = document.getElementById('hero-content');
         const contentWrapper = document.querySelector('.content-wrapper');
         const weddingDetailsSection = document.getElementById('wedding-details');
-        const backgroundImage = document.getElementById('background-image');
         
-        // Create smooth transition timeline with improved sequencing
+        // Create smooth transition timeline - simplified approach
         const transitionTl = gsap.timeline();
         
-        // Step 1: Zoom out monogram first (dramatic effect)
+        // Step 1: Start with a subtle zoom out while keeping position
         transitionTl.to(heroMonogram, {
-            duration: 1.0,
-            scale: 0.6,
+            duration: 0.8,
+            scale: 0.8,
             ease: "power2.out"
         })
         // Step 2: Fade out all other hero content with stagger effect
         .to('.hero-greeting-title, .hero-invitation-message, .hero-open-invitation-btn, .couple-names', {
-            duration: 0.8,
-            opacity: 0,
-            y: -50,
-            ease: "power2.in",
-            stagger: 0.1
-        }, "-=0.5")
-        // Step 3: Fade out background image for clean transition
-        .to(backgroundImage, {
             duration: 0.6,
-            opacity: 0.3,
-            ease: "power2.out"
-        }, "-=0.4")
+            opacity: 0,
+            y: -40,
+            ease: "power2.in",
+            stagger: 0.08
+        }, "-=0.6")
+        // Step 3: Continue zooming out monogram
+        .to(heroMonogram, {
+            duration: 0.6,
+            scale: 0.6,
+            ease: "power1.inOut"
+        })
         // Step 4: Extract monogram and make it fixed positioned
         .call(() => {
-            // Move monogram out of the content wrapper to body
+            // Get current position before moving
+            const rect = heroMonogram.getBoundingClientRect();
+            const currentX = rect.left + rect.width / 2;
+            const currentY = rect.top + rect.height / 2;
+            
+            // Move to body with exact same visual position
             document.body.appendChild(heroMonogram);
+            
+            // Set exact position to prevent jump
+            gsap.set(heroMonogram, {
+                position: 'fixed',
+                left: currentX,
+                top: currentY,
+                transform: 'translate(-50%, -50%) scale(0.6)',
+                zIndex: 50,
+                opacity: 1
+            });
         })
-        .set(heroMonogram, {
-            position: 'fixed',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%) scale(0.6)',
-            zIndex: 50
-        })
-        // Step 5: Move monogram to final position while fading content completely
+        // Step 5: Move monogram to final sticky position
         .to(heroMonogram, {
-            duration: 0.8,
-            top: '0.2rem',
+            duration: 1.0,
+            left: '50%',
+            top: '1.5rem',
             transform: 'translateX(-50%) scale(0.6)',
-            ease: "power2.out"
-        })
+            ease: "power2.inOut"
+        }, "+=0.1")
+        // Step 6: Hide content wrapper
         .to(contentWrapper, {
-            duration: 0.6,
+            duration: 0.5,
             opacity: 0,
             ease: "power2.out"
-        }, "-=0.6")
-        // Step 6: Hide hero sections completely
+        }, "-=0.8")
+        // Step 7: Clean up hero sections
         .set(contentWrapper, {
             display: 'none'
         })
         .set('.dynamic-section', {
             display: 'none'
         })
-        // Step 7: Restore background image opacity for next section
-        .to(backgroundImage, {
-            duration: 0.4,
-            opacity: 1,
-            ease: "power2.out"
-        })
-        // Step 8: Smooth scroll to wedding details section
+        // Step 8: Smooth scroll to wedding details
         .to(window, {
             duration: 1.8,
             scrollTo: {
@@ -1161,8 +1175,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 offsetY: 0
             },
             ease: "power2.inOut"
-        }, "+=0.3")
-        // Step 9: Animate wedding details content after scroll completes
+        }, "+=0.2")
+        // Step 9: Animate wedding details content
         .call(() => {
             animateWeddingDetailsContent();
         }, null, "+=0.3");
