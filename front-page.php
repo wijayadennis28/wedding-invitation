@@ -758,7 +758,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Hero to Wedding Details transition with flip effect
     ScrollTrigger.create({
         trigger: "#wedding-details",
-        start: "top 90%",
+        start: "top 95%",
         end: "top 50%",
         onEnter: () => {
             // Only run if monogram hasn't been transformed yet
@@ -864,7 +864,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Ceremony & Reception Section
     ScrollTrigger.create({
         trigger: "#ceremony-reception",
-        start: "top bottom",
+        start: "top 100%",
         end: "bottom 20%",
         toggleActions: "play none none reverse",
         onEnter: () => {
@@ -896,7 +896,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Love Story Section
     ScrollTrigger.create({
         trigger: "#love-story",
-        start: "top bottom",
+        start: "top 100%",
         end: "bottom 20%",
         toggleActions: "play none none reverse",
         onEnter: () => {
@@ -916,7 +916,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Detailed Love Story Section
     ScrollTrigger.create({
         trigger: "#detailed-love-story",
-        start: "top bottom",
+        start: "top 100%",
         end: "bottom 20%",
         toggleActions: "play none none reverse",
         onEnter: () => {
@@ -944,7 +944,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Final Love Story Section
     ScrollTrigger.create({
         trigger: "#final-love-story",
-        start: "top bottom",
+        start: "top 100%",
         end: "bottom 20%",
         toggleActions: "play none none reverse",
         onEnter: () => {
@@ -976,7 +976,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Image Slider Section
     ScrollTrigger.create({
         trigger: "#image-slider",
-        start: "top bottom",
+        start: "top 100%",
         end: "bottom 20%",
         toggleActions: "play none none reverse",
         onEnter: () => {
@@ -1010,7 +1010,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // RSVP Section
     ScrollTrigger.create({
         trigger: "#rsvp",
-        start: "top bottom",
+        start: "top 100%",
         end: "bottom 20%",
         toggleActions: "play none none reverse",
         onEnter: () => {
@@ -1057,11 +1057,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Button click animation and functionality - optimized for smoothness
+    // Button click animation and functionality - improved smooth transition
     const heroOpenInvitationBtn = document.querySelector('.hero-open-invitation-btn');
     if (heroOpenInvitationBtn) {
         heroOpenInvitationBtn.addEventListener('click', function(e) {
-            // Button animation
+            // Prevent multiple clicks during animation
+            if (monogramTransformed) return;
+            
+            // Button press animation
             gsap.to(e.target, {
                 scale: 0.95,
                 duration: 0.15,
@@ -1072,22 +1075,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Enable scrolling if not already enabled
                     enableScrolling();
                     
-                    // Mark as transformed to prevent ScrollTrigger from firing
+                    // Mark as transformed to prevent ScrollTrigger conflicts
                     monogramTransformed = true;
                     
-                    // Smooth slide animation to wedding details section
-                    gsap.to(window, {
-                        duration: 1.5,
-                        scrollTo: {
-                            y: "#wedding-details",
-                            offsetY: 0
-                        },
-                        ease: "power2.inOut",
-                        onComplete: () => {
-                            // Trigger the monogram transformation after scroll completes
-                            transitionToWeddingDetails();
-                        }
-                    });
+                    // Start the smooth transition immediately (no pre-scroll)
+                    transitionToWeddingDetails();
                 }
             });
         });
@@ -1099,19 +1091,32 @@ document.addEventListener('DOMContentLoaded', function() {
         const heroContent = document.getElementById('hero-content');
         const contentWrapper = document.querySelector('.content-wrapper');
         const weddingDetailsSection = document.getElementById('wedding-details');
+        const backgroundImage = document.getElementById('background-image');
         
-        // Create smooth transition timeline
+        // Create smooth transition timeline with improved sequencing
         const transitionTl = gsap.timeline();
         
-        // Step 1: Fade out all other hero content except monogram
-        transitionTl.to('.hero-greeting-title, .hero-invitation-message, .hero-open-invitation-btn, .couple-names', {
-            duration: 0.6,
+        // Step 1: Zoom out monogram first (dramatic effect)
+        transitionTl.to(heroMonogram, {
+            duration: 1.0,
+            scale: 0.6,
+            ease: "power2.out"
+        })
+        // Step 2: Fade out all other hero content with stagger effect
+        .to('.hero-greeting-title, .hero-invitation-message, .hero-open-invitation-btn, .couple-names', {
+            duration: 0.8,
             opacity: 0,
-            y: -30,
+            y: -50,
             ease: "power2.in",
             stagger: 0.1
-        })
-        // Step 2: Extract monogram and make it fixed positioned
+        }, "-=0.5")
+        // Step 3: Fade out background image for clean transition
+        .to(backgroundImage, {
+            duration: 0.6,
+            opacity: 0.3,
+            ease: "power2.out"
+        }, "-=0.4")
+        // Step 4: Extract monogram and make it fixed positioned
         .call(() => {
             // Move monogram out of the content wrapper to body
             document.body.appendChild(heroMonogram);
@@ -1120,43 +1125,47 @@ document.addEventListener('DOMContentLoaded', function() {
             position: 'fixed',
             top: '50%',
             left: '50%',
-            transform: 'translate(-50%, -50%)',
+            transform: 'translate(-50%, -50%) scale(0.6)',
             zIndex: 50
         })
-        // Step 3: Zoom out and move monogram to top
+        // Step 5: Move monogram to final position while fading content completely
         .to(heroMonogram, {
-            duration: 1.2,
-            scale: 0.5,
+            duration: 0.8,
             top: '0.2rem',
-            transform: 'translateX(-50%)',
+            transform: 'translateX(-50%) scale(0.6)',
             ease: "power2.out"
         })
-        // Step 4: Hide hero section completely
         .to(contentWrapper, {
-            duration: 0.5,
+            duration: 0.6,
             opacity: 0,
             ease: "power2.out"
-        }, "-=0.8")
+        }, "-=0.6")
+        // Step 6: Hide hero sections completely
         .set(contentWrapper, {
             display: 'none'
         })
-        // Hide the entire dynamic section to prevent overlap
         .set('.dynamic-section', {
             display: 'none'
         })
-        // Step 5: Smooth scroll to wedding details section using ScrollToPlugin
+        // Step 7: Restore background image opacity for next section
+        .to(backgroundImage, {
+            duration: 0.4,
+            opacity: 1,
+            ease: "power2.out"
+        })
+        // Step 8: Smooth scroll to wedding details section
         .to(window, {
-            duration: 1.5,
+            duration: 1.8,
             scrollTo: {
                 y: weddingDetailsSection,
                 offsetY: 0
             },
             ease: "power2.inOut"
-        }, "+=0.5")
-        // Step 6: Animate wedding details content after scroll completes
+        }, "+=0.3")
+        // Step 9: Animate wedding details content after scroll completes
         .call(() => {
             animateWeddingDetailsContent();
-        }, null, "+=0.2");
+        }, null, "+=0.3");
     }
     
     // Function to animate wedding details content
@@ -1197,73 +1206,33 @@ document.addEventListener('DOMContentLoaded', function() {
             opacity: 1, 
             y: 0, 
             ease: "power2.out" 
-        }, "+=0.05");
+        }, "+=0.05")
+        .call(() => {
+            // Force show the sticky RSVP button
+            const stickyRSVP = document.getElementById('sticky-rsvp');
+            if (stickyRSVP) {
+                console.log('Forcing RSVP button visible after wedding details load');
+                gsap.set(stickyRSVP, { opacity: 1 });
+                stickyRSVP.style.pointerEvents = 'auto';
+                stickyRSVP.style.display = 'flex';
+            }
+        }, null, "+=0.2");
     }
     
-    // Sticky RSVP Button functionality
+    // Sticky RSVP Button functionality - Show from wedding details (2nd page) onwards
     const stickyRSVP = document.getElementById('sticky-rsvp');
-    const rsvpSection = document.getElementById('rsvp');
-    const weddingDetailsSection = document.getElementById('wedding-details');
     
-    // Show sticky RSVP from wedding details section onwards
+    // Show RSVP from wedding details section onwards - SIMPLE VERSION
     ScrollTrigger.create({
         trigger: "#wedding-details",
-        start: "top 50%",
-        end: "bottom bottom",
+        start: "top 90%",
         onEnter: () => {
-            // Only show if monogram has been transformed (meaning we're in the 2nd section properly)
-            if (monogramTransformed) {
-                gsap.to(stickyRSVP, {
-                    duration: 0.5,
-                    opacity: 1,
-                    ease: "power2.out"
-                });
+            console.log('Wedding details in view - ensuring RSVP button visible');
+            if (stickyRSVP) {
+                gsap.set(stickyRSVP, { opacity: 1 });
                 stickyRSVP.style.pointerEvents = 'auto';
+                stickyRSVP.style.display = 'flex';
             }
-        },
-        onLeave: () => {
-            // Keep it visible until RSVP section
-        },
-        onEnterBack: () => {
-            if (monogramTransformed) {
-                gsap.to(stickyRSVP, {
-                    duration: 0.5,
-                    opacity: 1,
-                    ease: "power2.out"
-                });
-                stickyRSVP.style.pointerEvents = 'auto';
-            }
-        },
-        onLeaveBack: () => {
-            gsap.to(stickyRSVP, {
-                duration: 0.5,
-                opacity: 0,
-                ease: "power2.out"
-            });
-            stickyRSVP.style.pointerEvents = 'none';
-        }
-    });
-    
-    // Hide sticky RSVP when reaching RSVP section
-    ScrollTrigger.create({
-        trigger: "#rsvp",
-        start: "top bottom",
-        end: "bottom bottom",
-        onEnter: () => {
-            gsap.to(stickyRSVP, {
-                duration: 0.5,
-                opacity: 0,
-                ease: "power2.out"
-            });
-            stickyRSVP.style.pointerEvents = 'none';
-        },
-        onLeaveBack: () => {
-            gsap.to(stickyRSVP, {
-                duration: 0.5,
-                opacity: 1,
-                ease: "power2.out"
-            });
-            stickyRSVP.style.pointerEvents = 'auto';
         }
     });
     
