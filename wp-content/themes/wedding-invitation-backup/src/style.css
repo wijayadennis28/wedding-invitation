@@ -1,0 +1,198 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Remove any default margins/padding that might cause white borders */
+body, html {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden;
+}
+
+section {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Hero section background - will be set via inline CSS in PHP */
+.hero-section {
+    background-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 200px, transparent 400px), url('../images/wedding-landscape.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    position: relative;
+    z-index: 1;
+}
+
+/* Invitation section background */
+.invitation-section {
+    position: relative;
+    z-index: 1;
+}
+
+/* Add gradient overlay to second section - dark at top, transparent at bottom */
+.invitation-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 400px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 200px, transparent 400px);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Monogram styling */
+.monogram-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: -10px;
+    position: relative;
+    z-index: 10;
+}
+
+.groom-initial {
+    font-family: 'Allura', cursive;
+    font-size: 150px;
+    color: white;
+}
+
+.bride-initial {
+    font-family: 'Aniyah Personal Use';
+    font-size: 100px;
+    color: white;
+    margin-top: -65px;
+    margin-left: -3px;
+}
+
+/* Ensure monogram stays visible when scaled down */
+.monogram-combined {
+    position: relative;
+    z-index: 9999;
+    will-change: transform, opacity;
+}
+
+/* Couple names styling */
+.couple-names {
+    display: block !important;
+    text-align: center !important;
+    margin: 0 auto !important;
+    color: white !important;
+}
+
+/* Invitation Section - removed duplicate, using the one defined above */
+
+/* Small Monogram for second section */
+.small-monogram-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: -5px;
+    margin-top: -4rem;
+}
+
+.small-groom-initial {
+    font-family: 'Allura', cursive;
+    font-size: 60px;
+    color: white;
+}
+
+.small-bride-initial {
+    font-family: 'Aniyah Personal Use';
+    font-size: 40px;
+    color: white;
+}
+
+/* Invitation text styling */
+.greeting-title {
+    font-family: 'Helvetica', sans-serif;
+}
+
+.invitation-message {
+    font-family: 'Helvetica', sans-serif;
+}
+
+/* Open invitation button */
+.open-invitation-btn {
+    font-family: 'Helvetica', sans-serif;
+    letter-spacing: 2px;
+}
+
+.reveal-text {
+    font-family: 'Helvetica', sans-serif;
+}
+
+/* Perfect text centering */
+h1 {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
+    display: block !important;
+}
+
+/* Mobile-specific background fixes */
+@media (max-width: 768px) {
+    .min-h-screen {
+        background-attachment: scroll !important;
+        background-size: cover !important;
+        background-position: center center !important;
+        min-height: 100vh;
+        min-height: 100svh; /* For newer browsers with small viewport height */
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* Use portrait image on mobile */
+    .hero-section {
+        background-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 200px, transparent 400px), url('../images/wedding.png') !important;
+    }
+    
+    /* Mobile text positioning - move content to center */
+    .pt-32 {
+        padding-top: 50vh !important;
+        transform: translateY(-50%) !important;
+    }
+    
+    /* Reduce font sizes on mobile */
+    .groom-initial {
+        font-size: 120px !important;
+    }
+    
+    .bride-initial {
+        font-size: 80px !important;
+    }
+    
+    .couple-names {
+        font-size: 14px !important;
+        letter-spacing: 0.2em !important;
+    }
+}
+
+/* Ensure full coverage on all devices */
+@media (orientation: portrait) {
+    .min-h-screen {
+        background-size: cover !important;
+        background-position: center center !important;
+    }
+    
+    /* Use portrait image on portrait orientation */
+    .hero-section {
+        background-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 200px, transparent 400px), url('../images/wedding.png') !important;
+    }
+    
+    /* Portrait mode - center content vertically */
+    .pt-32 {
+        padding-top: 50vh !important;
+        transform: translateY(-50%) !important;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+    .min-h-screen {
+        background-size: cover !important;
+        background-position: center center !important;
+    }
+}

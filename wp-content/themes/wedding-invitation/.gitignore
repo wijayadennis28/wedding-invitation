@@ -1,0 +1,27 @@
+# Ignore node modules
+node_modules/
+
+# Ignore build artifacts (if any)
+dist/
+build/
+
+# Ignore OS and editor files
+.DS_Store
+*.log
+
+# Ignore package lock
+package-lock.json
+package.json
+tailwind.config.js
+webpack.config.js
+postcss.config.js
+
+# Ignore other temp files
+npm-debug.log*
+.env
+
+# Ignore Tailwind JIT cache
+.jit/
+
+# Ignore VS Code settings
+.vscode/

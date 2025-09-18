@@ -1,0 +1,549 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:wght@400;700&family=Allura&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Remove any default margins/padding that might cause white borders */
+body, html {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden;
+}
+
+section {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Hero section background - will be set via inline CSS in PHP */
+.hero-section {
+    background-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 200px, transparent 400px), url('../images/wedding-landscape.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    position: relative;
+    z-index: 1;
+}
+
+/* Invitation section background */
+.invitation-section {
+    position: relative;
+    z-index: 1;
+}
+
+/* Add gradient overlay to second section - dark at top, transparent at bottom */
+.invitation-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 400px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 200px, transparent 400px);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Monogram styling */
+.monogram-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: -10px;
+    position: relative;
+    z-index: 10;
+}
+
+.groom-initial {
+    font-family: 'Allura', cursive;
+    font-size: 150px;
+    color: white;
+}
+
+.bride-initial {
+    font-family: 'Aniyah Personal Use';
+    font-size: 100px;
+    color: white;
+    margin-top: -65px;
+    margin-left: -3px;
+}
+
+.playfair-display-italic {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 400; /* or 700, etc. */
+  font-style: italic;
+}
+
+.playfair-display {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 400; /* or 700, etc. */
+  font-style: normal;
+}
+
+.wedding-title {
+    font-family: "Playfair Display", serif;
+    font-optical-sizing: auto;
+    font-weight: 400; /* or 700, etc. */
+    font-style: italic;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.wedding-date {
+    font-family: "Playfair Display", serif;
+    font-optical-sizing: auto;
+    font-weight: 400; /* or 700, etc. */
+    font-style: normal;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.bible-verse {
+    font-family: "Playfair Display", serif;
+    font-optical-sizing: auto;
+    font-weight: 400; /* or 700, etc. */
+    font-style: italic;
+    color: white;
+}
+
+.verse-reference {
+    font-family: "Playfair Display", serif;
+    font-optical-sizing: auto;
+    font-weight: 400; /* or 700, etc. */
+    font-style: normal;
+    color: white;
+}
+
+.person-name {
+    font-family: "Montserrat", serif;
+    font-optical-sizing: auto;
+    font-weight: 400; /* or 700, etc. */
+    font-style: normal;
+    color: white;
+    letter-spacing: 5px;
+    line-height: 1.4;
+}
+
+.person-details {
+    font-family: "Playfair Display", serif;
+    font-optical-sizing: auto;
+    font-weight: 400; /* or 700, etc. */
+    font-style: italic;
+    color: white;
+}
+
+
+/* Ensure monogram stays visible when scaled down */
+.monogram-combined {
+    position: relative;
+    z-index: 9999;
+    will-change: transform, opacity;
+}
+
+/* Couple names styling */
+.couple-names {
+    display: block !important;
+    text-align: center !important;
+    margin: 0 auto !important;
+    color: white !important;
+}
+
+/* Invitation Section - removed duplicate, using the one defined above */
+
+/* Small Monogram for second section */
+.small-monogram-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: -5px;
+    margin-top: -4rem;
+}
+
+.small-groom-initial {
+    font-family: 'Allura', cursive;
+    font-size: 60px;
+    color: white;
+}
+
+.small-bride-initial {
+    font-family: 'Aniyah Personal Use';
+    font-size: 40px;
+    color: white;
+}
+
+/* Invitation text styling */
+.greeting-title {
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: 5px;
+    line-height: 1.4;
+}
+
+.invitation-message {
+    font-family: "Playfair Display", serif;
+    font-optical-sizing: auto;
+    font-weight: 400; /* or 700, etc. */
+    font-style: italic;
+}
+
+.reception-intro,
+.ceremony-intro {
+    font-family: "Playfair Display", serif;
+    font-optical-sizing: auto;
+    font-weight: 400; /* or 700, etc. */
+    font-style: italic;
+    font-size: 0.9rem;
+    color: white;
+}
+
+.reception-title,
+.ceremony-title {
+    font-family: "Montserrat", serif;
+    font-optical-sizing: auto;
+    font-weight: 400; /* or 700, etc. */
+    font-style: normal;
+    color: white;
+    margin-bottom: 1rem;
+    letter-spacing: 5px;
+    line-height: 1.4;
+}
+
+.reception-time,
+.ceremony-time {
+    font-family: "Montserrat", serif;
+    font-optical-sizing: auto;
+    font-weight: 600; /* or 700, etc. */
+    font-style: normal;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.reception-place,
+.ceremony-place {
+    font-family: "Montserrat", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    color: white;
+    letter-spacing: 5px;
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+}
+
+.reception-address,
+.ceremony-address {
+    font-family: "Playfair Display", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: italic;
+    color: white;
+}
+
+.love-story-title,
+.love-quote {
+    font-family: "Playfair Display", serif;
+    font-optical-sizing: auto;
+    font-weight: 400; /* or 700, etc. */
+    font-style: italic;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.final-love-story-title,
+.final-love-story-narrative,
+.detailed-love-story-title,
+.love-story-narrative{
+    font-family: "Playfair Display", serif;
+    font-optical-sizing: auto;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.slider-quote-line1,
+.slider-quote-line2,
+.slider-quote-line3,
+.slider-quote-line4,
+.slider-quote-line5,
+.slider-quote-line6,
+.slider-quote-line7,
+.slider-quote-line8,
+.slider-bottom-text {
+    font-family: "Playfair Display", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: italic;
+    color: white;
+}
+
+.slider-image-placeholder {
+    transition: all 0.3s ease;
+}
+
+.slider-nav button {
+    backdrop-filter: blur(4px);
+    transition: all 0.3s ease;
+}
+
+.slider-nav button:hover {
+    transform: scale(1.1);
+}
+
+/* Open invitation button */
+.open-invitation-btn {
+    font-family: "Montserrat", sans-serif;
+    letter-spacing: 3px;
+}
+
+.reveal-text {
+    font-family: "Playfair Display", serif;
+    font-optical-sizing: auto;
+    font-weight: 400; 
+    font-style: italic;
+}
+
+/* Perfect text centering */
+h1 {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
+    display: block !important;
+}
+
+/* Mobile-specific background fixes */
+@media (max-width: 768px) {
+    .min-h-screen {
+        background-attachment: scroll !important;
+        background-size: cover !important;
+        background-position: center center !important;
+        min-height: 100vh;
+        min-height: 100svh; /* For newer browsers with small viewport height */
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* Use portrait image on mobile */
+    .hero-section {
+        background-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 200px, transparent 400px), url('../images/wedding.png') !important;
+    }
+    
+    /* Mobile text positioning - move content to center */
+    .pt-32 {
+        padding-top: 50vh !important;
+        transform: translateY(-50%) !important;
+    }
+    
+    /* Reduce font sizes on mobile */
+    .groom-initial {
+        font-size: 120px !important;
+    }
+    
+    .bride-initial {
+        font-size: 80px !important;
+    }
+    
+    .couple-names {
+        font-size: 14px !important;
+        letter-spacing: 0.2em !important;
+    }
+}
+
+/* Ensure full coverage on all devices */
+@media (orientation: portrait) {
+    .min-h-screen {
+        background-size: cover !important;
+        background-position: center center !important;
+    }
+    
+    /* Use portrait image on portrait orientation */
+    .hero-section {
+        background-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 200px, transparent 400px), url('../images/wedding.png') !important;
+    }
+    
+    /* Portrait mode - center content vertically */
+    .pt-32 {
+        padding-top: 50vh !important;
+        transform: translateY(-50%) !important;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+    .min-h-screen {
+        background-size: cover !important;
+        background-position: center center !important;
+    }
+}
+
+/* Dynamic section for single-page approach */
+.dynamic-section {
+    position: relative;
+}
+
+.background-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+}
+
+.content-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ensure content stays perfectly centered and stable during scroll */
+#hero-content, #invitation-content {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    will-change: opacity;
+}
+
+/* Ensure hero content positioning is correct on desktop */
+#hero-content {
+    transform: translateX(-50%) translateY(-10vh);
+}
+
+@media (max-width: 768px) {
+    #hero-content {
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* ============================================================================
+   CUSTOM WEDDING INVITATION STYLES
+   ============================================================================ */
+
+/* Custom monogram styles */
+.monogram-combined {
+    font-family: 'Alex Brush', cursive;
+    font-size: 4rem;
+    line-height: 1;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    position: relative;
+    z-index: 20; /* Higher z-index to stay above other sections */
+}
+
+.monogram-combined-small {
+    font-family: 'Alex Brush', cursive;
+    font-size: 2.5rem;
+    line-height: 1;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Hero section should have higher z-index for monogram transition */
+#hero-section {
+    position: relative;
+    z-index: 10;
+}
+
+#hero-section .monogram-container {
+    position: relative;
+    z-index: 20;
+}
+
+.groom-initial, .bride-initial {
+    display: inline-block;
+}
+
+/* ============================================================================
+   INVITATION BUTTON STYLES - Clean and organized
+   ============================================================================ */
+
+/* Base button styles */
+.open-invitation-btn {
+    display: inline-block !important;
+    visibility: visible !important;
+    border: 1px solid white !important;
+    background: transparent !important;
+    color: white !important;
+    padding: 12px 32px !important;
+    font-size: 14px !important;
+    font-weight: 300 !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+}
+
+.open-invitation-btn:hover {
+    background: white !important;
+    color: black !important;
+}
+
+/* Force button to show with maximum specificity - but allow GSAP opacity control */
+#invitation-section .open-invitation-btn,
+section#invitation-section .open-invitation-btn,
+.open-invitation-btn.open-invitation-btn {
+    display: inline-block !important;
+    visibility: visible !important;
+    position: relative !important;
+    z-index: 9999 !important;
+    border: 1px solid white !important;
+    background: transparent !important;
+    color: white !important;
+    padding: 12px 32px !important;
+    font-size: 14px !important;
+    font-weight: 300 !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    clip: auto !important;
+    margin: 0 !important;
+    transform: none !important;
+}
+
+#invitation-section .open-invitation-btn:hover,
+section#invitation-section .open-invitation-btn:hover,
+.open-invitation-btn.open-invitation-btn:hover {
+    background: white !important;
+    color: black !important;
+}
+
+/* ============================================================================
+   SCROLL & ANIMATION UTILITIES
+   ============================================================================ */
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Section transitions */
+section {
+    scroll-snap-align: start;
+}
+
+/* Vertical line animation */
+.vertical-line {
+    transform-origin: top;
+    transform: scaleY(0);
+    transition: transform 1s ease-out;
+}
+
+.vertical-line.animate {
+    transform: scaleY(1);
+}
