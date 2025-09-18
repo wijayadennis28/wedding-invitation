@@ -1,0 +1,94 @@
+# WordPress Core
+wp-admin/
+wp-includes/
+wp-activate.php
+wp-blog-header.php
+wp-comments-post.php
+wp-config-sample.php
+wp-cron.php
+wp-links-opml.php
+wp-load.php
+wp-login.php
+wp-mail.php
+wp-settings.php
+wp-signup.php
+wp-trackback.php
+xmlrpc.php
+
+# WordPress Config (sensitive)
+wp-config.php
+
+# Development/Debug files
+*.php.bak
+*.sql
+debug_*.php
+test_*.php
+check_*.php
+analyze_*.php
+cleanup_*.php
+clear_*.php
+convert_*.php
+explain_*.php
+fix_*.php
+gets_*.php
+import_*.php
+reset_*.php
+simple_*.php
+souvenir_*.php
+update_*.php
+final_report.php
+admin-interface.php
+
+# Logs
+*.log
+error_log
+debug.log
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node modules (if any)
+node_modules/
+
+# Composer
+vendor/
+
+# Backup files
+*.backup
+*.bak
+*.tmp
+
+# Database dumps
+*.sql
+*.sql.gz
+
+# Uploads (usually ignored in production)
+wp-content/uploads/
+
+# Cache
+wp-content/cache/
+wp-content/advanced-cache.php
+wp-content/wp-cache-config.php
+
+# WordPress themes (keep only custom themes)
+wp-content/themes/twenty*/
+
+# WordPress plugins (keep only custom plugins)
+wp-content/plugins/akismet/
+wp-content/plugins/hello.php
+
+# WordPress language files
+wp-content/languages/
