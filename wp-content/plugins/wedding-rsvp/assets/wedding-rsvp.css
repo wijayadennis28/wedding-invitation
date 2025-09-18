@@ -1,0 +1,361 @@
+/* Wedding RSVP Plugin Styles */
+
+.rsvp-form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.rsvp-form-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.rsvp-form-header h2 {
+    color: #2c3e50;
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    font-weight: 300;
+}
+
+.rsvp-form-header p {
+    color: #7f8c8d;
+    font-size: 1.1em;
+    line-height: 1.6;
+}
+
+.personalized-greeting {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.personalized-greeting h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.8em;
+    font-weight: 400;
+}
+
+.personalized-names {
+    font-size: 1.3em;
+    font-weight: 600;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.guest-responses {
+    margin-bottom: 40px;
+    border: 2px solid #ecf0f1;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.guest-responses.error {
+    border-color: #e74c3c;
+    background-color: #fdf2f2;
+}
+
+.guest-header {
+    background: #3498db;
+    color: white;
+    padding: 20px;
+    margin: 0;
+    font-size: 1.3em;
+    font-weight: 500;
+}
+
+.guest-events {
+    padding: 25px;
+}
+
+.event-response {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    border-left: 4px solid #ecf0f1;
+}
+
+.event-response.attending {
+    background: #e8f5e8;
+    border-left-color: #27ae60;
+}
+
+.event-response:last-child {
+    margin-bottom: 0;
+}
+
+.event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.event-info h4 {
+    color: #2c3e50;
+    margin: 0 0 5px 0;
+    font-size: 1.4em;
+}
+
+.event-details {
+    color: #7f8c8d;
+    font-size: 0.95em;
+}
+
+.attendance-options {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.attendance-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: white;
+    border: 2px solid #ecf0f1;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.attendance-option:hover {
+    border-color: #3498db;
+    transform: translateY(-1px);
+}
+
+.attendance-option.selected {
+    background: #3498db;
+    color: white;
+    border-color: #2980b9;
+}
+
+.attendance-option input[type="radio"] {
+    margin: 0;
+    width: 18px;
+    height: 18px;
+}
+
+.additional-info {
+    margin-top: 25px;
+    padding-top: 25px;
+    border-top: 1px solid #ecf0f1;
+    display: none;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ecf0f1;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.3s ease;
+}
+
+.form-group textarea:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.rsvp-submit {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.rsvp-submit button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 18px 50px;
+    font-size: 1.2em;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.rsvp-submit button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.rsvp-submit button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.rsvp-messages {
+    margin-bottom: 30px;
+    display: none;
+}
+
+.rsvp-message {
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.rsvp-message.notice-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.rsvp-message.notice-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.rsvp-thank-you {
+    text-align: center;
+    padding: 60px 30px;
+    display: none;
+}
+
+.rsvp-thank-you h2 {
+    color: #27ae60;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.rsvp-thank-you p {
+    color: #7f8c8d;
+    font-size: 1.2em;
+    line-height: 1.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .rsvp-form-container {
+        margin: 20px;
+        padding: 20px;
+    }
+    
+    .rsvp-form-header h2 {
+        font-size: 2em;
+    }
+    
+    .event-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .attendance-options {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .attendance-option {
+        justify-content: center;
+    }
+    
+    .guest-events {
+        padding: 20px;
+    }
+    
+    .event-response {
+        padding: 20px;
+    }
+}
+
+/* Animation for form interactions */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.guest-responses {
+    animation: slideInUp 0.5s ease-out;
+}
+
+/* Custom radio button styling */
+.attendance-option input[type="radio"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #bdc3c7;
+    border-radius: 50%;
+    position: relative;
+    background: white;
+}
+
+.attendance-option input[type="radio"]:checked {
+    border-color: #3498db;
+}
+
+.attendance-option input[type="radio"]:checked::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #3498db;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.attendance-option.selected input[type="radio"]:checked::after {
+    background: white;
+}
+
+/* Loading state */
+.rsvp-form-container.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.rsvp-form-container.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
