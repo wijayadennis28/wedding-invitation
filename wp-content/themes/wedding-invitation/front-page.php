@@ -986,6 +986,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // ScrollTrigger animations for all individual sections
     
+<<<<<<< HEAD
     // Button click handler for open invitation
     const openInvitationBtn = document.querySelector('.hero-open-invitation-btn');
     if (openInvitationBtn) {
@@ -993,6 +994,18 @@ document.addEventListener('DOMContentLoaded', function() {
             // Only run if monogram hasn't been transformed yet
             if (monogramTransformed) return;
             
+=======
+    // Hero to Wedding Details transition with flip effect
+    ScrollTrigger.create({
+        trigger: "#wedding-details",
+        start: "top 95%",
+        end: "top 50%",
+        onEnter: () => {
+            // Only run if monogram hasn't been transformed yet
+            if (monogramTransformed) return;
+            
+            // Create flip state animation with single monogram
+>>>>>>> master
             const heroMonogram = document.querySelector('.monogram-combined');
             const heroContent = document.getElementById('hero-content');
             const contentWrapper = document.querySelector('.content-wrapper');
@@ -1000,11 +1013,18 @@ document.addEventListener('DOMContentLoaded', function() {
             // Mark as transformed to prevent duplicate animations
             monogramTransformed = true;
             
+<<<<<<< HEAD
             // Enable scrolling
             document.body.style.overflow = 'auto';
             document.documentElement.style.overflow = 'auto';
             
             // Create simple animation timeline
+=======
+            // Get current position BEFORE any changes
+            // Skip getBoundingClientRect for Safari mobile compatibility
+            
+            // Hide all hero content first, then transform monogram
+>>>>>>> master
             const tl = gsap.timeline();
             
             // Step 1: Fade out all other hero content but keep monogram
@@ -1013,6 +1033,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 opacity: 0,
                 ease: "power2.out"
             })
+<<<<<<< HEAD
             // Step 2: Simple animation to top with scale
             .to(heroMonogram, {
                 duration: 1.2,
@@ -1041,6 +1062,46 @@ document.addEventListener('DOMContentLoaded', function() {
             .set('.dynamic-section', {
                 display: 'none'
             })
+=======
+            // Step 2: Extract monogram and maintain center position
+            .call(() => {
+                // Move monogram out of the content wrapper to body
+                document.body.appendChild(heroMonogram);
+                
+                // Use simple center positioning to avoid Safari viewport issues
+                gsap.set(heroMonogram, {
+                    position: 'fixed',
+                    left: '50%',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    zIndex: 50,
+                    opacity: 1,
+                    scale: 1
+                });
+            })
+            // Step 3: Hide the content wrapper
+            .to(contentWrapper, {
+                duration: 0.3,
+                opacity: 0,
+                ease: "power2.out"
+            }, "-=0.2")
+            .set(contentWrapper, {
+                display: 'none'
+            })
+            .set('.dynamic-section', {
+                display: 'none'
+            })
+            // Step 4: Smoothly zoom out and move to final position
+            .to(heroMonogram, {
+                duration: 1.2,
+                scale: 0.6,
+                left: '50%',
+                top: '1.5rem',
+                transform: 'translate(-50%, 0)',
+                ease: "power2.inOut"
+            }, "+=0.2")
+            // Step 5: Start wedding details animation
+>>>>>>> master
             .to('#wedding-details .wedding-title', { 
                 duration: 1, 
                 opacity: 1, 
@@ -1077,8 +1138,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 y: 0, 
                 ease: "power2.out" 
             }, "+=0.1");
+<<<<<<< HEAD
         });
     }
+=======
+        }
+    });
+>>>>>>> master
     
     // Wedding Details Section (content only, transition handled above)
     
@@ -1335,20 +1401,42 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
+<<<<<<< HEAD
         // Step 1: Start with smooth zoom out while keeping position
         transitionTl.to(heroMonogram, {
             duration: 1.2,
             scale: 0.6,
+=======
+        // Step 1: Start with a subtle zoom out while keeping position
+        transitionTl.to(heroMonogram, {
+            duration: 0.8,
+            scale: 0.8,
+>>>>>>> master
             ease: "power2.out"
         })
         // Step 2: Fade out all other hero content with stagger effect
         .to('.hero-greeting-title, .hero-invitation-message, .hero-open-invitation-btn, .couple-names', {
+<<<<<<< HEAD
             duration: 0.8,
             opacity: 0,
             y: -30,
             ease: "power2.in",
             stagger: 0.06
         }, "-=1.0")
+=======
+            duration: 0.6,
+            opacity: 0,
+            y: -40,
+            ease: "power2.in",
+            stagger: 0.08
+        }, "-=0.6")
+        // Step 3: Continue zooming out monogram
+        .to(heroMonogram, {
+            duration: 0.6,
+            scale: 0.6,
+            ease: "power1.inOut"
+        })
+>>>>>>> master
         // Step 4: Extract monogram and make it fixed positioned
         .call(() => {
             // Get current position before moving
@@ -1389,13 +1477,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 position: 'fixed',
                 left: currentXPercent + '%',
                 top: currentY,
+<<<<<<< HEAD
                 scale: 0.6,
                 x: '-50%',
                 y: '-50%',
+=======
+                transform: 'translate(-50%, -50%) scale(0.6)',
+>>>>>>> master
                 zIndex: 50,
                 opacity: 1
             });
         })
+<<<<<<< HEAD
         // Step 3: Move monogram to final sticky position with smooth transition
         .to(heroMonogram, {
             duration: 1.2,
@@ -1411,6 +1504,22 @@ document.addEventListener('DOMContentLoaded', function() {
             opacity: 0,
             ease: "power2.out"
         }, "-=0.6")
+=======
+        // Step 5: Move monogram to final sticky position
+        .to(heroMonogram, {
+            duration: 1.0,
+            left: '50%',
+            top: '1rem',
+            transform: 'translateX(-50%) scale(0.6)',
+            ease: "power2.inOut"
+        }, "+=0.1")
+        // Step 6: Hide content wrapper
+        .to(contentWrapper, {
+            duration: 0.5,
+            opacity: 0,
+            ease: "power2.out"
+        }, "-=0.8")
+>>>>>>> master
         // Step 7: Clean up hero sections
         .set(contentWrapper, {
             display: 'none'

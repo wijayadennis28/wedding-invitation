@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 
+=======
+# BEGIN LSCACHE
+# END LSCACHE
+# BEGIN NON_LSCACHE
+# END NON_LSCACHE
+>>>>>>> master
 # BEGIN WordPress
 # The directives (lines) between "BEGIN WordPress" and "END WordPress" are
 # dynamically generated, and should only be modified via WordPress filters.
@@ -6,6 +13,7 @@
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+<<<<<<< HEAD
 RewriteBase /wedding-invitation/
 RewriteRule ^index\.php$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
@@ -14,3 +22,21 @@ RewriteRule . /wedding-invitation/index.php [L]
 </IfModule>
 
 # END WordPress
+=======
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+
+# END WordPress
+
+# DO NOT REMOVE THIS LINE AND THE LINES BELOW PWPROTECTID:DinN16RF4N
+AuthType Basic
+AuthName "Restricted Access"
+AuthUserFile /home/u910603741/domains/invitation.digital-nest.tech/public_html/.htpasswd
+Require valid-user
+# DO NOT REMOVE THIS LINE AND THE LINES ABOVE DinN16RF4N:PWPROTECTID
+
+>>>>>>> master
