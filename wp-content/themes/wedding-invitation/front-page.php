@@ -7,8 +7,8 @@ get_header(); ?>
 <!-- Single Dynamic Section -->
 <section class="dynamic-section relative min-h-screen">
     <!-- Dynamic Background Image -->
-    <div class="background-container fixed inset-0 z-0">
-        <img id="background-image" src="" alt="" class="w-full h-full object-cover transition-opacity duration-1000">
+    <div class="background-container fixed inset-0 z-0" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg'); background-size: cover; background-position: center;">
+        <img id="background-image" src="<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg" alt="" class="w-full h-full object-cover transition-opacity duration-1000" onload="console.log('Image loaded successfully')" onerror="console.log('Image failed to load')">
         <div id="background-overlay" class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent transition-opacity duration-1000"></div>
     </div>
     
@@ -452,7 +452,7 @@ get_header(); ?>
             <div class="slider-image-container mb-8 relative">
                 <div class="slider-image-placeholder bg-gray-800 rounded-lg overflow-hidden relative aspect-square max-w-xs mx-auto">
                     <!-- Placeholder for slider image -->
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/placeholder-hands.jpg" alt="Love Story Image" class="slider-main-image w-full h-full object-cover">
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg" alt="Love Story Image" class="slider-main-image w-full h-full object-cover">
                     
                     <!-- Navigation arrows (for future slider functionality) -->
                     <div class="slider-nav absolute inset-y-0 left-0 flex items-center">
@@ -511,13 +511,41 @@ get_header(); ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
 
 <style>
-/* Hide scrollbars but keep scrolling functionality */
+/* Hide scrollbars but keep scrolling functionality - Enhanced for Safari */
 .scrollbar-hide {
     -ms-overflow-style: none;  /* Internet Explorer 10+ */
     scrollbar-width: none;  /* Firefox */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 .scrollbar-hide::-webkit-scrollbar {
     display: none;  /* Safari and Chrome */
+    width: 0 !important;
+    height: 0 !important;
+}
+
+/* Apply to body and html when scrollbar-hide is active */
+body.scrollbar-hide,
+html.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+body.scrollbar-hide::-webkit-scrollbar,
+html.scrollbar-hide::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+/* Mobile-specific scrollbar hiding */
+@media (max-width: 768px) {
+    .scrollbar-hide,
+    body.scrollbar-hide,
+    html.scrollbar-hide {
+        -webkit-overflow-scrolling: touch;
+        overflow-x: hidden; /* Prevent horizontal scroll */
+    }
 }
 
 /* Smooth image transitions */
@@ -768,8 +796,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check if mobile device and set initial background image immediately
     let isMobile = window.innerWidth <= 768;
     const initialImageSrc = isMobile ? 
-        '<?php echo function_exists('get_hero_background_image') ? get_hero_background_image(true) : get_template_directory_uri() . '/assets/images/wedding.png'; ?>' : 
-        '<?php echo function_exists('get_hero_background_image') ? get_hero_background_image(false) : get_template_directory_uri() . '/assets/images/wedding-landscape.png'; ?>';
+        '<?php echo function_exists('get_hero_background_image') ? get_hero_background_image(true) : get_template_directory_uri() . '/assets/images/s.jpg'; ?>' : 
+        '<?php echo function_exists('get_hero_background_image') ? get_hero_background_image(false) : get_template_directory_uri() . '/assets/images/s.jpg'; ?>';
     
     // Set the correct image immediately to prevent flash
     backgroundImage.src = initialImageSrc;
@@ -908,10 +936,14 @@ document.addEventListener('DOMContentLoaded', function() {
         y: 0,
         ease: "power2.out"
     }, "+=0.3")
-    // Enable scrolling after animation completes
+    // Enable scrolling after animation completes with hidden scrollbars
     .call(() => {
         scrollEnabled = true;
         document.body.style.overflow = 'auto';
+        document.documentElement.style.overflow = 'auto';
+        // Hide scrollbars but keep functionality
+        document.body.classList.add('scrollbar-hide');
+        document.documentElement.classList.add('scrollbar-hide');
         
         // Enable button clicking only after it's fully visible
         const openBtn = document.querySelector('.hero-open-invitation-btn');
@@ -920,12 +952,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Function to enable scrolling
+    // Function to enable scrolling with hidden scrollbars
     function enableScrolling() {
         if (!scrollEnabled) {
             scrollEnabled = true;
             document.body.style.overflow = 'auto';
             document.documentElement.style.overflow = 'auto';
+            // Add classes to hide scrollbars
+            document.body.classList.add('scrollbar-hide');
+            document.documentElement.classList.add('scrollbar-hide');
         }
     }
     
@@ -1300,7 +1335,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         duration: 0.2,
                         ease: "back.out(1.2)",
                         onComplete: () => {
-                            // Enable scrolling if not already enabled
+                            // Enable scrolling when button is clicked
                             enableScrolling();
                             
                             // Mark as transformed to prevent ScrollTrigger conflicts
@@ -1326,111 +1361,73 @@ document.addEventListener('DOMContentLoaded', function() {
         const contentWrapper = document.querySelector('.content-wrapper');
         const weddingDetailsSection = document.getElementById('wedding-details');
         
-        // Create smooth transition timeline - simplified approach
+        // Create smooth transition timeline - simplified and improved
         const transitionTl = gsap.timeline({
             onComplete: () => {
                 // Re-enable scrolling after transition
-                document.body.style.overflow = '';
-                document.documentElement.style.overflow = '';
+                enableScrolling();
             }
         });
         
-        // Step 1: Start with smooth zoom out while keeping position
+        // Step 1: Smooth scale down while keeping centered
         transitionTl.to(heroMonogram, {
-            duration: 1.2,
-            scale: 0.6,
-            ease: "power2.out"
+            duration: 1.5,
+            scale: 0.5,
+            ease: "power2.inOut"
         })
-        // Step 2: Fade out all other hero content with stagger effect
+        // Step 2: Fade out other content smoothly
         .to('.hero-greeting-title, .hero-invitation-message, .hero-open-invitation-btn, .couple-names', {
-            duration: 0.8,
+            duration: 1.0,
             opacity: 0,
-            y: -30,
-            ease: "power2.in",
-            stagger: 0.06
-        }, "-=1.0")
-        // Step 4: Extract monogram and make it fixed positioned
-        .call(() => {
-            // Get current position before moving
-            const rect = heroMonogram.getBoundingClientRect();
-            
-            // Detect device types
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-            const isRegularPhone = /Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            
-            let currentXPercent;
-            let currentY;
-            
-            if (isIOS && !isSafari) {
-                // iOS devices (but not Safari): Specific positioning for iOS apps/Chrome
-                console.log('iOS firefox detected, adjusting monogram position');
-                currentXPercent = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
-                currentY = '30%';
-            } else if (isSafari) {
-                // Safari browser (desktop or mobile): Specific positioning for Safari
-                currentXPercent = ((rect.left + rect.width / 2) / window.innerWidth) * 100 - 10;
-                currentY = '25%';
-            } else if (isRegularPhone) {
-                // Regular phones (Android, etc.): Specific positioning for other mobile devices
-                currentXPercent = ((rect.left + rect.width / 2) / window.innerWidth) * 100 - 3;
-                currentY = rect.top + rect.height / 2 - 5;
-            } else {
-                // Desktop browsers: Standard calculation
-                currentXPercent = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
-                currentY = rect.top + rect.height / 2;
-            }
-            
-            // Move to body with exact same visual position
-            document.body.appendChild(heroMonogram);
-            
-            // Set exact position to prevent jump
-            gsap.set(heroMonogram, {
-                position: 'fixed',
-                left: currentXPercent + '%',
-                top: currentY,
-                scale: 0.6,
-                x: '-50%',
-                y: '-50%',
-                zIndex: 50,
-                opacity: 1
-            });
-        })
-        // Step 3: Move monogram to final sticky position with smooth transition
+            y: -20,
+            ease: "power2.inOut",
+            stagger: 0.1
+        }, "-=1.2")
+        // Step 3: Move monogram to top center position
         .to(heroMonogram, {
             duration: 1.2,
-            left: '50%',
-            top: '1rem',
-            x: '-50%',
-            y: '0%',
+            y: -window.innerHeight * 0.35,
+            scale: 0.4,
             ease: "power2.inOut"
-        }, "+=0.1")
-        // Step 6: Hide content wrapper smoothly
-        .to(contentWrapper, {
-            duration: 0.6,
-            opacity: 0,
-            ease: "power2.out"
-        }, "-=0.6")
-        // Step 7: Clean up hero sections
-        .set(contentWrapper, {
-            display: 'none'
-        })
-        .set('.dynamic-section', {
-            display: 'none'
-        })
-        // Step 8: Smooth scroll to wedding details
-        .to(window, {
-            duration: 1.8,
-            scrollTo: {
-                y: weddingDetailsSection,
-                offsetY: 0
-            },
-            ease: "power2.inOut"
-        }, "+=0.2")
-        // Step 9: Animate wedding details content
+        }, "-=0.8")
+        // Step 4: Create the fixed positioned small monogram
         .call(() => {
-            animateWeddingDetailsContent();
-        }, null, "+=0.3");
+            // Create new small monogram for the header
+            const smallMonogram = heroMonogram.cloneNode(true);
+            smallMonogram.classList.add('small-monogram-fixed');
+            smallMonogram.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%) scale(0.3);
+                z-index: 1000;
+                opacity: 0;
+            `;
+            document.body.appendChild(smallMonogram);
+            
+            // Fade in the new small monogram
+            gsap.to(smallMonogram, {
+                duration: 0.8,
+                opacity: 1,
+                ease: "power2.out"
+            });
+            
+            // Hide the original monogram
+            gsap.to(heroMonogram, {
+                duration: 0.5,
+                opacity: 0,
+                ease: "power2.out"
+            });
+        })
+        // Step 5: Change background and show wedding details
+        .call(() => {
+            changeBackgroundImage('<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('wedding_details') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>');
+        })
+        .to(weddingDetailsSection, {
+            duration: 1.0,
+            opacity: 1,
+            ease: "power2.out"
+        });
     }
     
     // Function to animate wedding details content

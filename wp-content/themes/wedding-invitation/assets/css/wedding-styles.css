@@ -1250,7 +1250,7 @@ section {
 /* Hero section background - will be set via inline CSS in PHP */
 
 .hero-section {
-  background-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 200px, transparent 400px), url('../images/wedding-landscape.png');
+  background-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 200px, transparent 400px), url('../images/s.jpg');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -1286,9 +1286,17 @@ section {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: -10px;
+  width: 100%;
   position: relative;
   z-index: 10;
+  text-align: center;
+}
+
+.monogram-combined {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
 .groom-initial {
@@ -1301,8 +1309,10 @@ section {
   font-family: 'Aniyah Personal Use';
   font-size: 100px;
   color: white;
-  margin-top: -65px;
-  margin-left: -3px;
+  margin-top: -50px;
+  margin-left: -5px;
+  position: relative;
+  z-index: 2;
 }
 
 .playfair-display-italic {
@@ -1418,6 +1428,29 @@ section {
   font-family: 'Aniyah Personal Use';
   font-size: 40px;
   color: white;
+}
+
+/* Fixed small monogram for smooth animations */
+.small-monogram-fixed {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  position: fixed !important;
+  top: 20px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 1000 !important;
+  pointer-events: none !important;
+}
+
+.small-monogram-fixed .groom-initial {
+  font-size: 60px !important;
+}
+
+.small-monogram-fixed .bride-initial {
+  font-size: 40px !important;
+  margin-top: -25px !important;
+  margin-left: -3px !important;
 }
 
 /* Invitation text styling */
@@ -1586,7 +1619,7 @@ h1 {
   /* Use portrait image on mobile */
 
   .hero-section {
-    background-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 200px, transparent 400px), url('../images/wedding.png') !important;
+    background-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 200px, transparent 400px), url('../images/s.jpg') !important;
   }
 
   /* Mobile text positioning - move content to center */
@@ -1596,19 +1629,79 @@ h1 {
     transform: translateY(-50%) !important;
   }
 
-  /* Reduce font sizes on mobile */
+  /* Reduce font sizes on mobile and improve centering */
+
+  .monogram-container {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    position: relative !important;
+  }
 
   .groom-initial {
     font-size: 120px !important;
+    line-height: 1 !important;
   }
 
   .bride-initial {
     font-size: 80px !important;
+    margin-top: -45px !important;
+    margin-left: -5px !important;
+    line-height: 1 !important;
   }
 
   .couple-names {
     font-size: 14px !important;
     letter-spacing: 0.2em !important;
+  }
+}
+
+/* iPhone and small mobile devices */
+@media (max-width: 480px) {
+  .monogram-container {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    text-align: center !important;
+  }
+
+  .groom-initial {
+    font-size: 100px !important;
+    line-height: 0.9 !important;
+  }
+
+  .bride-initial {
+    font-size: 70px !important;
+    margin-top: -40px !important;
+    margin-left: -3px !important;
+    line-height: 0.9 !important;
+  }
+
+  .couple-names {
+    font-size: 12px !important;
+    letter-spacing: 0.15em !important;
+    margin-top: 12px !important;
+    text-align: center !important;
+  }
+}
+
+/* Extra small devices (iPhone SE, etc.) */
+@media (max-width: 375px) {
+  .groom-initial {
+    font-size: 90px !important;
+  }
+
+  .bride-initial {
+    font-size: 60px !important;
+    margin-top: -35px !important;
+  }
+
+  .couple-names {
+    font-size: 11px !important;
+    letter-spacing: 0.1em !important;
   }
 }
 
@@ -1623,7 +1716,7 @@ h1 {
   /* Use portrait image on portrait orientation */
 
   .hero-section {
-    background-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 200px, transparent 400px), url('../images/wedding.png') !important;
+    background-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 200px, transparent 400px), url('../images/s.jpg') !important;
   }
 
   /* Portrait mode - center content vertically */

@@ -983,14 +983,14 @@ function get_hero_background_image($is_mobile = false) {
             return $image_url;
         }
         // Fallback to default mobile image
-        return get_template_directory_uri() . '/assets/images/wedding.png';
+        return get_template_directory_uri() . '/assets/images/s.jpg';
     } else {
         $image_url = get_option('wedding_hero_desktop_image', '');
         if (!empty($image_url)) {
             return $image_url;
         }
         // Fallback to default desktop image
-        return get_template_directory_uri() . '/assets/images/wedding-landscape.png';
+        return get_template_directory_uri() . '/assets/images/s.jpg';
     }
 }
 
