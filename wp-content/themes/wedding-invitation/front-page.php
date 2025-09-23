@@ -8,12 +8,12 @@ get_header(); ?>
 <section class="dynamic-section relative min-h-screen">
     <!-- Dynamic Background Image -->
     <div class="background-container fixed inset-0 z-0" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg'); background-size: cover; background-position: center;">
-        <img id="background-image" src="<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg" alt="" class="w-full h-full object-cover transition-opacity duration-1000" onload="console.log('Image loaded successfully')" onerror="console.log('Image failed to load')">
+        <img id="background-image" src="<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg" alt="" class="w-full h-full object-cover transition-opacity duration-1000 responsive-bg-image" loading="eager" decoding="async" onload="console.log('Image loaded successfully')" onerror="console.log('Image failed to load')">
         <div id="background-overlay" class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent transition-opacity duration-1000"></div>
     </div>
     
-    <div class="content-wrapper fixed inset-0 flex items-center justify-center z-10">
-        <div class="w-full mx-auto px-4 text-center relative" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; max-width: none;">
+    <div class="content-wrapper fixed inset-0 flex items-center justify-center z-10 px-safe-left pr-safe-right">
+        <div class="w-full mx-auto px-3 xs:px-4 sm:px-6 md:px-8 text-center relative" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; max-width: none;">
             <?php 
             $groom_name = get_theme_mod('groom_name', 'Dennis');
             $bride_name = get_theme_mod('bride_name', 'Emilia');
@@ -21,18 +21,17 @@ get_header(); ?>
             
             <!-- Hero Content -->
             <div id="hero-content" class="content-container max-w-4xl mx-auto" style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 100%;">
-                <div class="monogram-container mb-4 sm:mb-6 leading-none">
+                <div class="monogram-container mb-3 xs:mb-4 sm:mb-6 leading-none">
                     <span class="monogram-combined">
                         <span class="groom-initial"><?php echo strtolower(substr($groom_name, 0, 1)); ?></span><span class="bride-initial"><?php echo strtolower(substr($bride_name, 0, 1)); ?></span>
                     </span>
                 </div>
                 
-                <h1 class="couple-names text-base sm:text-lg md:text-xl tracking-[0.2em] sm:tracking-[0.3em] font-medium leading-tight text-white">
-                    <?php echo strtoupper($groom_name . ' AND ' . $bride_name); ?>
+                <h1 class="couple-names text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl tracking-[0.15em] xs:tracking-[0.2em] sm:tracking-[0.3em] font-medium leading-tight text-white px-2"><?php echo strtoupper($groom_name . ' AND ' . $bride_name); ?>
                 </h1>
                 
                 <!-- Invitation greeting (initially hidden) -->
-                <h2 class="hero-greeting-title text-sm md:text-2xl font-light text-white mb-4 md:mb-6 tracking-wide text-center">
+                <h2 class="hero-greeting-title text-xs xs:text-sm sm:text-base md:text-lg lg:text-2xl font-light text-white mb-3 xs:mb-4 md:mb-6 tracking-wide text-center px-2 leading-relaxed">
                     <?php 
                     // Debug: Check if global variables are set
                     global $wedding_family_data, $wedding_guests_data;
@@ -65,13 +64,13 @@ get_header(); ?>
                 </h2>
                 
                 <!-- Invitation message at bottom (initially hidden) -->
-                <div class="hero-invitation-bottom" style="position: absolute; bottom: -200px; left: 50%; transform: translateX(-50%); width: 100%; text-align: center;">
-                    <p class="hero-invitation-message text-sm md:text-base text-white leading-relaxed mb-6 md:mb-8 max-w-md mx-auto">
+                <div class="hero-invitation-bottom" style="position: absolute; bottom: -180px; left: 50%; transform: translateX(-50%); width: 100%; text-align: center;">
+                    <p class="hero-invitation-message text-xs xs:text-sm sm:text-base md:text-lg text-white leading-relaxed mb-4 xs:mb-6 md:mb-8 max-w-xs xs:max-w-sm sm:max-w-md mx-auto px-3">
                         You are warmly invited to join us on our wedding day.<br>
                         We apologise for any misspellings of names or titles.
                     </p>
                     
-                    <button class="hero-open-invitation-btn bg-transparent border border-white text-white px-8 py-3 text-sm font-light tracking-widest hover:bg-white hover:text-black transition-all duration-300">
+                    <button class="hero-open-invitation-btn bg-transparent border border-white text-white px-4 xs:px-6 sm:px-8 py-2 xs:py-3 text-xs xs:text-sm font-light tracking-wider xs:tracking-widest hover:bg-white hover:text-black transition-all duration-300">
                         OPEN THE INVITATION
                     </button>
                 </div>
@@ -136,45 +135,45 @@ get_header(); ?>
 <section id="wedding-details" class="wedding-details-section relative min-h-screen">
     <!-- Background Image -->
     <div class="absolute inset-0 z-0">
-        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('wedding_details') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="Wedding Details" class="w-full h-full object-cover">
+        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('wedding_details') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="Wedding Details" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
         <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-black/50"></div>
     </div>
     
     <div class="relative z-10 flex items-center justify-center min-h-screen">
-        <div class="max-w-2xl mx-auto px-4 py-8 md:py-12 text-center">
+        <div class="max-w-xs xs:max-w-sm sm:max-w-lg md:max-w-2xl mx-auto px-3 xs:px-4 sm:px-6 py-6 xs:py-8 md:py-12 text-center">
             <!-- Wedding Title -->
-            <div class="wedding-title-section mb-6 md:mb-8 text-center">
-                <h2 class="wedding-title text-base md:text-xl font-light text-white mb-3 md:mb-4 tracking-wider italic">
+            <div class="wedding-title-section mb-4 xs:mb-6 md:mb-8 text-center">
+                <h2 class="wedding-title text-sm xs:text-base md:text-xl font-light text-white mb-2 xs:mb-3 md:mb-4 tracking-wider italic">
                     The wedding of
                 </h2>
-                <h1 class="wedding-couple-names text-xl md:text-3xl font-medium text-white tracking-wider leading-tight">
+                <h1 class="wedding-couple-names text-lg xs:text-xl sm:text-2xl md:text-3xl font-medium text-white tracking-wider leading-tight">
                     <?php echo strtoupper($groom_name . ' AND ' . $bride_name); ?>
                 </h1>
             </div>
             
             <!-- Wedding Date -->
-            <div class="wedding-date-section mt-4 md:mt-8 mb-8 md:mb-12 text-center">
-                <p class="wedding-date text-sm md:text-lg text-white font-light tracking-wide">
+            <div class="wedding-date-section mt-3 xs:mt-4 md:mt-8 mb-6 xs:mb-8 md:mb-12 text-center">
+                <p class="wedding-date text-xs xs:text-sm md:text-lg text-white font-light tracking-wide">
                     Saturday, 22 November 2025
                 </p>
             </div>
             
             <!-- Bible Verse -->
-            <div class="bible-verse-section mb-8 md:mb-12 text-center">
-                <p class="bible-verse text-xs md:text-base text-white font-light leading-relaxed max-w-lg mx-auto px-4">
+            <div class="bible-verse-section mb-6 xs:mb-8 md:mb-12 text-center">
+                <p class="bible-verse text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light leading-relaxed max-w-xs xs:max-w-sm sm:max-w-lg mx-auto px-2 xs:px-4">
                     "Love knows no limit to its endurance, <br>
                     no end to its trust, love still stands <br>
                     when all else has fallen."<br>
-                    <span class="verse-reference mt-6 md:mt-12 text-xs tracking-wider block">1 Corinthians 13:7-8</span>
+                    <span class="verse-reference mt-4 xs:mt-6 md:mt-12 text-2xs xs:text-xs tracking-wider block">1 Corinthians 13:7-8</span>
                 </p>
             </div>
             
             <!-- Wedding Details -->
-            <div class="wedding-info-section mb-8 md:mb-12 text-center">
-                <div class="grid grid-cols-2 gap-6 md:gap-8 max-w-lg mx-auto">
+            <div class="wedding-info-section mb-6 xs:mb-8 md:mb-12 text-center">
+                <div class="grid grid-cols-2 gap-3 xs:gap-4 sm:gap-6 md:gap-8 max-w-xs xs:max-w-sm sm:max-w-lg mx-auto">
                     <div class="groom-info">
-                        <h3 class="person-name text-base md:text-lg text-white font-medium mb-2">Dennis <br>Wijaya</h3>
-                        <p class="person-details text-xs md:text-sm text-white font-light">
+                        <h3 class="person-name text-sm xs:text-base md:text-lg text-white font-medium mb-1 xs:mb-2">Dennis <br>Wijaya</h3>
+                        <p class="person-details text-2xs xs:text-xs md:text-sm text-white font-light">
                             First son of<br>
                             <b>Saleh Widjaja </b> and<br>
                             <b>Soesi Wijaya </b>
@@ -182,8 +181,8 @@ get_header(); ?>
                     </div>
                     
                     <div class="bride-info">
-                        <h3 class="person-name text-base md:text-lg text-white font-medium mb-2">Emilia Bewintara</h3>
-                        <p class="person-details text-xs md:text-sm text-white font-light">
+                        <h3 class="person-name text-sm xs:text-base md:text-lg text-white font-medium mb-1 xs:mb-2">Emilia Bewintara</h3>
+                        <p class="person-details text-2xs xs:text-xs md:text-sm text-white font-light">
                             Second daughter of<br>
                             <b>Budy Bewintara </b> and<br>
                             <b>Lindawati</b>
@@ -199,28 +198,28 @@ get_header(); ?>
 <section id="ceremony-reception" class="ceremony-reception-section relative min-h-screen">
     <!-- Background Image -->
     <div class="absolute inset-0 z-0">
-        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('ceremony_reception') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="Ceremony Reception" class="w-full h-full object-cover">
+        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('ceremony_reception') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="Ceremony Reception" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-black/60"></div>
     </div>
     
     <div class="relative z-10 flex items-center justify-center min-h-screen">
-        <div class="max-w-2xl mx-auto px-4 py-8 md:py-12 text-center">
-            <p class="ceremony-intro text-xs md:text-sm text-white font-light mb-2">We request the blessing of your presence as we are united in</p>
-            <h2 class="ceremony-title text-lg md:text-xl tracking-widest mb-2 text-white font-semibold">HOLY MATRIMONY</h2>
-            <div class="ceremony-time text-sm md:text-base tracking-wider mb-4 text-white font-medium">9 AM ONWARD</div>
-            <div class="ceremony-location mb-6 text-white">
-                <div class="ceremony-place font-semibold tracking-widest text-sm md:text-lg">GEREJA KATOLIK<br>SANTO LAURENSIUS</div>
-                <div class="ceremony-address text-xs md:text-sm font-light italic mt-2 mb-3">Jl. Sutera Utama No. 2, Alam Sutera<br>Tangerang, Banten 15326</div>
-                <a href="https://maps.app.goo.gl/wWV4HAQFGC6D9Xy76" target="_blank" class="ceremony-map-link text-xs underline text-white tracking-wider">VIEW MAP</a>
+        <div class="max-w-xs xs:max-w-sm sm:max-w-lg md:max-w-2xl mx-auto px-3 xs:px-4 sm:px-6 py-6 xs:py-8 md:py-12 text-center">
+            <p class="ceremony-intro text-2xs xs:text-xs md:text-sm text-white font-light mb-1 xs:mb-2">We request the blessing of your presence as we are united in</p>
+            <h2 class="ceremony-title text-base xs:text-lg md:text-xl tracking-widest mb-1 xs:mb-2 text-white font-semibold">HOLY MATRIMONY</h2>
+            <div class="ceremony-time text-xs xs:text-sm md:text-base tracking-wider mb-3 xs:mb-4 text-white font-medium">9 AM ONWARD</div>
+            <div class="ceremony-location mb-4 xs:mb-6 text-white">
+                <div class="ceremony-place font-semibold tracking-widest text-xs xs:text-sm md:text-lg">GEREJA KATOLIK<br>SANTO LAURENSIUS</div>
+                <div class="ceremony-address text-2xs xs:text-xs md:text-sm font-light italic mt-1 xs:mt-2 mb-2 xs:mb-3">Jl. Sutera Utama No. 2, Alam Sutera<br>Tangerang, Banten 15326</div>
+                <a href="https://maps.app.goo.gl/wWV4HAQFGC6D9Xy76" target="_blank" class="ceremony-map-link text-2xs xs:text-xs underline text-white tracking-wider">VIEW MAP</a>
             </div>
-            <hr class="ceremony-divider my-6 md:my-8 border-white/30">
-            <p class="reception-intro text-xs md:text-sm text-white font-light mb-2">We request the pleasure of your company at our</p>
-            <h2 class="reception-title text-lg md:text-xl font-light text-white tracking-widest mb-2">EVENING RECEPTION</h2>
-            <div class="reception-time text-sm md:text-base text-white font-semibold tracking-wider mb-4">6 PM ONWARD</div>
-            <div class="reception-location text-white mb-6">
-                <div class="reception-place font-semibold tracking-widest text-sm md:text-lg">JHL SOLITAIRE</div>
-                <div class="reception-address text-xs md:text-sm font-light italic mt-2 mb-3">Jl. Gading Serpong Boulevard,<br>Blok S no. 5, Gading Serpong,<br>Tangerang, Banten 15810</div>
-                <a href="https://maps.app.goo.gl/xPCwuyatC8ghgDd79" target="_blank" class="reception-map-link text-xs underline text-white tracking-wider">VIEW MAP</a>
+            <hr class="ceremony-divider my-4 xs:my-6 md:my-8 border-white/30">
+            <p class="reception-intro text-2xs xs:text-xs md:text-sm text-white font-light mb-1 xs:mb-2">We request the pleasure of your company at our</p>
+            <h2 class="reception-title text-base xs:text-lg md:text-xl font-light text-white tracking-widest mb-1 xs:mb-2">EVENING RECEPTION</h2>
+            <div class="reception-time text-xs xs:text-sm md:text-base text-white font-semibold tracking-wider mb-3 xs:mb-4">6 PM ONWARD</div>
+            <div class="reception-location text-white mb-4 xs:mb-6">
+                <div class="reception-place font-semibold tracking-widest text-xs xs:text-sm md:text-lg">JHL SOLITAIRE</div>
+                <div class="reception-address text-2xs xs:text-xs md:text-sm font-light italic mt-1 xs:mt-2 mb-2 xs:mb-3">Jl. Gading Serpong Boulevard,<br>Blok S no. 5, Gading Serpong,<br>Tangerang, Banten 15810</div>
+                <a href="https://maps.app.goo.gl/xPCwuyatC8ghgDd79" target="_blank" class="reception-map-link text-2xs xs:text-xs underline text-white tracking-wider">VIEW MAP</a>
             </div>
         </div>
     </div>
@@ -231,12 +230,12 @@ get_header(); ?>
 <section id="rsvp" class="rsvp-section relative min-h-screen">
     <!-- Background Image -->
     <div class="absolute inset-0 z-0">
-        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('rsvp') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="RSVP" class="w-full h-full object-cover">
+        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('rsvp') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="RSVP" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-black/60"></div>
     </div>
     
-    <div class="relative z-10 flex items-center justify-center min-h-screen py-20">
-        <div class="max-w-4xl mx-auto px-4">
+    <div class="relative z-10 flex items-center justify-center min-h-screen py-12 xs:py-16 sm:py-20">
+        <div class="max-w-xs xs:max-w-sm sm:max-w-2xl md:max-w-4xl mx-auto px-3 xs:px-4 sm:px-6">
             <?php 
             if (function_exists('render_wedding_rsvp_form')) {
                 render_wedding_rsvp_form(); 
@@ -253,34 +252,34 @@ get_header(); ?>
 <section id="love-story" class="love-story-section relative min-h-screen">
     <!-- Background Image -->
     <div class="absolute inset-0 z-0">
-        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="Love Story" class="w-full h-full object-cover">
+        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="Love Story" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-black/60"></div>
     </div>
     
     <div class="relative z-10 flex items-center justify-center min-h-screen">
-        <div class="max-w-2xl mx-auto px-4 py-8 md:py-12 text-center">
+        <div class="max-w-xs xs:max-w-sm sm:max-w-lg md:max-w-2xl mx-auto px-3 xs:px-4 sm:px-6 py-6 xs:py-8 md:py-12 text-center">
             <!-- Love Story Title -->
-            <h2 class="love-story-title text-lg md:text-2xl font-bold mb-6 md:mb-8 tracking-wider italic text-white">
+            <h2 class="love-story-title text-base xs:text-lg md:text-2xl font-bold mb-4 xs:mb-6 md:mb-8 tracking-wider italic text-white">
                 The Love Story
             </h2>
             
             <!-- Video Container -->
-            <div class="love-story-video-container mb-6 md:mb-8 relative">
-                <div class="video-placeholder bg-gray-800 rounded-lg overflow-hidden relative aspect-video max-w-xs md:max-w-md mx-auto">
+            <div class="love-story-video-container mb-4 xs:mb-6 md:mb-8 relative">
+                <div class="video-placeholder bg-gray-800 rounded-lg overflow-hidden relative aspect-video max-w-xs xs:max-w-sm md:max-w-md mx-auto">
                     <!-- Placeholder for video -->
                     <div class="video-overlay absolute inset-0 bg-black/50 flex items-center justify-center">
-                        <div class="play-button w-12 h-12 md:w-16 md:h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                            <div class="play-icon w-0 h-0 border-l-[16px] md:border-l-[20px] border-l-white border-t-[10px] md:border-t-[12px] border-t-transparent border-b-[10px] md:border-b-[12px] border-b-transparent ml-1"></div>
+                        <div class="play-button w-10 xs:w-12 md:w-16 h-10 xs:h-12 md:h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                            <div class="play-icon w-0 h-0 border-l-[12px] xs:border-l-[16px] md:border-l-[20px] border-l-white border-t-[8px] xs:border-t-[10px] md:border-t-[12px] border-t-transparent border-b-[8px] xs:border-b-[10px] md:border-b-[12px] border-b-transparent ml-1"></div>
                         </div>
                     </div>
                     <!-- Placeholder image -->
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg" alt="Love Story" class="w-full h-full object-cover">
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg" alt="Love Story" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
                 </div>
             </div>
             
             <!-- Love Quote -->
-            <div class="love-quote-section mb-6 md:mb-8">
-                <p class="love-quote text-xs md:text-base text-white font-light italic leading-relaxed max-w-sm mx-auto px-4">
+            <div class="love-quote-section mb-4 xs:mb-6 md:mb-8">
+                <p class="love-quote text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed max-w-xs xs:max-w-sm mx-auto px-2 xs:px-4">
                     "..Their paths were always aligned,<br>
                     <b>yet they never met,</b><br>
                     as if the stars were never quite set."
@@ -294,20 +293,20 @@ get_header(); ?>
 <section id="detailed-love-story" class="detailed-love-story-section relative min-h-screen">
     <!-- Background Image -->
     <div class="absolute inset-0 z-0">
-        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('detailed_love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="Detailed Love Story" class="w-full h-full object-cover">
+        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('detailed_love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="Detailed Love Story" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-black/60"></div>
     </div>
     
     <div class="relative z-10 flex items-center justify-center min-h-screen">
-        <div class="max-w-2xl mx-auto px-4 py-6 md:py-8 text-center">
+        <div class="max-w-xs xs:max-w-sm sm:max-w-lg md:max-w-2xl mx-auto px-3 xs:px-4 sm:px-6 py-4 xs:py-6 md:py-8 text-center">
             <!-- Love Story Title -->
-            <h2 class="detailed-love-story-title text-xl md:text-2xl font-bold mb-6 mt-10 tracking-wider italic text-white">
+            <h2 class="detailed-love-story-title text-base xs:text-xl md:text-2xl font-bold mb-4 xs:mb-6 mt-6 xs:mt-8 md:mt-10 tracking-wider italic text-white">
                 The Love Story
             </h2>
             
             <!-- Love Story Narrative -->
-            <div class="love-story-narrative text-white text-sm md:text-base leading-relaxed space-y-3 max-w-lg mx-auto">
-                <p class="narrative-opening text-center mb-4">
+            <div class="love-story-narrative text-white text-2xs xs:text-xs sm:text-sm md:text-base leading-relaxed space-y-2 xs:space-y-3 max-w-xs xs:max-w-sm sm:max-w-lg mx-auto">
+                <p class="narrative-opening text-center mb-3 xs:mb-4">
                     <strong>Their paths quietly overlapped.</strong><br>
                     Always in the same places,<br>
                     <strong>just never at the same time.</strong>
@@ -353,20 +352,20 @@ get_header(); ?>
 <section id="final-love-story" class="final-love-story-section relative min-h-screen">
     <!-- Background Image -->
     <div class="absolute inset-0 z-0">
-        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('final_love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="Final Love Story" class="w-full h-full object-cover">
+        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('final_love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="Final Love Story" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-black/60"></div>
     </div>
     
     <div class="relative z-10 flex items-center justify-center min-h-screen">
-        <div class="max-w-2xl mx-auto px-4 py-6 md:py-8 text-center">
+        <div class="max-w-xs xs:max-w-sm sm:max-w-lg md:max-w-2xl mx-auto px-3 xs:px-4 sm:px-6 py-4 xs:py-6 md:py-8 text-center">
             <!-- Love Story Title -->
-            <h2 class="final-love-story-title text-xl md:text-2xl font-bold mb-6 tracking-wider italic text-white">
+            <h2 class="final-love-story-title text-base xs:text-xl md:text-2xl font-bold mb-4 xs:mb-6 tracking-wider italic text-white">
                 The Love Story
             </h2>
             
             <!-- Final Love Story Narrative -->
-            <div class="final-love-story-narrative text-white text-sm md:text-base leading-relaxed space-y-3 max-w-lg mx-auto">
-                <p class="narrative-time-kind text-center mb-4">
+            <div class="final-love-story-narrative text-white text-2xs xs:text-xs sm:text-sm md:text-base leading-relaxed space-y-2 xs:space-y-3 max-w-xs xs:max-w-sm sm:max-w-lg mx-auto">
+                <p class="narrative-time-kind text-center mb-3 xs:mb-4">
                     Still, time was kind and gently played<br>
                     through work and life, the bond was laid.
                 </p>
@@ -382,8 +381,8 @@ get_header(); ?>
                 </p>
                 
                 <!-- Animated vertical line before proposal -->
-                <div class="proposal-divider flex justify-center my-6">
-                    <div class="vertical-line w-px bg-white/50 h-16"></div>
+                <div class="proposal-divider flex justify-center my-4 xs:my-6">
+                    <div class="vertical-line w-px bg-white/50 h-12 xs:h-16"></div>
                 </div>
                 
                 <p class="narrative-proposal">
@@ -414,57 +413,57 @@ get_header(); ?>
 <section id="image-slider" class="image-slider-section relative min-h-screen">
     <!-- Background Image -->
     <div class="absolute inset-0 z-0">
-        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('image_slider') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="Image Slider" class="w-full h-full object-cover">
+        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('image_slider') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="Image Slider" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-black/60"></div>
     </div>
     
     <div class="relative z-10 flex items-center justify-center min-h-screen">
-        <div class="max-w-2xl mx-auto px-4 py-6 md:py-8 text-center">
+        <div class="max-w-xs xs:max-w-sm sm:max-w-lg md:max-w-2xl mx-auto px-3 xs:px-4 sm:px-6 py-4 xs:py-6 md:py-8 text-center">
             <!-- Romantic Quote -->
-            <div class="slider-quote-section mb-8">
-                <p class="slider-quote-line1 text-sm md:text-base text-white font-light italic leading-relaxed text-center">
+            <div class="slider-quote-section mb-6 xs:mb-8">
+                <p class="slider-quote-line1 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
                     "Our paths always knew,
                 </p>
-                <p class="slider-quote-line2 text-sm md:text-base text-white font-light italic leading-relaxed text-center">
+                <p class="slider-quote-line2 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
                     though we walked unaware.
                 </p>
-                <p class="slider-quote-line3 text-sm md:text-base text-white font-light italic leading-relaxed text-center">
+                <p class="slider-quote-line3 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
                     A promise unspoken
                 </p>
-                <p class="slider-quote-line4 text-sm md:text-base text-white font-light italic leading-relaxed text-center mb-6">
+                <p class="slider-quote-line4 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center mb-4 xs:mb-6">
                     that led us here.
                 </p>
-                <p class="slider-quote-line5 text-sm md:text-base text-white font-light italic leading-relaxed text-center">
+                <p class="slider-quote-line5 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
                     We crossed many lifetimes
                 </p>
-                <p class="slider-quote-line6 text-sm md:text-base text-white font-light italic leading-relaxed text-center">
+                <p class="slider-quote-line6 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
                     to stand side by side.
                 </p>
-                <p class="slider-quote-line7 text-sm md:text-base text-white font-light italic leading-relaxed text-center">
+                <p class="slider-quote-line7 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
                     <strong>Wherever you are,</strong>
                 </p>
-                <p class="slider-quote-line8 text-sm md:text-base text-white font-light italic leading-relaxed text-center">
+                <p class="slider-quote-line8 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
                     <strong>my heart will reside."</strong>
                 </p>
             </div>
             
             <!-- Image Container -->
-            <div class="slider-image-container mb-8 relative">
-                <div class="slider-image-placeholder bg-gray-800 rounded-lg overflow-hidden relative aspect-square max-w-xs mx-auto">
+            <div class="slider-image-container mb-6 xs:mb-8 relative">
+                <div class="slider-image-placeholder bg-gray-800 rounded-lg overflow-hidden relative aspect-square max-w-xs xs:max-w-sm mx-auto">
                     <!-- Placeholder for slider image -->
                     <img src="<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg" alt="Love Story Image" class="slider-main-image w-full h-full object-cover">
                     
                     <!-- Navigation arrows (for future slider functionality) -->
                     <div class="slider-nav absolute inset-y-0 left-0 flex items-center">
-                        <button class="slider-prev bg-white/20 hover:bg-white/30 text-white p-2 ml-2 rounded-full transition-all">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button class="slider-prev bg-white/20 hover:bg-white/30 text-white p-1 xs:p-2 ml-1 xs:ml-2 rounded-full transition-all">
+                            <svg class="w-3 xs:w-4 h-3 xs:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                             </svg>
                         </button>
                     </div>
                     <div class="slider-nav absolute inset-y-0 right-0 flex items-center">
-                        <button class="slider-next bg-white/20 hover:bg-white/30 text-white p-2 mr-2 rounded-full transition-all">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button class="slider-next bg-white/20 hover:bg-white/30 text-white p-1 xs:p-2 mr-1 xs:mr-2 rounded-full transition-all">
+                            <svg class="w-3 xs:w-4 h-3 xs:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                             </svg>
                         </button>
@@ -473,8 +472,8 @@ get_header(); ?>
             </div>
             
             <!-- Bottom Quote -->
-            <div class="slider-bottom-quote mb-8">
-                <p class="slider-bottom-text text-sm md:text-base text-white font-light italic leading-relaxed text-center">
+            <div class="slider-bottom-quote mb-6 xs:mb-8">
+                <p class="slider-bottom-text text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
                     We said yes, <strong>will you say yes to us?</strong>
                 </p>
             </div>
@@ -486,7 +485,7 @@ get_header(); ?>
 <section id="rsvp" class="rsvp-section relative min-h-screen">
     <!-- Background Image -->
     <div class="absolute inset-0 z-0">
-        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('rsvp_final') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="RSVP" class="w-full h-full object-cover">
+        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('rsvp_final') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="RSVP" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
         <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-black/70"></div>
     </div>
     
@@ -511,6 +510,185 @@ get_header(); ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
 
 <style>
+/* Specific responsive image class for all background images */
+.responsive-bg-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    will-change: transform;
+}
+
+/* Performance optimizations for images */
+.responsive-bg-image {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimize-contrast;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* Responsive image handling for all screen sizes */
+.background-container {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.background-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+}
+
+/* Section background images - responsive handling */
+.wedding-details-section .absolute.inset-0,
+.ceremony-reception-section .absolute.inset-0,
+.rsvp-section .absolute.inset-0,
+.love-story-section .absolute.inset-0,
+.detailed-love-story-section .absolute.inset-0,
+.final-love-story-section .absolute.inset-0,
+.image-slider-section .absolute.inset-0 {
+    overflow: hidden;
+}
+
+.wedding-details-section img,
+.ceremony-reception-section img,
+.rsvp-section img,
+.love-story-section img,
+.detailed-love-story-section img,
+.final-love-story-section img,
+.image-slider-section img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.3s ease;
+}
+
+/* Mobile-first responsive adjustments */
+@media (max-width: 480px) {
+    .background-container img,
+    .wedding-details-section img,
+    .ceremony-reception-section img,
+    .rsvp-section img,
+    .love-story-section img,
+    .detailed-love-story-section img,
+    .final-love-story-section img,
+    .image-slider-section img {
+        object-position: center center;
+        transform: scale(1.05); /* Slight zoom for better mobile framing */
+    }
+}
+
+/* Tablet adjustments */
+@media (min-width: 481px) and (max-width: 768px) {
+    .background-container img,
+    .wedding-details-section img,
+    .ceremony-reception-section img,
+    .rsvp-section img,
+    .love-story-section img,
+    .detailed-love-story-section img,
+    .final-love-story-section img,
+    .image-slider-section img {
+        object-position: center center;
+        transform: scale(1.02); /* Minimal zoom for tablets */
+    }
+}
+
+/* Desktop and larger screens */
+@media (min-width: 769px) {
+    .background-container img,
+    .wedding-details-section img,
+    .ceremony-reception-section img,
+    .rsvp-section img,
+    .love-story-section img,
+    .detailed-love-story-section img,
+    .final-love-story-section img,
+    .image-slider-section img {
+        object-position: center center;
+        transform: scale(1);
+    }
+}
+
+/* High resolution displays */
+@media (min-width: 1200px) {
+    .background-container img,
+    .wedding-details-section img,
+    .ceremony-reception-section img,
+    .rsvp-section img,
+    .love-story-section img,
+    .detailed-love-story-section img,
+    .final-love-story-section img,
+    .image-slider-section img {
+        object-fit: cover;
+        object-position: center center;
+    }
+}
+
+/* Ultra-wide screens */
+@media (min-width: 1920px) {
+    .background-container img,
+    .wedding-details-section img,
+    .ceremony-reception-section img,
+    .rsvp-section img,
+    .love-story-section img,
+    .detailed-love-story-section img,
+    .final-love-story-section img,
+    .image-slider-section img {
+        object-fit: cover;
+        object-position: center center;
+        transform: scale(1);
+    }
+}
+
+/* Portrait orientation optimizations */
+@media (orientation: portrait) {
+    .background-container img,
+    .wedding-details-section img,
+    .ceremony-reception-section img,
+    .rsvp-section img,
+    .love-story-section img,
+    .detailed-love-story-section img,
+    .final-love-story-section img,
+    .image-slider-section img {
+        object-position: center top;
+    }
+}
+
+/* Landscape orientation optimizations */
+@media (orientation: landscape) and (max-height: 600px) {
+    .background-container img,
+    .wedding-details-section img,
+    .ceremony-reception-section img,
+    .rsvp-section img,
+    .love-story-section img,
+    .detailed-love-story-section img,
+    .final-love-story-section img,
+    .image-slider-section img {
+        object-position: center center;
+        object-fit: cover;
+    }
+}
+
+/* Retina display optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .background-container img,
+    .wedding-details-section img,
+    .ceremony-reception-section img,
+    .rsvp-section img,
+    .love-story-section img,
+    .detailed-love-story-section img,
+    .final-love-story-section img,
+    .image-slider-section img {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: optimize-contrast;
+    }
+}
+
 /* Hide scrollbars but keep scrolling functionality - Enhanced for Safari */
 .scrollbar-hide {
     -ms-overflow-style: none;  /* Internet Explorer 10+ */
@@ -826,11 +1004,38 @@ document.addEventListener('DOMContentLoaded', function() {
     const backgroundOverlay = document.getElementById('background-overlay');
     const dynamicSection = document.querySelector('.dynamic-section');
     
-    // Check if mobile device and set initial background image immediately
+    // Enhanced device detection for responsive images
     let isMobile = window.innerWidth <= 768;
-    const initialImageSrc = isMobile ? 
-        '<?php echo function_exists('get_hero_background_image') ? get_hero_background_image(true) : get_template_directory_uri() . '/assets/images/s.jpg'; ?>' : 
-        '<?php echo function_exists('get_hero_background_image') ? get_hero_background_image(false) : get_template_directory_uri() . '/assets/images/s.jpg'; ?>';
+    let isTablet = window.innerWidth > 768 && window.innerWidth <= 1024;
+    let isDesktop = window.innerWidth > 1024;
+    
+    // Function to get the appropriate image source based on screen size
+    function getResponsiveImageSrc(sectionType = 'hero') {
+        const screenWidth = window.innerWidth;
+        const isPortrait = window.innerHeight > window.innerWidth;
+        
+        if (sectionType === 'hero') {
+            // Hero section responsive images
+            if (screenWidth <= 480) {
+                // Small mobile
+                return '<?php echo function_exists('get_hero_background_image') ? get_hero_background_image(true) : get_template_directory_uri() . '/assets/images/s.jpg'; ?>';
+            } else if (screenWidth <= 768) {
+                // Large mobile/small tablet
+                return '<?php echo function_exists('get_hero_background_image') ? get_hero_background_image(true) : get_template_directory_uri() . '/assets/images/s.jpg'; ?>';
+            } else if (screenWidth <= 1024) {
+                // Tablet
+                return '<?php echo function_exists('get_hero_background_image') ? get_hero_background_image(false) : get_template_directory_uri() . '/assets/images/s.jpg'; ?>';
+            } else {
+                // Desktop and larger
+                return '<?php echo function_exists('get_hero_background_image') ? get_hero_background_image(false) : get_template_directory_uri() . '/assets/images/s.jpg'; ?>';
+            }
+        }
+        
+        // Default fallback
+        return '<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg';
+    }
+    
+    const initialImageSrc = getResponsiveImageSrc('hero');
     
     // Set the correct image immediately to prevent flash
     backgroundImage.src = initialImageSrc;
@@ -1585,23 +1790,31 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Link buttons don't need JavaScript as they use regular navigation
     
-    // Handle window resize for background image
+    // Enhanced responsive resize handler
     let resizeTimeout;
     window.addEventListener('resize', function() {
         // Debounce resize events
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
-            const newIsMobile = window.innerWidth <= 768;
+            const currentWidth = window.innerWidth;
+            const newIsMobile = currentWidth <= 768;
+            const newIsTablet = currentWidth > 768 && currentWidth <= 1024;
+            const newIsDesktop = currentWidth > 1024;
             
             // Only change image if device type actually changed
-            if (newIsMobile !== isMobile) {
-                const newSrc = newIsMobile ? 
-                    '<?php echo function_exists('get_hero_background_image') ? get_hero_background_image(true) : get_template_directory_uri() . '/assets/images/wedding.png'; ?>' : 
-                    '<?php echo function_exists('get_hero_background_image') ? get_hero_background_image(false) : get_template_directory_uri() . '/assets/images/wedding-landscape.png'; ?>';
-                backgroundImage.src = newSrc;
+            if (newIsMobile !== isMobile || newIsTablet !== isTablet || newIsDesktop !== isDesktop) {
+                const newSrc = getResponsiveImageSrc('hero');
                 
-                // Update the isMobile variable
+                if (backgroundImage && backgroundImage.src !== newSrc) {
+                    backgroundImage.src = newSrc;
+                }
+                
+                // Update device type variables
                 isMobile = newIsMobile;
+                isTablet = newIsTablet;
+                isDesktop = newIsDesktop;
+                
+                console.log(`Responsive image updated for ${newIsMobile ? 'mobile' : newIsTablet ? 'tablet' : 'desktop'} (${currentWidth}px)`);
             }
         }, 100);
     });

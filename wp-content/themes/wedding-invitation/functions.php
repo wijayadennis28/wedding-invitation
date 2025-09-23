@@ -25,12 +25,12 @@ add_action('after_setup_theme', 'wedding_invitation_setup');
 
 // Enqueue styles and scripts
 function wedding_invitation_scripts() {
-    // Google Fonts for Allura and Aniyah
-    wp_enqueue_style('google-fonts', '<link href="https://fonts.googleapis.com/css2?family=Allura&family=Montserrat:wght@100..900&family=Playfair+Display:ital,wght@1,400..900&display=swap" rel="stylesheet" rel="stylesheet">', array(), '1.0.0');
-    wp_enqueue_style('aniyah-font', 'https://fonts.cdnfonts.com/css/aniyah-personal-use', array(), '1.0.0');
-    wp_enqueue_style('quiche-font', 'https://fonts.cdnfonts.com/css/quiche', array(), '1.0.0');
-                
-                
+    // Google Fonts for Allura, Montserrat, and Playfair Display
+    wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Allura&family=Montserrat:wght@100..900&family=Playfair+Display:ital,wght@1,400..900&display=swap', array(), time());
+    
+    // Additional custom fonts from CDN Fonts
+    wp_enqueue_style('aniyah-font', 'https://fonts.cdnfonts.com/css/aniyah-personal-use', array(), time());
+    wp_enqueue_style('quiche-font', 'https://fonts.cdnfonts.com/css/quiche', array(), time());
     
     // GSAP from CDN - make sure they load in footer
     wp_enqueue_script('gsap', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js', array(), '3.12.2', true);
