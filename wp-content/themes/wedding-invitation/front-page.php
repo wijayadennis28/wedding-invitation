@@ -754,6 +754,39 @@ input, select, textarea {
         text-decoration: none !important;
     }
 }
+
+/* Wedding Section Monogram - appears after fly-away animation */
+.wedding-section-monogram {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    color: white;
+    /* Removed font-size from container */
+    line-height: 1;
+    pointer-events: none;
+}
+
+.wedding-section-monogram .monogram-combined {
+    position: relative;
+    z-index: 9999;
+    will-change: transform, opacity;
+}
+
+.wedding-section-monogram .groom-initial {
+    font-family: 'Allura', cursive !important;
+    font-size: 60px !important; /* Increased from 48px */
+    color: white !important;
+}
+
+.wedding-section-monogram .bride-initial {
+    font-family: 'Aniyah Personal Use' !important;
+    font-size: 40px !important; /* Increased from 32px */
+    color: white !important;
+    margin-top: -26px !important; /* Adjusted proportionally */
+    margin-left: -1px !important; /* Force override */
+}
 </style>
 
 <script>
@@ -1025,12 +1058,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const openInvitationBtn = document.querySelector('.hero-open-invitation-btn');
     if (openInvitationBtn) {
         openInvitationBtn.addEventListener('click', function() {
+            console.log('🚀 OPEN INVITATION CLICKED - FLY AWAY ANIMATION! 🚀');
+            
             // Only run if monogram hasn't been transformed yet
             if (monogramTransformed) return;
             
             const heroMonogram = document.querySelector('.monogram-combined');
-            const heroContent = document.getElementById('hero-content');
-            const contentWrapper = document.querySelector('.content-wrapper');
             
             // Mark as transformed to prevent duplicate animations
             monogramTransformed = true;
@@ -1039,79 +1072,86 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.style.overflow = 'auto';
             document.documentElement.style.overflow = 'auto';
             
-            // Create simple animation timeline
-            const tl = gsap.timeline();
-            
-            // Step 1: Fade out all other hero content but keep monogram
-            tl.to('.hero-greeting-title, .hero-invitation-message, .hero-open-invitation-btn', {
-                duration: 0.4,
+            console.log('🎯 Phase 1: Fading out other content');
+            // Phase 1: Fade out all other hero content but keep monogram visible
+            gsap.to('.hero-greeting-title, .hero-invitation-message, .hero-open-invitation-btn', {
+                duration: 0.5,
                 opacity: 0,
                 ease: "power2.out"
-            })
-            // Step 2: Simple animation to top with scale
-            .to(heroMonogram, {
-                duration: 1.2,
-                scale: 0.5,
-                y: -200, // Simple fixed movement up
-                ease: "power2.inOut"
-            }, "+=0.2")
-            // Step 3: After animation, position as sticky header
-            .call(() => {
-                // Move monogram to body and position it as sticky header
-                document.body.appendChild(heroMonogram);
-                
-                // Set final position as fixed element - keep it simple
-                gsap.set(heroMonogram, {
-                    position: 'fixed',
-                    top: '1rem',
-                    left: '50%',
-                    transform: 'translateX(-50%) scale(0.5)',
-                    zIndex: 999,
-                    opacity: 1,
-                    y: 0, // Reset any y transforms
-                    x: 0  // Reset any x transforms
+            });
+            
+            // Phase 2: Make monogram FLY AWAY - really disappear
+            setTimeout(() => {
+                console.log('🚁 Phase 2: Monogram flying away completely');
+                gsap.to(heroMonogram, {
+                    duration: 1.5,
+                    y: -window.innerHeight - 200, // Fly way off screen
+                    scale: 0.1, // Shrink to almost nothing
+                    opacity: 0, // Completely fade out
+                    ease: "power2.in",
+                    onComplete: function() {
+                        console.log('🎬 Phase 3: Hiding hero section');
+                        // Hide the entire hero section after monogram flies away
+                        document.querySelector('.dynamic-section').style.display = 'none';
+                        
+                        // Scroll to the wedding details section to ensure it's visible
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Small delay to ensure section is visible before adding monogram
+                        setTimeout(() => {
+                        
+                        console.log('📄 Phase 4: Creating new monogram for wedding section');
+                        // Create a new monogram that will slide down from top and stick there
+                        const newMonogram = document.createElement('div');
+                        newMonogram.className = 'wedding-section-monogram';
+                        newMonogram.innerHTML = '<span class="monogram-combined"><span class="groom-initial">d</span><span class="bride-initial">e</span></span>';
+                        
+                        // Attach to body so it stays fixed at top throughout all sections
+                        document.body.appendChild(newMonogram);
+                        
+                        console.log('⬇️ Phase 5: New monogram sliding down from top');
+                        // Set initial position WAY off-screen and tiny scale
+                        gsap.set(newMonogram, {
+                            y: -window.innerHeight - 100, // Start way above screen
+                            opacity: 0,
+                            scale: 0.3 // Start very small
+                        });
+                        
+                        console.log('💒 Phase 6: Animating monogram sliding down to fixed position');
+                        // Animate the new monogram sliding down from top
+                        gsap.to(newMonogram, {
+                            duration: 2,
+                            y: 0, // Slide to final position
+                            opacity: 1, // Fade in
+                            scale: 1, // Grow to full size
+                            ease: "power2.out",
+                            onComplete: function() {
+                                console.log('✅ Monogram slide-down animation complete - now fixed at top!');
+                                
+                                // After monogram slides down, animate the wedding section content
+                                console.log('💒 Phase 6: Animating wedding section content');
+                                
+                                // After monogram slides down, animate the wedding section content
+                                const weddingTl = gsap.timeline();
+                                weddingTl.to('#wedding-details .wedding-title', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" })
+                                        .to('#wedding-details .wedding-couple-names', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
+                                        .to('#wedding-details .wedding-date', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
+                                        .to('#wedding-details .bible-verse', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
+                                        .to('#wedding-details .groom-info', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
+                                        .to('#wedding-details .bride-info', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "-=0.4")
+                                        .call(() => {
+                                            console.log('✅ Animation complete - Wedding section fully loaded!');
+                                        });
+                            }
+                        });
+                        
+                        }, 200); // End of setTimeout
+                    }
                 });
-            })
-            // Step 3: Hide the hero section and show wedding details
-            .set('.dynamic-section', {
-                display: 'none'
-            })
-            .to('#wedding-details .wedding-title', { 
-                duration: 1, 
-                opacity: 1, 
-                y: 0, 
-                ease: "power2.out" 
-            }, "+=0.3")
-            .to('#wedding-details .wedding-couple-names', { 
-                duration: 1, 
-                opacity: 1, 
-                y: 0, 
-                ease: "power2.out" 
-            }, "+=0.1")
-            .to('#wedding-details .wedding-date', { 
-                duration: 0.8, 
-                opacity: 1, 
-                y: 0, 
-                ease: "power2.out" 
-            }, "+=0.2")
-            .to('#wedding-details .bible-verse', { 
-                duration: 1, 
-                opacity: 1, 
-                y: 0, 
-                ease: "power2.out" 
-            }, "+=0.3")
-            .to('#wedding-details .groom-info', { 
-                duration: 0.8, 
-                opacity: 1, 
-                y: 0, 
-                ease: "power2.out" 
-            }, "+=0.2")
-            .to('#wedding-details .bride-info', { 
-                duration: 0.8, 
-                opacity: 1, 
-                y: 0, 
-                ease: "power2.out" 
-            }, "+=0.1");
+            }, 500);
         });
     }
     
