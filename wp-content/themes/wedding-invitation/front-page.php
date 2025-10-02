@@ -933,18 +933,6 @@ input, select, textarea {
     }
 }
 
-/* Ensure hero section is completely non-scrollable */
-body.hero-locked {
-    overflow: hidden !important;
-    position: fixed !important;
-    width: 100% !important;
-    height: 100% !important;
-}
-
-html.hero-locked {
-    overflow: hidden !important;
-}
-
 /* Wedding Section Monogram - appears after fly-away animation */
 .wedding-section-monogram {
     position: fixed;
@@ -997,9 +985,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
     
-    // Completely prevent scrolling during hero section
-    document.body.classList.add('hero-locked');
-    document.documentElement.classList.add('hero-locked');
+    // Prevent scrolling during hero section
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
     
     // Check if GSAP is loaded
     if (typeof gsap === 'undefined') {
@@ -1052,9 +1040,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set the correct image immediately to prevent flash
     backgroundImage.src = initialImageSrc;
     
-    // Global scroll control variables
+    // Disable scrolling initially
     let scrollEnabled = false;
-    let monogramTransformed = false; // Flag to prevent duplicate monogram animations
     document.body.style.overflow = 'hidden';
     
     // Set initial positions for hero content
@@ -1187,8 +1174,15 @@ document.addEventListener('DOMContentLoaded', function() {
         y: 0,
         ease: "power2.out"
     }, "+=0.3")
-    // Keep scrolling disabled until button is clicked
-    .call(() => {        
+    // Enable scrolling after animation completes with hidden scrollbars
+    .call(() => {
+        scrollEnabled = true;
+        document.body.style.overflow = 'auto';
+        document.documentElement.style.overflow = 'auto';
+        // Hide scrollbars but keep functionality
+        document.body.classList.add('scrollbar-hide');
+        document.documentElement.classList.add('scrollbar-hide');
+        
         // Enable button clicking only after it's fully visible
         const openBtn = document.querySelector('.hero-open-invitation-btn');
         if (openBtn) {
@@ -1196,16 +1190,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Function to enable scrolling (only used when Open Invitation is clicked)
+    // Function to enable scrolling with hidden scrollbars
     function enableScrolling() {
-        scrollEnabled = true;
-        document.body.classList.remove('hero-locked');
-        document.documentElement.classList.remove('hero-locked');
-        document.body.style.overflow = 'auto';
-        document.documentElement.style.overflow = 'auto';
+        if (!scrollEnabled) {
+            scrollEnabled = true;
+            document.body.style.overflow = 'auto';
+            document.documentElement.style.overflow = 'auto';
+            // Add classes to hide scrollbars
+            document.body.classList.add('scrollbar-hide');
+            document.documentElement.classList.add('scrollbar-hide');
+        }
     }
     
-    // Complete scroll prevention - block all forms of scrolling
+    // Override scroll events until animation is complete
     function preventScroll(e) {
         if (!scrollEnabled) {
             e.preventDefault();
@@ -1214,11 +1211,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Add comprehensive scroll prevention
+    // Add scroll prevention
     window.addEventListener('wheel', preventScroll, { passive: false });
     window.addEventListener('touchmove', preventScroll, { passive: false });
-    window.addEventListener('touchstart', preventScroll, { passive: false });
-    window.addEventListener('scroll', preventScroll, { passive: false });
     window.addEventListener('keydown', function(e) {
         if (!scrollEnabled && [32, 33, 34, 35, 36, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
             e.preventDefault();
@@ -1226,12 +1221,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Prevent mouse drag scrolling on mobile
-    window.addEventListener('gesturestart', preventScroll);
-    window.addEventListener('gesturechange', preventScroll);
-    window.addEventListener('gestureend', preventScroll);
-    
     let currentSection = 'hero'; // 'hero', 'invitation'
+    let monogramTransformed = false; // Flag to prevent duplicate monogram animations
     
     // Function to change background with smooth transition
     function changeBackgroundImage(newSrc) {
@@ -1282,10 +1273,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Mark as transformed to prevent duplicate animations
             monogramTransformed = true;
             
-            // Enable scrolling completely
-            scrollEnabled = true;
-            document.body.classList.remove('hero-locked');
-            document.documentElement.classList.remove('hero-locked');
+            // Enable scrolling
             document.body.style.overflow = 'auto';
             document.documentElement.style.overflow = 'auto';
             
