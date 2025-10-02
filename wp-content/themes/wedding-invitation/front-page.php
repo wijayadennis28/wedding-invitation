@@ -139,7 +139,7 @@ get_header(); ?>
         <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-black/50"></div>
     </div>
     
-    <div class="relative z-10 flex items-center justify-center min-h-screen pt-20 xs:pt-24 sm:pt-16 md:pt-12">
+    <div class="relative z-10 flex items-center justify-center min-h-screen">
         <div class="max-w-xs xs:max-w-sm sm:max-w-lg md:max-w-2xl mx-auto px-3 xs:px-4 sm:px-6 py-6 xs:py-8 md:py-12 text-center">
             <!-- Wedding Title -->
             <div class="wedding-title-section mb-4 xs:mb-6 md:mb-8 text-center">
@@ -161,10 +161,10 @@ get_header(); ?>
             <!-- Bible Verse -->
             <div class="bible-verse-section mb-6 xs:mb-8 md:mb-12 text-center">
                 <p class="bible-verse text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light leading-relaxed max-w-xs xs:max-w-sm sm:max-w-lg mx-auto px-2 xs:px-4">
-                    "Love knows no limit to its endurance,<br>
-                    no end to its trust, love still stands<br>
+                    "Love knows no limit to its endurance, <br>
+                    no end to its trust, love still stands <br>
                     when all else has fallen."<br>
-                    <span class="verse-reference mt-3 xs:mt-4 md:mt-12 text-2xs xs:text-xs tracking-wider block opacity-80">1 Corinthians 13:7-8</span>
+                    <span class="verse-reference mt-4 xs:mt-6 md:mt-12 text-2xs xs:text-xs tracking-wider block">1 Corinthians 13:7-8</span>
                 </p>
             </div>
             
@@ -948,7 +948,7 @@ html.hero-locked {
 /* Wedding Section Monogram - appears after fly-away animation */
 .wedding-section-monogram {
     position: fixed;
-    top: 40px;
+    top: 20px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 999;
@@ -956,22 +956,6 @@ html.hero-locked {
     /* Removed font-size from container */
     line-height: 1;
     pointer-events: none;
-}
-
-/* Mobile adjustments for monogram */
-@media (max-width: 640px) {
-    .wedding-section-monogram {
-        top: 60px; /* More space from top on mobile */
-    }
-    
-    .wedding-section-monogram .groom-initial {
-        font-size: 48px !important; /* Slightly smaller on mobile */
-    }
-    
-    .wedding-section-monogram .bride-initial {
-        font-size: 32px !important; /* Slightly smaller on mobile */
-        margin-top: -20px !important; /* Adjusted for smaller size */
-    }
 }
 
 .wedding-section-monogram .monogram-combined {
