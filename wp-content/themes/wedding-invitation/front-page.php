@@ -200,31 +200,16 @@ get_header(); ?>
             if (function_exists('is_wedding_family_page') && is_wedding_family_page()) {
                 $family_data = function_exists('get_wedding_family_data') ? get_wedding_family_data() : null;
                 
-                // Debug: Show the family data structure
-                if ($family_data) {
-                    echo "<!-- DEBUG: Family data: " . print_r($family_data, true) . " -->";
+                if ($family_data && isset($family_data->invitations)) {
+                    // Check specific invitations for family users
+                    $show_church = isset($family_data->invitations->church) && $family_data->invitations->church->invited;
+                    $show_reception = isset($family_data->invitations->reception) && $family_data->invitations->reception->invited;
                     
-                    if (isset($family_data->invitations)) {
-                        echo "<!-- DEBUG: Invitations data: " . print_r($family_data->invitations, true) . " -->";
-                        
-                        // Check specific invitations for family users
-                        $show_church = isset($family_data->invitations->church) && $family_data->invitations->church->invited;
-                        $show_reception = isset($family_data->invitations->reception) && $family_data->invitations->reception->invited;
-                        
-                        echo "<!-- DEBUG: show_church = " . ($show_church ? 'true' : 'false') . " -->";
-                        echo "<!-- DEBUG: show_reception = " . ($show_reception ? 'true' : 'false') . " -->";
-                        
-                        // If neither is specifically invited, show both as fallback
-                        if (!$show_church && !$show_reception) {
-                            $show_church = true;
-                            $show_reception = true;
-                            echo "<!-- DEBUG: Using fallback - showing both -->";
-                        }
-                    } else {
-                        echo "<!-- DEBUG: No invitations data found -->";
+                    // If neither is specifically invited, show both as fallback
+                    if (!$show_church && !$show_reception) {
+                        $show_church = true;
+                        $show_reception = true;
                     }
-                } else {
-                    echo "<!-- DEBUG: No family data found -->";
                 }
             }
             ?>
