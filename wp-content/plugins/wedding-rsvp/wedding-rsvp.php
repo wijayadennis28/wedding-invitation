@@ -69,6 +69,8 @@ class WeddingRSVP {
         // AJAX hooks
         add_action('wp_ajax_wedding_rsvp_submit', array($this, 'handle_rsvp_submission'));
         add_action('wp_ajax_nopriv_wedding_rsvp_submit', array($this, 'handle_rsvp_submission'));
+        add_action('wp_ajax_wedding_general_rsvp_submit', array($this, 'handle_general_rsvp_submission'));
+        add_action('wp_ajax_nopriv_wedding_general_rsvp_submit', array($this, 'handle_general_rsvp_submission'));
         add_action('wp_ajax_get_family_data', array($this, 'handle_get_family_data'));
         add_action('wp_ajax_get_whatsapp_message', array($this, 'handle_get_whatsapp_message'));
         add_action('wp_ajax_import_csv_guests', array($this, 'handle_import_csv'));
@@ -497,6 +499,117 @@ class WeddingRSVP {
         }
         
         wp_send_json_success('RSVP submitted successfully');
+    }
+    
+    /**
+     * Handle General RSVP form submission (for non-family users)
+     */
+    public function handle_general_rsvp_submission() {
+        // Verify nonce
+        if (!wp_verify_nonce($_POST['nonce'], 'wedding_rsvp_nonce')) {
+            wp_send_json_error('Security check failed');
+        }
+        
+        global $wpdb;
+        
+        // Sanitize input data
+        $guest_name = sanitize_text_field($_POST['guest_name']);
+        $guest_email = sanitize_email($_POST['guest_email']);
+        $guest_count = intval($_POST['guest_count']);
+        $events = isset($_POST['events']) ? array_map('sanitize_text_field', $_POST['events']) : array();
+        $dietary_requirements = sanitize_textarea_field($_POST['dietary_requirements']);
+        $additional_notes = sanitize_textarea_field($_POST['additional_notes']);
+        
+        // Validate required fields
+        if (empty($guest_name) || empty($guest_email) || $guest_count < 1) {
+            wp_send_json_error('Please fill in all required fields');
+        }
+        
+        if (empty($events)) {
+            wp_send_json_error('Please select at least one event to attend');
+        }
+        
+        // Validate events against available options
+        $valid_events = array('church', 'teapai', 'reception');
+        foreach ($events as $event) {
+            if (!in_array($event, $valid_events)) {
+                wp_send_json_error('Invalid event selection');
+            }
+        }
+        
+        try {
+            // Start transaction
+            $wpdb->query('START TRANSACTION');
+            
+            // Check if guest already exists by email
+            $existing_guest = $wpdb->get_row($wpdb->prepare("
+                SELECT * FROM {$this->table_guests} WHERE email = %s
+            ", $guest_email));
+            
+            if ($existing_guest) {
+                // Update existing guest
+                $guest_id = $existing_guest->id;
+                $wpdb->update(
+                    $this->table_guests,
+                    array(
+                        'primary_guest_name' => $guest_name,
+                        'pax_num' => $guest_count,
+                        'phone_number' => '', // Will be empty for general submissions
+                        'invitation_type' => 'general',
+                        'updated_at' => current_time('mysql')
+                    ),
+                    array('id' => $guest_id)
+                );
+            } else {
+                // Insert new guest
+                $wpdb->insert(
+                    $this->table_guests,
+                    array(
+                        'primary_guest_name' => $guest_name,
+                        'email' => $guest_email,
+                        'pax_num' => $guest_count,
+                        'phone_number' => '', // Will be empty for general submissions
+                        'invitation_type' => 'general',
+                        'created_at' => current_time('mysql'),
+                        'updated_at' => current_time('mysql')
+                    )
+                );
+                $guest_id = $wpdb->insert_id;
+            }
+            
+            if (!$guest_id) {
+                throw new Exception('Failed to create/update guest record');
+            }
+            
+            // Clear existing RSVP responses for this guest
+            $wpdb->delete($this->table_rsvp, array('guest_id' => $guest_id));
+            
+            // Insert RSVP responses for each selected event
+            foreach ($events as $event_type) {
+                $wpdb->insert(
+                    $this->table_rsvp,
+                    array(
+                        'guest_id' => $guest_id,
+                        'event_type' => $event_type,
+                        'attendance_status' => 'yes',
+                        'dietary_requirements' => $dietary_requirements,
+                        'additional_notes' => $additional_notes,
+                        'created_at' => current_time('mysql'),
+                        'updated_at' => current_time('mysql')
+                    )
+                );
+            }
+            
+            // Commit transaction
+            $wpdb->query('COMMIT');
+            
+            wp_send_json_success('Thank you! Your RSVP has been submitted successfully.');
+            
+        } catch (Exception $e) {
+            // Rollback transaction
+            $wpdb->query('ROLLBACK');
+            wp_send_json_error('Sorry, there was an error submitting your RSVP. Please try again.');
+        }
     }
     
     /**

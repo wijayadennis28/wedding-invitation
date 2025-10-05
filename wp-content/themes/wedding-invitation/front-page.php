@@ -5,7 +5,7 @@
 get_header(); ?>
 
 <!-- Single Dynamic Section -->
-<section class="dynamic-section relative min-h-screen">
+<section class="dynamic-section relative" style="margin: 0; padding: 0; height: 100vh; height: 100dvh; min-height: 100vh; min-height: 100dvh;">
     <!-- Dynamic Background Image -->
     <div class="background-container fixed inset-0 z-0" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg'); background-size: cover; background-position: center;">
         <img id="background-image" src="<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg" alt="" class="w-full h-full object-cover transition-opacity duration-1000 responsive-bg-image" loading="eager" decoding="async" onload="console.log('Image loaded successfully')" onerror="console.log('Image failed to load')">
@@ -116,30 +116,17 @@ get_header(); ?>
     
 </section>
 
-<!-- Sticky RSVP Button -->
-<div id="sticky-rsvp" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-40 opacity-0 pointer-events-none transition-all duration-300">
-    <?php if ($family_data && !empty($family_data->guests)): ?>
-        <button class="rsvp-scroll-btn bg-white/10 backdrop-blur-sm border border-white/30 text-white px-6 py-3 rounded-full text-sm font-light tracking-wider hover:bg-white/20 transition-all duration-300 flex items-center space-x-2">
-            <span>SCROLL TO RSVP</span>
-            <i class="fas fa-angle-down"></i>
-        </button>
-    <?php else: ?>
-        <a href="<?php echo home_url('/rsvp/'); ?>" class="rsvp-link-btn bg-white/10 backdrop-blur-sm border border-white/30 text-white px-6 py-3 rounded-full text-sm font-light tracking-wider hover:bg-white/20 transition-all duration-300 flex items-center space-x-2">
-            <span>RSVP</span>
-            <i class="fas fa-external-link-alt"></i>
-        </a>
-    <?php endif; ?>
-</div>
+
 
 <!-- Wedding Details Section -->
-<section id="wedding-details" class="wedding-details-section relative min-h-screen">
+<section id="wedding-details" class="wedding-details-section relative" style="margin: 0; padding: 0; height: 100vh; height: 100dvh; min-height: 100vh; min-height: 100dvh;">
     <!-- Background Image -->
     <div class="absolute inset-0 z-0">
         <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('wedding_details') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="Wedding Details" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
         <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-black/50"></div>
     </div>
     
-    <div class="relative z-10 flex items-center justify-center min-h-screen">
+    <div class="relative z-10 flex items-center justify-center" style="height: 100vh; height: 100dvh; min-height: 100vh; min-height: 100dvh;">
         <div class="max-w-xs xs:max-w-sm sm:max-w-lg md:max-w-2xl mx-auto px-3 xs:px-4 sm:px-6 py-6 xs:py-8 md:py-12 text-center">
             <!-- Wedding Title -->
             <div class="wedding-title-section mb-4 xs:mb-6 md:mb-8 text-center">
@@ -224,29 +211,6 @@ get_header(); ?>
         </div>
     </div>
 </section>
-
-<!-- RSVP Section (Only show for family pages) -->
-<?php if (function_exists('is_wedding_family_page') && is_wedding_family_page()): ?>
-<section id="rsvp" class="rsvp-section relative min-h-screen">
-    <!-- Background Image -->
-    <div class="absolute inset-0 z-0">
-        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('rsvp') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="RSVP" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-black/60"></div>
-    </div>
-    
-    <div class="relative z-10 flex items-center justify-center min-h-screen py-12 xs:py-16 sm:py-20">
-        <div class="max-w-xs xs:max-w-sm sm:max-w-2xl md:max-w-4xl mx-auto px-3 xs:px-4 sm:px-6">
-            <?php 
-            if (function_exists('render_wedding_rsvp_form')) {
-                render_wedding_rsvp_form(); 
-            } else {
-                echo '<p>RSVP functionality is not available.</p>';
-            }
-            ?>
-        </div>
-    </div>
-</section>
-<?php endif; ?>
 
 <!-- Love Story Section -->
 <section id="love-story" class="love-story-section relative min-h-screen">
@@ -482,25 +446,239 @@ get_header(); ?>
 </section>
 
 <!-- RSVP Section -->
-<section id="rsvp" class="rsvp-section relative min-h-screen">
+<section id="rsvp" class="rsvp-section relative" style="margin: 0; padding: 0; height: 100vh; height: 100dvh; min-height: 100vh; min-height: 100dvh;">
     <!-- Background Image -->
     <div class="absolute inset-0 z-0">
-        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('rsvp_final') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="RSVP" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
+        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('rsvp') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="RSVP" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
         <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-black/70"></div>
     </div>
     
-    <div class="relative z-10 flex items-center justify-center min-h-screen">
-        <div class="max-w-2xl mx-auto px-4 py-8 md:py-12 text-center">
-            <h2 class="text-2xl md:text-3xl font-bold text-white mb-8 tracking-wider">RSVP</h2>
-            <p class="text-white text-lg mb-8">Please let us know if you can join us on our special day</p>
+    <div class="relative z-10 flex items-center justify-center" style="height: 100vh; height: 100dvh; min-height: 100vh; min-height: 100dvh;">
+        <div class="max-w-xs xs:max-w-sm sm:max-w-lg md:max-w-2xl mx-auto px-3 xs:px-4 sm:px-6 py-6 xs:py-8 md:py-12 text-center">
             
-            <!-- RSVP Form Placeholder -->
-            <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 md:p-8">
-                <p class="text-white text-base">RSVP Form Coming Soon</p>
-            </div>
+            <?php if (function_exists('is_wedding_family_page') && is_wedding_family_page()): ?>
+                <!-- Family-specific Multi-step RSVP Form -->
+                <div id="family-rsvp-container" class="rsvp-content">
+                    <!-- Step 1: Will You Be Attending -->
+                    <div id="family-step-1" class="rsvp-step active">
+                        <h2 class="rsvp-title text-lg xs:text-xl md:text-2xl font-medium text-white mb-2 xs:mb-3 md:mb-4 tracking-wider">
+                            RSVP
+                        </h2>
+                        <h3 class="attendance-question text-sm xs:text-base md:text-lg text-white mb-6 xs:mb-8 md:mb-10 font-light tracking-wide">
+                            WILL YOU BE ATTENDING?
+                        </h3>
+                        
+                        <div class="attendance-options mb-6 xs:mb-8 space-y-4">
+                            <div class="attendance-button-wrapper">
+                                <button type="button" class="attendance-btn attendance-yes w-full max-w-sm mx-auto block bg-white/20 backdrop-blur-sm border-2 border-white/50 text-white px-8 py-4 text-xs xs:text-sm font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300 rounded-lg" data-answer="yes">
+                                    With joy, I'll be there
+                                </button>
+                            </div>
+                            <div class="attendance-button-wrapper">
+                                <button type="button" class="attendance-btn attendance-no w-full max-w-sm mx-auto block bg-white/20 backdrop-blur-sm border-2 border-white/50 text-white px-8 py-4 text-xs xs:text-sm font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300 rounded-lg" data-answer="no">
+                                    Regretfully, can't attend
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2: Event Selection -->
+                    <div id="family-step-2" class="rsvp-step hidden">
+                        <h2 class="rsvp-title text-lg xs:text-xl md:text-2xl font-medium text-white mb-2 xs:mb-3 md:mb-4 tracking-wider">
+                            RSVP
+                        </h2>
+                        <h3 class="event-question text-sm xs:text-base md:text-lg text-white mb-6 xs:mb-8 md:mb-10 font-light tracking-wide">
+                            WHICH EVENT WILL YOU ATTEND?
+                        </h3>
+                        
+                        <div class="event-options mb-6 xs:mb-8 space-y-3 xs:space-y-4">
+                            <button type="button" class="event-btn w-full max-w-xs mx-auto block bg-white/10 backdrop-blur-sm border border-white/30 text-white px-6 py-4 text-2xs xs:text-xs font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300 rounded" data-event="church">
+                                Holy Matrimony
+                            </button>
+                            <button type="button" class="event-btn w-full max-w-xs mx-auto block bg-white/10 backdrop-blur-sm border border-white/30 text-white px-6 py-4 text-2xs xs:text-xs font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300 rounded" data-event="reception">
+                                Evening Reception
+                            </button>
+                            <!-- Teapai only for family category = "family" -->
+                            <div id="teapai-option" class="hidden">
+                                <button type="button" class="event-btn w-full max-w-xs mx-auto block bg-white/10 backdrop-blur-sm border border-white/30 text-white px-6 py-4 text-2xs xs:text-xs font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300 rounded" data-event="teapai">
+                                    Teapai
+                                </button>
+                            </div>
+                            <button type="button" class="event-btn w-full max-w-xs mx-auto block bg-white/10 backdrop-blur-sm border border-white/30 text-white px-6 py-4 text-2xs xs:text-xs font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300 rounded" data-event="both">
+                                Both
+                            </button>
+                        </div>
+                        
+                        <button type="button" class="back-btn flex items-center text-white text-2xs xs:text-xs font-light tracking-wider hover:text-white/70 transition-all duration-300" onclick="showFamilyStep(1)">
+                            <i class="fas fa-arrow-left mr-2"></i> BACK
+                        </button>
+                    </div>
+                    
+                    <!-- Step 3: Guest List -->
+                    <div id="family-step-3" class="rsvp-step hidden">
+                        <h2 class="rsvp-title text-lg xs:text-xl md:text-2xl font-medium text-white mb-2 xs:mb-3 md:mb-4 tracking-wider">
+                            RSVP
+                        </h2>
+                        <h3 class="guest-list-title text-sm xs:text-base md:text-lg text-white mb-2 xs:mb-3 font-light tracking-wide">
+                            GUEST LIST
+                        </h3>
+                        <p class="guest-list-subtitle text-2xs xs:text-xs text-white/70 mb-6 xs:mb-8 font-light italic">
+                            Select who will be attending
+                        </p>
+                        
+                        <div id="family-members-list" class="guest-checkboxes mb-6 xs:mb-8 space-y-3 xs:space-y-4">
+                            <!-- Family members will be populated by JavaScript -->
+                        </div>
+                        
+                        <div class="additional-info-section mb-6 xs:mb-8 space-y-3 xs:space-y-4">
+                            <div class="form-group">
+                                <textarea id="family-dietary-requirements" 
+                                          name="dietary_requirements" 
+                                          placeholder="Dietary requirements or allergies" 
+                                          rows="3" 
+                                          class="w-full px-3 xs:px-4 py-2 xs:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded text-white placeholder-white/70 text-2xs xs:text-xs resize-none focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <textarea id="family-additional-notes" 
+                                          name="additional_notes" 
+                                          placeholder="Additional notes or special requests" 
+                                          rows="3" 
+                                          class="w-full px-3 xs:px-4 py-2 xs:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded text-white placeholder-white/70 text-2xs xs:text-xs resize-none focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="step-actions space-y-4">
+                            <button type="button" id="family-submit-btn" class="rsvp-submit-btn w-full bg-transparent border border-white text-white px-6 py-3 text-2xs xs:text-xs font-light tracking-widest hover:bg-white hover:text-black transition-all duration-300 rounded">
+                                SUBMIT RSVP
+                            </button>
+                            <button type="button" class="back-btn flex items-center text-white text-2xs xs:text-xs font-light tracking-wider hover:text-white/70 transition-all duration-300" onclick="showFamilyStep(2)">
+                                <i class="fas fa-arrow-left mr-2"></i> BACK
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Success Message -->
+                    <div id="family-rsvp-success" class="rsvp-step hidden text-center">
+                        <h3 class="text-lg xs:text-xl text-white mb-3 xs:mb-4 font-medium">
+                            Thank You!
+                        </h3>
+                        <p class="text-2xs xs:text-xs text-white/90 leading-relaxed">
+                            Your RSVP has been received. We can't wait to celebrate with you!
+                        </p>
+                    </div>
+                </div>
+            <?php else: ?>
+                <!-- General Users Multi-step RSVP Form -->
+                <div id="general-rsvp-container" class="rsvp-content">
+                    <!-- Step 1: Event Selection (No attendance question) -->
+                    <div id="general-step-1" class="rsvp-step active">
+                        <h2 class="rsvp-title text-lg xs:text-xl md:text-2xl font-medium text-white mb-2 xs:mb-3 md:mb-4 tracking-wider">
+                            RSVP
+                        </h2>
+                        <h3 class="event-question text-sm xs:text-base md:text-lg text-white mb-6 xs:mb-8 md:mb-10 font-light tracking-wide">
+                            WHICH EVENT WILL YOU ATTEND?
+                        </h3>
+                        
+                        <div class="event-options mb-6 xs:mb-8 space-y-3 xs:space-y-4">
+                            <button type="button" class="general-event-btn w-full max-w-xs mx-auto block bg-white/10 backdrop-blur-sm border border-white/30 text-white px-6 py-4 text-2xs xs:text-xs font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300 rounded" data-event="church">
+                                Holy Matrimony
+                            </button>
+                            <button type="button" class="general-event-btn w-full max-w-xs mx-auto block bg-white/10 backdrop-blur-sm border border-white/30 text-white px-6 py-4 text-2xs xs:text-xs font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300 rounded" data-event="reception">
+                                Evening Reception
+                            </button>
+                            <!-- No Teapai for general users -->
+                            <button type="button" class="general-event-btn w-full max-w-xs mx-auto block bg-white/10 backdrop-blur-sm border border-white/30 text-white px-6 py-4 text-2xs xs:text-xs font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300 rounded" data-event="both">
+                                Both
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2: Guest Information -->
+                    <div id="general-step-2" class="rsvp-step hidden">
+                        <h2 class="rsvp-title text-lg xs:text-xl md:text-2xl font-medium text-white mb-2 xs:mb-3 md:mb-4 tracking-wider">
+                            RSVP
+                        </h2>
+                        <h3 class="guest-info-title text-sm xs:text-base md:text-lg text-white mb-6 xs:mb-8 md:mb-10 font-light tracking-wide">
+                            GUEST INFORMATION
+                        </h3>
+                        
+                        <div class="guest-info-form space-y-4 xs:space-y-6 mb-6 xs:mb-8">
+                            <!-- Contact Information -->
+                            <div class="contact-info space-y-3 xs:space-y-4">
+                                <input type="text" 
+                                       id="general-guest-name" 
+                                       name="guest_name" 
+                                       placeholder="Your Name" 
+                                       required 
+                                       class="w-full px-3 xs:px-4 py-2 xs:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded text-white placeholder-white/70 text-2xs xs:text-xs focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent">
+                                
+                                <input type="email" 
+                                       id="general-guest-email" 
+                                       name="guest_email" 
+                                       placeholder="Your Email" 
+                                       required 
+                                       class="w-full px-3 xs:px-4 py-2 xs:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded text-white placeholder-white/70 text-2xs xs:text-xs focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent">
+                            </div>
+                            
+                            <!-- Guest Count Selection -->
+                            <div class="guest-count-section">
+                                <label class="block text-white text-2xs xs:text-xs font-light mb-2">Number of Guests (1-4):</label>
+                                <select id="general-guest-count" name="guest_count" class="w-full px-3 xs:px-4 py-2 xs:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded text-white text-2xs xs:text-xs focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent">
+                                    <option value="1">1 Guest</option>
+                                    <option value="2">2 Guests</option>
+                                    <option value="3">3 Guests</option>
+                                    <option value="4">4 Guests</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Dynamic Guest Name Fields -->
+                            <div id="general-guest-names" class="guest-names-section space-y-2 xs:space-y-3">
+                                <!-- Guest name inputs will be populated by JavaScript -->
+                            </div>
+                            
+                            <!-- Additional Information -->
+                            <div class="additional-info space-y-3 xs:space-y-4">
+                                <textarea id="general-dietary-requirements" 
+                                          name="dietary_requirements" 
+                                          placeholder="Dietary requirements or allergies" 
+                                          rows="3" 
+                                          class="w-full px-3 xs:px-4 py-2 xs:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded text-white placeholder-white/70 text-2xs xs:text-xs resize-none focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"></textarea>
+                                
+                                <textarea id="general-additional-notes" 
+                                          name="additional_notes" 
+                                          placeholder="Additional notes or special requests" 
+                                          rows="3" 
+                                          class="w-full px-3 xs:px-4 py-2 xs:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded text-white placeholder-white/70 text-2xs xs:text-xs resize-none focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="step-actions space-y-4">
+                            <button type="button" id="general-submit-btn" class="rsvp-submit-btn w-full bg-transparent border border-white text-white px-6 py-3 text-2xs xs:text-xs font-light tracking-widest hover:bg-white hover:text-black transition-all duration-300 rounded">
+                                SUBMIT RSVP
+                            </button>
+                            <button type="button" class="back-btn flex items-center text-white text-2xs xs:text-xs font-light tracking-wider hover:text-white/70 transition-all duration-300" onclick="showGeneralStep(1)">
+                                <i class="fas fa-arrow-left mr-2"></i> BACK
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Success Message -->
+                    <div id="general-rsvp-success" class="rsvp-step hidden text-center">
+                        <h3 class="text-lg xs:text-xl text-white mb-3 xs:mb-4 font-medium">
+                            Thank You!
+                        </h3>
+                        <p class="text-2xs xs:text-xs text-white/90 leading-relaxed">
+                            Your RSVP has been received. We can't wait to celebrate with you!
+                        </p>
+                    </div>
+                </div>
+            <?php endif; ?>
+            
         </div>
     </div>
 </section>
+
+
 
 <!-- Backup GSAP loading in case WordPress doesn't load it properly -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -510,6 +688,57 @@ get_header(); ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
 
 <style>
+/* Remove gaps between sections */
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow-x: hidden;
+}
+
+/* WordPress theme resets */
+body.home, body.page {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#page, #content, .site-content {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Ensure sections connect seamlessly - NO GAPS */
+section {
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block;
+    position: relative;
+}
+
+/* Force exact viewport heights - eliminate all gaps */
+.dynamic-section, #wedding-details {
+    height: 100vh !important;
+    height: 100dvh !important;
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+    max-height: 100vh !important;
+    max-height: 100dvh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    outline: none !important;
+}
+
+/* Fix for any remaining min-h-screen gaps */
+.mobile-full-height, .min-h-screen {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
 /* Specific responsive image class for all background images */
 .responsive-bg-image {
     width: 100%;
@@ -965,6 +1194,188 @@ input, select, textarea {
     margin-top: -26px !important; /* Adjusted proportionally */
     margin-left: -1px !important; /* Force override */
 }
+
+/* RSVP Form Styles */
+.rsvp-content {
+    max-width: 100%;
+}
+
+.rsvp-step {
+    transition: all 0.3s ease;
+}
+
+.rsvp-step.hidden {
+    display: none !important;
+}
+
+.rsvp-step.active {
+    display: block;
+}
+
+/* Multi-step RSVP styles */
+.attendance-btn,
+.event-btn,
+.general-event-btn {
+    transition: all 0.3s ease;
+    min-height: 50px;
+    position: relative;
+    z-index: 10;
+    cursor: pointer;
+    user-select: none;
+}
+
+.attendance-btn:hover,
+.event-btn:hover,
+.general-event-btn:hover {
+    background-color: white;
+    color: black;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.attendance-btn:active,
+.event-btn:active,
+.general-event-btn:active {
+    transform: translateY(0);
+}
+
+.family-member-checkbox label {
+    transition: all 0.2s ease;
+}
+
+.family-member-checkbox label:hover {
+    background-color: rgba(255, 255, 255, 0.25) !important;
+    transform: translateY(-1px);
+}
+
+.guest-names-section input {
+    margin-bottom: 0.5rem;
+}
+
+.back-btn {
+    transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+    opacity: 0.7;
+    transform: translateX(-2px);
+}
+
+.step-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Legacy form styles */
+.rsvp-form {
+    text-align: left;
+}
+
+.rsvp-form .form-group {
+    position: relative;
+}
+
+.rsvp-form input,
+.rsvp-form textarea {
+    transition: all 0.3s ease;
+}
+
+.rsvp-form input:focus,
+.rsvp-form textarea:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.7);
+}
+
+.event-option {
+    transition: all 0.2s ease;
+}
+
+.event-option:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    padding: 2px 4px;
+}
+
+.event-option input[type="checkbox"] {
+    accent-color: white;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.event-option input[type="checkbox"]:checked {
+    background-color: white;
+    border-color: white;
+}
+
+.rsvp-submit-btn {
+    transition: all 0.3s ease;
+    letter-spacing: 0.1em;
+}
+
+.rsvp-submit-btn:hover {
+    background-color: white;
+    color: black;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.rsvp-submit-btn:active {
+    transform: translateY(0);
+}
+
+.rsvp-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.rsvp-success {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-top: 1rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Mobile adjustments for RSVP form */
+@media (max-width: 480px) {
+    .rsvp-form input,
+    .rsvp-form textarea,
+    .attendance-btn,
+    .event-btn,
+    .general-event-btn {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+    
+    .event-option {
+        margin-bottom: 1rem;
+    }
+    
+    .event-option span {
+        margin-left: 0.5rem;
+    }
+    
+    .attendance-btn,
+    .event-btn,
+    .general-event-btn {
+        min-height: 44px; /* Better touch target */
+        padding: 12px 24px;
+    }
+    
+    .family-member-checkbox {
+        margin-bottom: 0.75rem;
+    }
+    
+    .step-actions {
+        gap: 1rem;
+    }
+}
 </style>
 
 <script>
@@ -980,6 +1391,37 @@ if (history.scrollRestoration) {
 
 // Multi-Section Wedding Invitation with GSAP ScrollTrigger
 document.addEventListener('DOMContentLoaded', function() {
+    // Set up dynamic viewport height for mobile browsers
+    function setViewportHeight() {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        
+        // Force exact height on sections to eliminate gaps
+        const dynamicSection = document.querySelector('.dynamic-section');
+        const weddingSection = document.querySelector('#wedding-details');
+        
+        if (dynamicSection) {
+            dynamicSection.style.height = `${window.innerHeight}px`;
+            dynamicSection.style.minHeight = `${window.innerHeight}px`;
+            dynamicSection.style.maxHeight = `${window.innerHeight}px`;
+        }
+        
+        if (weddingSection) {
+            weddingSection.style.height = `${window.innerHeight}px`;
+            weddingSection.style.minHeight = `${window.innerHeight}px`;
+            weddingSection.style.maxHeight = `${window.innerHeight}px`;
+        }
+    }
+    
+    // Set initial viewport height
+    setViewportHeight();
+    
+    // Update on resize and orientation change
+    window.addEventListener('resize', setViewportHeight);
+    window.addEventListener('orientationchange', () => {
+        setTimeout(setViewportHeight, 100);
+    });
+    
     // Force scroll to top on page load/refresh
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
@@ -1117,10 +1559,18 @@ document.addEventListener('DOMContentLoaded', function() {
     gsap.set('#image-slider .slider-image-placeholder', { opacity: 0, scale: 0.9 });
     gsap.set('#image-slider .slider-bottom-text', { opacity: 0, y: 30 });
     
-    // Set initial positions for RSVP section elements
-    gsap.set('#rsvp h2', { opacity: 0, y: 30 });
-    gsap.set('#rsvp p', { opacity: 0, y: 30 });
-    gsap.set('#rsvp .bg-white\\/10', { opacity: 0, y: 30 });
+    // Set initial positions for RSVP section elements - visible by default
+    gsap.set('#rsvp .rsvp-title', { opacity: 1, y: 0 });
+    gsap.set('#rsvp .attendance-question', { opacity: 1, y: 0 });
+    gsap.set('#rsvp .attendance-btn', { opacity: 1, y: 0, pointerEvents: 'auto' });
+    gsap.set('#rsvp .event-question', { opacity: 1, y: 0 });
+    gsap.set('#rsvp .event-btn', { opacity: 1, y: 0, pointerEvents: 'auto' });
+    gsap.set('#rsvp .general-event-btn', { opacity: 1, y: 0, pointerEvents: 'auto' });
+    gsap.set('#rsvp .guest-list-title', { opacity: 1, y: 0 });
+    gsap.set('#rsvp .family-member-checkbox', { opacity: 1, y: 0 });
+    gsap.set('#rsvp input', { opacity: 0, y: 30 });
+    gsap.set('#rsvp textarea', { opacity: 0, y: 30 });
+    gsap.set('#rsvp .rsvp-submit-btn', { opacity: 0, y: 30 });
     
     // Ensure hero content is visible and invitation content is hidden on load
     heroContent.style.display = 'block';
@@ -1508,55 +1958,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // RSVP Section
-    ScrollTrigger.create({
-        trigger: "#rsvp",
-        start: "top 100%",
-        end: "bottom 20%",
-        toggleActions: "play none none reverse",
-        onEnter: () => {
-            const tl = gsap.timeline();
-            tl.to('#rsvp h2', { 
-                duration: 1, 
-                opacity: 1, 
-                y: 0, 
-                ease: "power2.out"
-            })
-            .to('#rsvp p', { 
-                duration: 1, 
-                opacity: 1, 
-                y: 0, 
-                ease: "power2.out"
-            }, "+=0.2")
-            .to('#rsvp .bg-white\\/10', { 
-                duration: 1, 
-                opacity: 1, 
-                y: 0, 
-                ease: "power2.out"
-            }, "+=0.2");
-        },
-        onEnterBack: () => {
-            const tl = gsap.timeline();
-            tl.to('#rsvp h2', { 
-                duration: 1, 
-                opacity: 1, 
-                y: 0, 
-                ease: "power2.out"
-            })
-            .to('#rsvp p', { 
-                duration: 1, 
-                opacity: 1, 
-                y: 0, 
-                ease: "power2.out"
-            }, "+=0.2")
-            .to('#rsvp .bg-white\\/10', { 
-                duration: 1, 
-                opacity: 1, 
-                y: 0, 
-                ease: "power2.out"
-            }, "+=0.2");
-        }
-    });
+    // RSVP Section - No ScrollTrigger, elements visible by default
     
     // Button click animation and functionality - improved smooth transition
     const heroOpenInvitationBtn = document.querySelector('.hero-open-invitation-btn');
@@ -1789,6 +2191,322 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Link buttons don't need JavaScript as they use regular navigation
+    
+    // Multi-step RSVP Functionality
+    
+    // Global variables for RSVP data
+    let familyRsvpData = {
+        attendance: null,
+        selectedEvents: [],
+        attendingMembers: [],
+        dietaryRequirements: '',
+        additionalNotes: ''
+    };
+    
+    let generalRsvpData = {
+        selectedEvents: [],
+        guestInfo: {},
+        guestNames: [],
+        dietaryRequirements: '',
+        additionalNotes: ''
+    };
+    
+    // Family RSVP Functions
+    function showFamilyStep(stepNumber) {
+        // Hide all steps
+        const allSteps = document.querySelectorAll('#family-rsvp-container .rsvp-step');
+        allSteps.forEach(step => {
+            step.classList.add('hidden');
+            step.classList.remove('active');
+        });
+        
+        // Show target step with animation
+        const targetStep = document.getElementById(`family-step-${stepNumber}`);
+        if (targetStep) {
+            targetStep.classList.remove('hidden');
+            targetStep.classList.add('active');
+            
+            // Animate step transition
+            gsap.fromTo(targetStep, 
+                { opacity: 0, y: 20 },
+                { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
+            );
+        }
+    }
+    
+    function initializeFamilyRsvp() {
+        // Check if family data exists and show teapai option if family category is "family"
+        if (window.weddingFamilyData && window.weddingFamilyData.relationship_type === 'Family') {
+            const teapaiOption = document.getElementById('teapai-option');
+            if (teapaiOption) {
+                teapaiOption.classList.remove('hidden');
+            }
+        }
+        
+        // Populate family members list
+        if (window.weddingFamilyMembers && window.weddingFamilyMembers.length > 0) {
+            const familyMembersList = document.getElementById('family-members-list');
+            if (familyMembersList) {
+                familyMembersList.innerHTML = '';
+                window.weddingFamilyMembers.forEach((member, index) => {
+                    const memberDiv = document.createElement('div');
+                    memberDiv.className = 'family-member-checkbox flex items-center justify-center';
+                    memberDiv.innerHTML = `
+                        <label class="flex items-center text-white text-2xs xs:text-xs cursor-pointer bg-white/10 backdrop-blur-sm border border-white/30 rounded px-4 py-3 hover:bg-white/20 transition-all duration-300 w-full max-w-xs">
+                            <input type="checkbox" 
+                                   name="family_members[]" 
+                                   value="${index}" 
+                                   class="mr-3 w-4 h-4 text-white bg-white/10 border-white/30 rounded focus:ring-white/50 focus:ring-2">
+                            <span class="flex-1 text-center">${member}</span>
+                        </label>
+                    `;
+                    familyMembersList.appendChild(memberDiv);
+                });
+            }
+        }
+    }
+    
+    // General RSVP Functions
+    function showGeneralStep(stepNumber) {
+        document.querySelectorAll('#general-rsvp-container .rsvp-step').forEach(step => {
+            step.classList.add('hidden');
+            step.classList.remove('active');
+        });
+        
+        const targetStep = document.getElementById(`general-step-${stepNumber}`);
+        if (targetStep) {
+            targetStep.classList.remove('hidden');
+            targetStep.classList.add('active');
+        }
+    }
+    
+    function updateGeneralGuestNames() {
+        const guestCount = parseInt(document.getElementById('general-guest-count').value);
+        const guestNamesContainer = document.getElementById('general-guest-names');
+        
+        guestNamesContainer.innerHTML = '';
+        
+        for (let i = 1; i <= guestCount; i++) {
+            const inputDiv = document.createElement('div');
+            inputDiv.innerHTML = `
+                <input type="text" 
+                       name="guest_names[]" 
+                       placeholder="Guest ${i} Name" 
+                       required 
+                       class="w-full px-3 xs:px-4 py-2 xs:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded text-white placeholder-white/70 text-2xs xs:text-xs focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent">
+            `;
+            guestNamesContainer.appendChild(inputDiv);
+        }
+    }
+    
+    // Initialize multi-step RSVP
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check what RSVP containers exist
+        const familyContainer = document.getElementById('family-rsvp-container');
+        const generalContainer = document.getElementById('general-rsvp-container');
+        
+        // Initialize family RSVP if on family page
+        if (familyContainer) {
+            // First initialize family data
+            initializeFamilyRsvp();
+            
+            // Attach event listeners with debugging
+            const attendanceBtns = document.querySelectorAll('.attendance-btn');
+            console.log('Found attendance buttons:', attendanceBtns.length);
+            
+            attendanceBtns.forEach((btn, index) => {
+                console.log('Attaching listener to button', index, btn.textContent.trim());
+                btn.style.border = '2px solid red'; // Debug: make buttons obvious
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Button clicked:', this.dataset.answer, this.textContent.trim());
+                    const answer = this.dataset.answer;
+                    familyRsvpData.attendance = answer;
+                    
+                    if (answer === 'yes') {
+                        console.log('Going to step 2');
+                        showFamilyStep(2);
+                    } else {
+                        console.log('Submitting decline');
+                        submitFamilyRsvp();
+                    }
+                });
+            });
+            
+            // Family Step 2: Event selection
+            document.querySelectorAll('.event-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const event = this.dataset.event;
+                    
+                    if (event === 'both') {
+                        // Select all available events
+                        familyRsvpData.selectedEvents = ['church', 'reception'];
+                        if (window.weddingFamilyData && window.weddingFamilyData.relationship_type === 'Family') {
+                            familyRsvpData.selectedEvents.push('teapai');
+                        }
+                    } else {
+                        familyRsvpData.selectedEvents = [event];
+                    }
+                    
+                    showFamilyStep(3);
+                });
+            });
+            
+            // Family Step 3: Submit
+            document.getElementById('family-submit-btn').addEventListener('click', function() {
+                // Collect attending family members
+                const checkedMembers = document.querySelectorAll('#family-members-list input[type="checkbox"]:checked');
+                familyRsvpData.attendingMembers = Array.from(checkedMembers).map(cb => cb.value);
+                
+                // Collect additional info
+                familyRsvpData.dietaryRequirements = document.getElementById('family-dietary-requirements').value;
+                familyRsvpData.additionalNotes = document.getElementById('family-additional-notes').value;
+                
+                submitFamilyRsvp();
+            });
+        }
+        
+        // Initialize general RSVP
+        if (document.getElementById('general-rsvp-container')) {
+            // General Step 1: Event selection
+            document.querySelectorAll('.general-event-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const event = this.dataset.event;
+                    
+                    if (event === 'both') {
+                        generalRsvpData.selectedEvents = ['church', 'reception'];
+                    } else {
+                        generalRsvpData.selectedEvents = [event];
+                    }
+                    
+                    showGeneralStep(2);
+                });
+            });
+            
+            // General guest count change
+            document.getElementById('general-guest-count').addEventListener('change', updateGeneralGuestNames);
+            
+            // Initialize with 1 guest
+            updateGeneralGuestNames();
+            
+            // General Step 2: Submit
+            document.getElementById('general-submit-btn').addEventListener('click', function() {
+                // Collect guest info
+                generalRsvpData.guestInfo.name = document.getElementById('general-guest-name').value;
+                generalRsvpData.guestInfo.email = document.getElementById('general-guest-email').value;
+                generalRsvpData.guestInfo.count = document.getElementById('general-guest-count').value;
+                
+                // Collect guest names
+                const guestNameInputs = document.querySelectorAll('#general-guest-names input[name="guest_names[]"]');
+                generalRsvpData.guestNames = Array.from(guestNameInputs).map(input => input.value);
+                
+                // Collect additional info
+                generalRsvpData.dietaryRequirements = document.getElementById('general-dietary-requirements').value;
+                generalRsvpData.additionalNotes = document.getElementById('general-additional-notes').value;
+                
+                submitGeneralRsvp();
+            });
+        }
+    });
+    
+    // Submit functions
+    function submitFamilyRsvp() {
+        const submitBtn = document.getElementById('family-submit-btn');
+        if (submitBtn) {
+            submitBtn.textContent = 'SUBMITTING...';
+            submitBtn.disabled = true;
+        }
+        
+        // Prepare data for submission
+        const formData = {
+            action: 'wedding_rsvp_submit',
+            guest_id: window.weddingMainGuest ? window.weddingMainGuest.id : null,
+            attendance: familyRsvpData.attendance,
+            events: familyRsvpData.selectedEvents,
+            attending_members: familyRsvpData.attendingMembers,
+            dietary_requirements: familyRsvpData.dietaryRequirements,
+            additional_notes: familyRsvpData.additionalNotes,
+            nonce: '<?php echo wp_create_nonce('wedding_rsvp_nonce'); ?>'
+        };
+        
+        // Submit via AJAX
+        fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showFamilyStep('success');
+                document.getElementById('family-rsvp-success').classList.remove('hidden');
+            } else {
+                alert('Error: ' + (data.data || 'Something went wrong. Please try again.'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Network error. Please try again.');
+        })
+        .finally(() => {
+            if (submitBtn) {
+                submitBtn.textContent = 'SUBMIT RSVP';
+                submitBtn.disabled = false;
+            }
+        });
+    }
+    
+    function submitGeneralRsvp() {
+        const submitBtn = document.getElementById('general-submit-btn');
+        if (submitBtn) {
+            submitBtn.textContent = 'SUBMITTING...';
+            submitBtn.disabled = true;
+        }
+        
+        // Prepare data for submission
+        const formData = {
+            action: 'wedding_general_rsvp_submit',
+            guest_name: generalRsvpData.guestInfo.name,
+            guest_email: generalRsvpData.guestInfo.email,
+            guest_count: generalRsvpData.guestInfo.count,
+            guest_names: generalRsvpData.guestNames,
+            events: generalRsvpData.selectedEvents,
+            dietary_requirements: generalRsvpData.dietaryRequirements,
+            additional_notes: generalRsvpData.additionalNotes,
+            nonce: '<?php echo wp_create_nonce('wedding_rsvp_nonce'); ?>'
+        };
+        
+        // Submit via AJAX
+        fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('general-step-2').classList.add('hidden');
+                document.getElementById('general-rsvp-success').classList.remove('hidden');
+            } else {
+                alert('Error: ' + (data.data || 'Something went wrong. Please try again.'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Network error. Please try again.');
+        })
+        .finally(() => {
+            if (submitBtn) {
+                submitBtn.textContent = 'SUBMIT RSVP';
+                submitBtn.disabled = false;
+            }
+        });
+    }
     
     // Enhanced responsive resize handler
     let resizeTimeout;
