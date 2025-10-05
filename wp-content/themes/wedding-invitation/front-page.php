@@ -191,23 +191,77 @@ get_header(); ?>
     
     <div class="relative z-10 flex items-center justify-center min-h-screen">
         <div class="max-w-xs xs:max-w-sm sm:max-w-lg md:max-w-2xl mx-auto px-3 xs:px-4 sm:px-6 py-6 xs:py-8 md:py-12 text-center">
-            <p class="ceremony-intro text-2xs xs:text-xs md:text-sm text-white font-light mb-1 xs:mb-2">We request the blessing of your presence as we are united in</p>
-            <h2 class="ceremony-title text-base xs:text-lg md:text-xl tracking-widest mb-1 xs:mb-2 text-white font-semibold">HOLY MATRIMONY</h2>
-            <div class="ceremony-time text-xs xs:text-sm md:text-base tracking-wider mb-3 xs:mb-4 text-white font-medium">9 AM ONWARD</div>
-            <div class="ceremony-location mb-4 xs:mb-6 text-white">
-                <div class="ceremony-place font-semibold tracking-widest text-xs xs:text-sm md:text-lg">GEREJA KATOLIK<br>SANTO LAURENSIUS</div>
-                <div class="ceremony-address text-2xs xs:text-xs md:text-sm font-light italic mt-1 xs:mt-2 mb-2 xs:mb-3">Jl. Sutera Utama No. 2, Alam Sutera<br>Tangerang, Banten 15326</div>
-                <a href="https://maps.app.goo.gl/wWV4HAQFGC6D9Xy76" target="_blank" class="ceremony-map-link text-2xs xs:text-xs underline text-white tracking-wider">VIEW MAP</a>
+            
+            <?php 
+            // Check if this is a family page and get invitation details
+            $show_church = true; // Default: show both for non-guest list users
+            $show_reception = true;
+            
+            if (function_exists('is_wedding_family_page') && is_wedding_family_page()) {
+                $family_data = function_exists('get_wedding_family_data') ? get_wedding_family_data() : null;
+                
+                // Debug: Show the family data structure
+                if ($family_data) {
+                    echo "<!-- DEBUG: Family data: " . print_r($family_data, true) . " -->";
+                    
+                    if (isset($family_data->invitations)) {
+                        echo "<!-- DEBUG: Invitations data: " . print_r($family_data->invitations, true) . " -->";
+                        
+                        // Check specific invitations for family users
+                        $show_church = isset($family_data->invitations->church) && $family_data->invitations->church->invited;
+                        $show_reception = isset($family_data->invitations->reception) && $family_data->invitations->reception->invited;
+                        
+                        echo "<!-- DEBUG: show_church = " . ($show_church ? 'true' : 'false') . " -->";
+                        echo "<!-- DEBUG: show_reception = " . ($show_reception ? 'true' : 'false') . " -->";
+                        
+                        // If neither is specifically invited, show both as fallback
+                        if (!$show_church && !$show_reception) {
+                            $show_church = true;
+                            $show_reception = true;
+                            echo "<!-- DEBUG: Using fallback - showing both -->";
+                        }
+                    } else {
+                        echo "<!-- DEBUG: No invitations data found -->";
+                    }
+                } else {
+                    echo "<!-- DEBUG: No family data found -->";
+                }
+            }
+            ?>
+            
+            <?php if ($show_church): ?>
+            <!-- Ceremony Section -->
+            <div class="ceremony-section <?php echo ($show_church && $show_reception) ? 'mb-4 xs:mb-6 md:mb-8' : ''; ?>">
+                <p class="ceremony-intro text-2xs xs:text-xs md:text-sm text-white font-light mb-1 xs:mb-2">We request the blessing of your presence as we are united in</p>
+                <h2 class="ceremony-title text-base xs:text-lg md:text-xl tracking-widest mb-1 xs:mb-2 text-white font-semibold">HOLY MATRIMONY</h2>
+                <div class="ceremony-time text-xs xs:text-sm md:text-base tracking-wider mb-3 xs:mb-4 text-white font-medium">9 AM ONWARD</div>
+                <div class="ceremony-location mb-4 xs:mb-6 text-white">
+                    <div class="ceremony-place font-semibold tracking-widest text-xs xs:text-sm md:text-lg">GEREJA KATOLIK<br>SANTO LAURENSIUS</div>
+                    <div class="ceremony-address text-2xs xs:text-xs md:text-sm font-light italic mt-1 xs:mt-2 mb-2 xs:mb-3">Jl. Sutera Utama No. 2, Alam Sutera<br>Tangerang, Banten 15326</div>
+                    <a href="https://maps.app.goo.gl/wWV4HAQFGC6D9Xy76" target="_blank" class="ceremony-map-link text-2xs xs:text-xs underline text-white tracking-wider">VIEW MAP</a>
+                </div>
             </div>
+            <?php endif; ?>
+            
+            <?php if ($show_church && $show_reception): ?>
+            <!-- Divider between sections -->
             <hr class="ceremony-divider my-4 xs:my-6 md:my-8 border-white/30">
-            <p class="reception-intro text-2xs xs:text-xs md:text-sm text-white font-light mb-1 xs:mb-2">We request the pleasure of your company at our</p>
-            <h2 class="reception-title text-base xs:text-lg md:text-xl font-light text-white tracking-widest mb-1 xs:mb-2">EVENING RECEPTION</h2>
-            <div class="reception-time text-xs xs:text-sm md:text-base text-white font-semibold tracking-wider mb-3 xs:mb-4">6 PM ONWARD</div>
-            <div class="reception-location text-white mb-4 xs:mb-6">
-                <div class="reception-place font-semibold tracking-widest text-xs xs:text-sm md:text-lg">JHL SOLITAIRE</div>
-                <div class="reception-address text-2xs xs:text-xs md:text-sm font-light italic mt-1 xs:mt-2 mb-2 xs:mb-3">Jl. Gading Serpong Boulevard,<br>Blok S no. 5, Gading Serpong,<br>Tangerang, Banten 15810</div>
-                <a href="https://maps.app.goo.gl/xPCwuyatC8ghgDd79" target="_blank" class="reception-map-link text-2xs xs:text-xs underline text-white tracking-wider">VIEW MAP</a>
+            <?php endif; ?>
+            
+            <?php if ($show_reception): ?>
+            <!-- Reception Section -->
+            <div class="reception-section">
+                <p class="reception-intro text-2xs xs:text-xs md:text-sm text-white font-light mb-1 xs:mb-2">We request the pleasure of your company at our</p>
+                <h2 class="reception-title text-base xs:text-lg md:text-xl font-light text-white tracking-widest mb-1 xs:mb-2">EVENING RECEPTION</h2>
+                <div class="reception-time text-xs xs:text-sm md:text-base text-white font-semibold tracking-wider mb-3 xs:mb-4">6 PM ONWARD</div>
+                <div class="reception-location text-white mb-4 xs:mb-6">
+                    <div class="reception-place font-semibold tracking-widest text-xs xs:text-sm md:text-lg">JHL SOLITAIRE</div>
+                    <div class="reception-address text-2xs xs:text-xs md:text-sm font-light italic mt-1 xs:mt-2 mb-2 xs:mb-3">Jl. Gading Serpong Boulevard,<br>Blok S no. 5, Gading Serpong,<br>Tangerang, Banten 15810</div>
+                    <a href="https://maps.app.goo.gl/xPCwuyatC8ghgDd79" target="_blank" class="reception-map-link text-2xs xs:text-xs underline text-white tracking-wider">VIEW MAP</a>
+                </div>
             </div>
+            <?php endif; ?>
+            
         </div>
     </div>
 </section>

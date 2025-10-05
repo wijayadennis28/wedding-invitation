@@ -390,12 +390,45 @@ class WeddingRSVP {
             if ($guest) {
                 error_log("Wedding URL Debug - Guest found: " . $guest->primary_guest_name);
                 
+                // Get invitations for this guest
+                $invitations = $wpdb->get_results($wpdb->prepare("
+                    SELECT e.event_type, gi.is_invited, gi.gets_souvenir 
+                    FROM {$this->table_guest_invitations} gi
+                    JOIN {$this->table_events} e ON gi.event_id = e.id
+                    WHERE gi.guest_id = %d
+                ", $guest->id));
+                
+                // Build guest data with invitations
+                $guest_data = [
+                    'id' => $guest->id,
+                    'primary_guest_name' => $guest->primary_guest_name,
+                    'phone_number' => $guest->phone_number,
+                    'pax_num' => $guest->pax_num,
+                    'invitation_type' => $guest->invitation_type,
+                    'relationship_type' => $guest->relationship_type ?? 'Friend',
+                    'family_members' => json_decode($guest->family_members, true) ?? [],
+                    'invitations' => []
+                ];
+                
+                foreach ($invitations as $inv) {
+                    $guest_data['invitations'][$inv->event_type] = [
+                        'invited' => $inv->is_invited === 'yes',
+                        'souvenir' => $inv->gets_souvenir === 'yes'
+                    ];
+                }
+                
+                // Convert to object for consistency with template usage
+                $guest_object = (object) $guest_data;
+                $guest_object->invitations = (object) array_map(function($inv) {
+                    return (object) $inv;
+                }, $guest_data['invitations']);
+                
                 // Set global data for templates
                 global $wedding_family_data, $wedding_guests_data;
-                $wedding_family_data = $guest; // Use guest as family data
-                $wedding_guests_data = [$guest]; // Array with the guest
+                $wedding_family_data = $guest_object;
+                $wedding_guests_data = [$guest_object];
                 
-                error_log("Wedding URL Debug - Global data set for guest");
+                error_log("Wedding URL Debug - Global data set for guest with invitations: " . print_r($guest_data['invitations'], true));
                 return;
             } else {
                 error_log("Wedding URL Debug - No guest found with name: " . $guest_name);
