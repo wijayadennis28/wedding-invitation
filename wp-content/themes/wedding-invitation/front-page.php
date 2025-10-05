@@ -1427,7 +1427,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
     
-    // Prevent scrolling during hero section
+    // Disable scrolling only on hero section
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
     
@@ -1482,9 +1482,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set the correct image immediately to prevent flash
     backgroundImage.src = initialImageSrc;
     
-    // Disable scrolling initially
-    let scrollEnabled = false;
-    document.body.style.overflow = 'hidden';
+    // Normal scrolling enabled from start
+    // Scroll prevention removed
     
     // Set initial positions for hero content
     gsap.set('.monogram-combined', { y: -window.innerHeight, opacity: 0 });
@@ -1626,12 +1625,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, "+=0.3")
     // Enable scrolling after animation completes with hidden scrollbars
     .call(() => {
-        scrollEnabled = true;
-        document.body.style.overflow = 'auto';
-        document.documentElement.style.overflow = 'auto';
-        // Hide scrollbars but keep functionality
-        document.body.classList.add('scrollbar-hide');
-        document.documentElement.classList.add('scrollbar-hide');
+        // Scroll prevention removed - normal scrolling allowed
         
         // Enable button clicking only after it's fully visible
         const openBtn = document.querySelector('.hero-open-invitation-btn');
@@ -1641,35 +1635,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Function to enable scrolling with hidden scrollbars
-    function enableScrolling() {
-        if (!scrollEnabled) {
-            scrollEnabled = true;
-            document.body.style.overflow = 'auto';
-            document.documentElement.style.overflow = 'auto';
-            // Add classes to hide scrollbars
-            document.body.classList.add('scrollbar-hide');
-            document.documentElement.classList.add('scrollbar-hide');
-        }
-    }
+    // Scroll enabling function removed
     
-    // Override scroll events until animation is complete
-    function preventScroll(e) {
-        if (!scrollEnabled) {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }
-    }
-    
-    // Add scroll prevention
-    window.addEventListener('wheel', preventScroll, { passive: false });
-    window.addEventListener('touchmove', preventScroll, { passive: false });
-    window.addEventListener('keydown', function(e) {
-        if (!scrollEnabled && [32, 33, 34, 35, 36, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-            e.preventDefault();
-            return false;
-        }
-    });
+    // Scroll prevention removed
     
     let currentSection = 'hero'; // 'hero', 'invitation'
     let monogramTransformed = false; // Flag to prevent duplicate monogram animations
@@ -1690,9 +1658,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 400);
     }
     
-    // Scroll-based animation for dynamic content (only after scroll is enabled)
+    // Scroll-based animation for dynamic content 
     window.addEventListener('scroll', () => {
-        if (!scrollEnabled) return;
+        // Scroll prevention removed - normal scrolling allowed
         
         const scrollY = window.scrollY;
         const windowHeight = window.innerHeight;
@@ -1723,7 +1691,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Mark as transformed to prevent duplicate animations
             monogramTransformed = true;
             
-            // Enable scrolling
+            // Enable scrolling when button is clicked
             document.body.style.overflow = 'auto';
             document.documentElement.style.overflow = 'auto';
             
@@ -1982,9 +1950,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         duration: 0.2,
                         ease: "back.out(1.2)",
                         onComplete: () => {
-                            // Enable scrolling when button is clicked
-                            enableScrolling();
-                            
                             // Mark as transformed to prevent ScrollTrigger conflicts
                             monogramTransformed = true;
                             
@@ -1999,9 +1964,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to smoothly transition to wedding details section
     function transitionToWeddingDetails() {
-        // Prevent scrolling during transition
-        document.body.style.overflow = 'hidden';
-        document.documentElement.style.overflow = 'hidden';
+        // No scroll blocking during transition - scroll stays enabled
         
         const heroMonogram = document.querySelector('.monogram-combined');
         const heroContent = document.getElementById('hero-content');
@@ -2009,12 +1972,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const weddingDetailsSection = document.getElementById('wedding-details');
         
         // Create smooth transition timeline - simplified and improved
-        const transitionTl = gsap.timeline({
-            onComplete: () => {
-                // Re-enable scrolling after transition
-                enableScrolling();
-            }
-        });
+        const transitionTl = gsap.timeline();
+        
+        // No automatic scroll enabling - only on button click
         
         // Step 1: Smooth scale down while keeping centered
         transitionTl.to(heroMonogram, {
