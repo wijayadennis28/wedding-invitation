@@ -605,6 +605,22 @@ get_header(); ?>
                             Your RSVP has been received. We can't wait to celebrate with you!
                         </p>
                     </div>
+                    
+                    <!-- Decline Message -->
+                    <div id="family-rsvp-decline" class="rsvp-step hidden text-center">
+                        <div class="thank-you-animation">
+                            <h3 class="thank-you-title text-lg xs:text-xl text-white mb-3 xs:mb-4 font-medium tracking-wider">
+                                THANK YOU FOR CONFIRMING!
+                            </h3>
+                            <p class="thank-you-subtitle text-2xs xs:text-xs text-white/90 leading-relaxed italic mb-4 xs:mb-6">
+                                You can change your response by<br>
+                                visiting or refreshing this page
+                            </p>
+                            <button type="button" class="back-to-start-btn flex items-center mx-auto text-white text-2xs xs:text-xs font-light tracking-wider hover:text-white/70 transition-all duration-300" onclick="resetFamilyForm()">
+                                <i class="fas fa-arrow-left mr-2"></i> BACK
+                            </button>
+                        </div>
+                    </div>
                 </div>
             <?php else: ?>
                 <!-- General Users Multi-step RSVP Form -->
@@ -709,6 +725,22 @@ get_header(); ?>
                         <p class="text-2xs xs:text-xs text-white/90 leading-relaxed">
                             Your RSVP has been received. We can't wait to celebrate with you!
                         </p>
+                    </div>
+                    
+                    <!-- Decline Message -->
+                    <div id="general-rsvp-decline" class="rsvp-step hidden text-center">
+                        <div class="thank-you-animation">
+                            <h3 class="thank-you-title text-lg xs:text-xl text-white mb-3 xs:mb-4 font-medium tracking-wider">
+                                THANK YOU FOR CONFIRMING!
+                            </h3>
+                            <p class="thank-you-subtitle text-2xs xs:text-xs text-white/90 leading-relaxed italic mb-4 xs:mb-6">
+                                You can change your response by<br>
+                                visiting or refreshing this page
+                            </p>
+                            <button type="button" class="back-to-start-btn flex items-center mx-auto text-white text-2xs xs:text-xs font-light tracking-wider hover:text-white/70 transition-all duration-300" onclick="resetGeneralForm()">
+                                <i class="fas fa-arrow-left mr-2"></i> BACK
+                            </button>
+                        </div>
                     </div>
                 </div>
             <?php endif; ?>
@@ -1251,6 +1283,90 @@ input, select, textarea {
     display: block;
 }
 
+/* Thank You Animation Styles */
+.thank-you-animation {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+    animation: thankYouFadeIn 0.8s ease-out forwards;
+}
+
+.thank-you-title {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideInFade 0.6s ease-out 0.2s forwards;
+}
+
+.thank-you-subtitle {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideInFade 0.6s ease-out 0.4s forwards;
+}
+
+.back-to-start-btn {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideInFade 0.6s ease-out 0.6s forwards;
+}
+
+@keyframes thankYouFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+    50% {
+        opacity: 0.8;
+        transform: translateY(-5px) scale(1.02);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes slideInFade {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Add a subtle glow effect to the thank you title */
+.thank-you-title {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    position: relative;
+}
+
+.thank-you-title::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    opacity: 0;
+    animation: shimmer 2s ease-in-out 0.8s forwards;
+}
+
+@keyframes shimmer {
+    0% {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    50% {
+        opacity: 1;
+        transform: translateX(0%);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
 /* Multi-step RSVP styles */
 .attendance-btn,
 .event-btn,
@@ -1609,6 +1725,151 @@ document.addEventListener('DOMContentLoaded', function() {
     gsap.set('#rsvp input', { opacity: 0, y: 30 });
     gsap.set('#rsvp textarea', { opacity: 0, y: 30 });
     gsap.set('#rsvp .rsvp-submit-btn', { opacity: 0, y: 30 });
+    
+    // RSVP Form Functions
+    window.showFamilyStep = function(step) {
+        console.log('Showing family step:', step);
+        
+        // Hide all steps
+        document.querySelectorAll('#family-rsvp-container .rsvp-step').forEach(stepEl => {
+            stepEl.classList.add('hidden');
+            stepEl.classList.remove('active');
+        });
+        
+        // Show the requested step
+        const targetStep = document.getElementById(`family-step-${step}`);
+        if (targetStep) {
+            targetStep.classList.remove('hidden');
+            targetStep.classList.add('active');
+        }
+    };
+    
+    window.showGeneralStep = function(step) {
+        console.log('Showing general step:', step);
+        
+        // Hide all steps
+        document.querySelectorAll('#general-rsvp-container .rsvp-step').forEach(stepEl => {
+            stepEl.classList.add('hidden');
+            stepEl.classList.remove('active');
+        });
+        
+        // Show the requested step
+        const targetStep = document.getElementById(`general-step-${step}`);
+        if (targetStep) {
+            targetStep.classList.remove('hidden');
+            targetStep.classList.add('active');
+        }
+    };
+    
+    window.resetFamilyForm = function() {
+        // Reset form data
+        document.querySelectorAll('#family-rsvp-container input, #family-rsvp-container textarea').forEach(input => {
+            if (input.type === 'checkbox' || input.type === 'radio') {
+                input.checked = false;
+            } else {
+                input.value = '';
+            }
+        });
+        
+        // Remove selected states
+        document.querySelectorAll('#family-rsvp-container .attendance-btn, #family-rsvp-container .event-btn').forEach(btn => {
+            btn.classList.remove('selected', 'bg-white', 'text-black');
+        });
+        
+        // Go back to step 1
+        showFamilyStep(1);
+    };
+    
+    window.resetGeneralForm = function() {
+        // Reset form data
+        document.querySelectorAll('#general-rsvp-container input, #general-rsvp-container textarea, #general-rsvp-container select').forEach(input => {
+            if (input.type === 'checkbox' || input.type === 'radio') {
+                input.checked = false;
+            } else {
+                input.value = '';
+            }
+        });
+        
+        // Remove selected states
+        document.querySelectorAll('#general-rsvp-container .general-event-btn').forEach(btn => {
+            btn.classList.remove('selected', 'bg-white', 'text-black');
+        });
+        
+        // Go back to step 1
+        showGeneralStep(1);
+    };
+    
+    // Handle family attendance buttons
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('attendance-btn')) {
+            const answer = e.target.dataset.answer;
+            
+            // Remove selection from all attendance buttons
+            document.querySelectorAll('.attendance-btn').forEach(btn => {
+                btn.classList.remove('selected', 'bg-white', 'text-black');
+                btn.classList.add('bg-white/20');
+            });
+            
+            // Add selection to clicked button
+            e.target.classList.add('selected', 'bg-white', 'text-black');
+            e.target.classList.remove('bg-white/20');
+            
+            setTimeout(() => {
+                if (answer === 'no') {
+                    // Show decline message
+                    document.querySelectorAll('#family-rsvp-container .rsvp-step').forEach(stepEl => {
+                        stepEl.classList.add('hidden');
+                        stepEl.classList.remove('active');
+                    });
+                    
+                    const declineStep = document.getElementById('family-rsvp-decline');
+                    if (declineStep) {
+                        declineStep.classList.remove('hidden');
+                        declineStep.classList.add('active');
+                    }
+                } else {
+                    // Continue to event selection
+                    showFamilyStep(2);
+                }
+            }, 800);
+        }
+        
+        // Handle event selection buttons for family
+        if (e.target.classList.contains('event-btn')) {
+            // Remove selection from all event buttons
+            document.querySelectorAll('.event-btn').forEach(btn => {
+                btn.classList.remove('selected', 'bg-white', 'text-black');
+                btn.classList.add('bg-white/10');
+            });
+            
+            // Add selection to clicked button
+            e.target.classList.add('selected', 'bg-white', 'text-black');
+            e.target.classList.remove('bg-white/10');
+            
+            // Continue to guest list
+            setTimeout(() => {
+                showFamilyStep(3);
+            }, 800);
+        }
+        
+        // Handle event selection buttons for general users
+        if (e.target.classList.contains('general-event-btn')) {
+            // Remove selection from all event buttons
+            document.querySelectorAll('.general-event-btn').forEach(btn => {
+                btn.classList.remove('selected', 'bg-white', 'text-black');
+                btn.classList.add('bg-white/10');
+            });
+            
+            // Add selection to clicked button
+            e.target.classList.add('selected', 'bg-white', 'text-black');
+            e.target.classList.remove('bg-white/10');
+            
+            // Continue to guest information
+            setTimeout(() => {
+                showGeneralStep(2);
+            }, 800);
+        }
+    });
     
     // Ensure hero content is visible and invitation content is hidden on load
     heroContent.style.display = 'block';
@@ -2440,8 +2701,13 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                showFamilyStep('success');
-                document.getElementById('family-rsvp-success').classList.remove('hidden');
+                // Check if this was a decline response
+                if (familyRsvpData.attendance === 'no') {
+                    showFamilyDecline();
+                } else {
+                    showFamilyStep('success');
+                    document.getElementById('family-rsvp-success').classList.remove('hidden');
+                }
             } else {
                 alert('Error: ' + (data.data || 'Something went wrong. Please try again.'));
             }
@@ -2456,6 +2722,104 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitBtn.disabled = false;
             }
         });
+    }
+    
+    // Animated decline functions
+    function showFamilyDecline() {
+        showFamilyStep('decline');
+        
+        // Reset and trigger animations
+        const thankYouAnimation = document.querySelector('#family-rsvp-decline .thank-you-animation');
+        const title = document.querySelector('#family-rsvp-decline .thank-you-title');
+        const subtitle = document.querySelector('#family-rsvp-decline .thank-you-subtitle');
+        const backBtn = document.querySelector('#family-rsvp-decline .back-to-start-btn');
+        
+        if (thankYouAnimation && title && subtitle && backBtn) {
+            // Reset animations
+            thankYouAnimation.style.animation = 'none';
+            title.style.animation = 'none';
+            subtitle.style.animation = 'none';
+            backBtn.style.animation = 'none';
+            
+            // Force reflow
+            thankYouAnimation.offsetHeight;
+            
+            // Restart animations
+            setTimeout(() => {
+                thankYouAnimation.style.animation = 'thankYouFadeIn 0.8s ease-out forwards';
+                title.style.animation = 'slideInFade 0.6s ease-out 0.2s forwards';
+                subtitle.style.animation = 'slideInFade 0.6s ease-out 0.4s forwards';
+                backBtn.style.animation = 'slideInFade 0.6s ease-out 0.6s forwards';
+            }, 50);
+        }
+    }
+    
+    function showGeneralDecline() {
+        showGeneralStep('decline');
+        
+        // Reset and trigger animations
+        const thankYouAnimation = document.querySelector('#general-rsvp-decline .thank-you-animation');
+        const title = document.querySelector('#general-rsvp-decline .thank-you-title');
+        const subtitle = document.querySelector('#general-rsvp-decline .thank-you-subtitle');
+        const backBtn = document.querySelector('#general-rsvp-decline .back-to-start-btn');
+        
+        if (thankYouAnimation && title && subtitle && backBtn) {
+            // Reset animations
+            thankYouAnimation.style.animation = 'none';
+            title.style.animation = 'none';
+            subtitle.style.animation = 'none';
+            backBtn.style.animation = 'none';
+            
+            // Force reflow
+            thankYouAnimation.offsetHeight;
+            
+            // Restart animations
+            setTimeout(() => {
+                thankYouAnimation.style.animation = 'thankYouFadeIn 0.8s ease-out forwards';
+                title.style.animation = 'slideInFade 0.6s ease-out 0.2s forwards';
+                subtitle.style.animation = 'slideInFade 0.6s ease-out 0.4s forwards';
+                backBtn.style.animation = 'slideInFade 0.6s ease-out 0.6s forwards';
+            }, 50);
+        }
+    }
+    
+    // Reset form functions
+    function resetFamilyForm() {
+        // Reset data
+        familyRsvpData = {
+            attendance: null,
+            selectedEvents: [],
+            attendingMembers: [],
+            dietaryRequirements: '',
+            additionalNotes: ''
+        };
+        
+        // Reset form elements
+        document.querySelectorAll('#family-rsvp-container input[type="checkbox"]').forEach(cb => cb.checked = false);
+        document.querySelectorAll('#family-rsvp-container textarea').forEach(ta => ta.value = '');
+        
+        // Show first step
+        showFamilyStep(1);
+    }
+    
+    function resetGeneralForm() {
+        // Reset data
+        generalRsvpData = {
+            selectedEvents: [],
+            guestInfo: {},
+            guestNames: [],
+            dietaryRequirements: '',
+            additionalNotes: ''
+        };
+        
+        // Reset form elements
+        document.querySelectorAll('#general-rsvp-container input').forEach(input => input.value = '');
+        document.querySelectorAll('#general-rsvp-container textarea').forEach(ta => ta.value = '');
+        document.getElementById('general-guest-count').value = '1';
+        updateGeneralGuestNames();
+        
+        // Show first step
+        showGeneralStep(1);
     }
     
     function submitGeneralRsvp() {
