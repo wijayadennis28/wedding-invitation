@@ -1574,7 +1574,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update on resize and orientation change
     window.addEventListener('resize', setViewportHeight);
     window.addEventListener('orientationchange', () => {
-        setTimeout(setViewportHeight, 100);
+        setTimeout(() => {
+            setViewportHeight();
+            // Refresh ScrollTrigger after viewport changes
+            if (typeof ScrollTrigger !== 'undefined') {
+                ScrollTrigger.refresh();
+            }
+        }, 100);
     });
     
     // Force scroll to top on page load/refresh
@@ -1958,14 +1964,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 400);
     }
     
-    // Scroll-based animation for dynamic content 
-    window.addEventListener('scroll', () => {
-        // Scroll prevention removed - normal scrolling allowed
+    // Mobile-specific scroll detection (backup system)
+    let isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    let lastScrollTime = 0;
+    
+    // Enhanced scroll listener for mobile compatibility
+    const scrollHandler = () => {
+        const now = Date.now();
+        if (now - lastScrollTime < 16) return; // Throttle to ~60fps
+        lastScrollTime = now;
         
         const scrollY = window.scrollY;
         const windowHeight = window.innerHeight;
         
-        // Calculate scroll trigger for other sections (keep hero active)
+        // Calculate scroll trigger for other sections
         const weddingDetailsTrigger = windowHeight * 0.8;
         
         if (scrollY > weddingDetailsTrigger) {
@@ -1973,7 +1985,40 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             // Still in hero section
         }
-    });
+        
+        // Mobile fallback animation triggers using getBoundingClientRect
+        if (isMobileDevice) {
+            const sections = [
+                '#ceremony-reception',
+                '#love-story', 
+                '#detailed-love-story',
+                '#final-love-story',
+                '#image-slider'
+            ];
+            
+            sections.forEach(sectionId => {
+                const section = document.querySelector(sectionId);
+                if (section) {
+                    const rect = section.getBoundingClientRect();
+                    const isInView = rect.top < windowHeight * 0.8 && rect.bottom > 0;
+                    
+                    if (isInView && !section.dataset.mobileAnimated) {
+                        section.dataset.mobileAnimated = 'true';
+                        console.log(`📱 Mobile fallback trigger for ${sectionId}`);
+                        
+                        // Trigger the same animations as ScrollTrigger
+                        const event = new CustomEvent('mobileScrollTrigger', { 
+                            detail: { sectionId } 
+                        });
+                        window.dispatchEvent(event);
+                    }
+                }
+            });
+        }
+    };
+    
+    // Add scroll listener with passive flag for better mobile performance
+    window.addEventListener('scroll', scrollHandler, { passive: true });
     
     // ScrollTrigger animations for all individual sections
     
@@ -2083,10 +2128,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Ceremony & Reception Section
     ScrollTrigger.create({
         trigger: "#ceremony-reception",
-        start: "top 100%",
+        start: "top 80%",
         end: "bottom 20%",
         toggleActions: "play none none reverse",
+        refreshPriority: -1,
+        invalidateOnRefresh: true,
         onEnter: () => {
+            console.log('🎬 Ceremony & Reception section entering...');
             const tl = gsap.timeline();
             tl.to('#ceremony-reception .ceremony-intro', { duration: 0.7, opacity: 1, y: 0, ease: "power2.out" })
               .to('#ceremony-reception .ceremony-title', { duration: 0.7, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
@@ -2115,10 +2163,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Love Story Section
     ScrollTrigger.create({
         trigger: "#love-story",
-        start: "top 100%",
+        start: "top 80%",
         end: "bottom 20%",
         toggleActions: "play none none reverse",
+        refreshPriority: -1,
+        invalidateOnRefresh: true,
         onEnter: () => {
+            console.log('💕 Love Story section entering...');
             const tl = gsap.timeline();
             tl.to('#love-story .love-story-title', { duration: 1, opacity: 1, y: 0, ease: "power2.out" })
               .to('#love-story .video-placeholder', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3")
@@ -2135,10 +2186,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Detailed Love Story Section
     ScrollTrigger.create({
         trigger: "#detailed-love-story",
-        start: "top 100%",
+        start: "top 80%",
         end: "bottom 20%",
         toggleActions: "play none none reverse",
+        refreshPriority: -1,
+        invalidateOnRefresh: true,
         onEnter: () => {
+            console.log('📖 Detailed Love Story section entering...');
             const tl = gsap.timeline();
             tl.to('#detailed-love-story .detailed-love-story-title', { duration: 1, opacity: 1, y: 0, ease: "power2.out" })
               .to('#detailed-love-story .narrative-opening', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3")
@@ -2163,10 +2217,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Final Love Story Section
     ScrollTrigger.create({
         trigger: "#final-love-story",
-        start: "top 100%",
+        start: "top 80%",
         end: "bottom 20%",
         toggleActions: "play none none reverse",
+        refreshPriority: -1,
+        invalidateOnRefresh: true,
         onEnter: () => {
+            console.log('💍 Final Love Story section entering...');
             const tl = gsap.timeline();
             tl.to('#final-love-story .final-love-story-title', { duration: 1, opacity: 1, y: 0, ease: "power2.out" })
               .to('#final-love-story .narrative-time-kind', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3")
@@ -2195,10 +2252,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Image Slider Section
     ScrollTrigger.create({
         trigger: "#image-slider",
-        start: "top 100%",
+        start: "top 80%",
         end: "bottom 20%",
         toggleActions: "play none none reverse",
+        refreshPriority: -1,
+        invalidateOnRefresh: true,
         onEnter: () => {
+            console.log('🖼️ Image Slider section entering...');
             const tl = gsap.timeline();
             tl.to('#image-slider .slider-quote-line1', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" })
               .to('#image-slider .slider-quote-line2', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
@@ -2412,7 +2472,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Show RSVP from wedding details section onwards - SIMPLE VERSION
     ScrollTrigger.create({
         trigger: "#wedding-details",
-        start: "top 95%",
+        start: "top 80%",
         onEnter: () => {
             console.log('Wedding details in view - ensuring RSVP button visible');
             forceShowRSVP();
@@ -2434,6 +2494,117 @@ document.addEventListener('DOMContentLoaded', function() {
             forceShowRSVP();
         }
     }, 3000);
+
+    // Mobile-specific ScrollTrigger enhancements
+    if (isMobileDevice) {
+        console.log('📱 Mobile device detected - applying mobile ScrollTrigger fixes');
+        
+        // Temporarily enable markers for mobile debugging (remove in production)
+        // ScrollTrigger.config({ markers: true });
+        
+        // Mobile refresh after layout is stable
+        setTimeout(() => {
+            ScrollTrigger.refresh();
+            console.log('📱 Mobile ScrollTrigger refreshed');
+        }, 1500);
+        
+        // Handle mobile viewport changes and orientation
+        let mobileRefreshTimeout;
+        const mobileRefreshHandler = () => {
+            clearTimeout(mobileRefreshTimeout);
+            mobileRefreshTimeout = setTimeout(() => {
+                ScrollTrigger.refresh();
+                console.log('📱 Mobile orientation/resize refresh');
+            }, 300);
+        };
+        
+        window.addEventListener('orientationchange', mobileRefreshHandler);
+        window.addEventListener('resize', mobileRefreshHandler);
+        
+        // Mobile touch momentum handling
+        let touchRefreshTimeout;
+        window.addEventListener('touchend', () => {
+            clearTimeout(touchRefreshTimeout);
+            touchRefreshTimeout = setTimeout(() => {
+                ScrollTrigger.refresh();
+            }, 100);
+        }, { passive: true });
+        
+        // Mobile fallback animation handler
+        window.addEventListener('mobileScrollTrigger', (e) => {
+            const sectionId = e.detail.sectionId;
+            console.log(`📱 Executing mobile fallback animation for ${sectionId}`);
+            
+            // Execute the same animations as ScrollTrigger onEnter
+            switch(sectionId) {
+                case '#ceremony-reception':
+                    const ceremonyTl = gsap.timeline();
+                    ceremonyTl.to('#ceremony-reception .ceremony-intro', { duration: 0.7, opacity: 1, y: 0, ease: "power2.out" })
+                      .to('#ceremony-reception .ceremony-title', { duration: 0.7, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
+                      .to('#ceremony-reception .ceremony-time', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
+                      .to('#ceremony-reception .ceremony-location', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
+                      .to('#ceremony-reception .ceremony-divider', { duration: 0.8, opacity: 1, scaleX: 1, ease: "power2.out" }, "+=0.2")
+                      .to('#ceremony-reception .reception-intro', { duration: 0.7, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
+                      .to('#ceremony-reception .reception-title', { duration: 0.7, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
+                      .to('#ceremony-reception .reception-time', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
+                      .to('#ceremony-reception .reception-location', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1");
+                    break;
+                    
+                case '#love-story':
+                    const loveTl = gsap.timeline();
+                    loveTl.to('#love-story .love-story-title', { duration: 1, opacity: 1, y: 0, ease: "power2.out" })
+                      .to('#love-story .video-placeholder', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3")
+                      .to('#love-story .love-quote', { duration: 1, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3");
+                    break;
+                    
+                case '#detailed-love-story':
+                    const detailedTl = gsap.timeline();
+                    detailedTl.to('#detailed-love-story .detailed-love-story-title', { duration: 1, opacity: 1, y: 0, ease: "power2.out" })
+                      .to('#detailed-love-story .narrative-opening', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3")
+                      .to('#detailed-love-story .narrative-college', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
+                      .to('#detailed-love-story .narrative-malaysia', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
+                      .to('#detailed-love-story .narrative-return', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
+                      .to('#detailed-love-story .narrative-2020', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
+                      .to('#detailed-love-story .narrative-2022', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4");
+                    break;
+                    
+                case '#final-love-story':
+                    const finalTl = gsap.timeline();
+                    finalTl.to('#final-love-story .final-love-story-title', { duration: 1, opacity: 1, y: 0, ease: "power2.out" })
+                      .to('#final-love-story .narrative-time-kind', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3")
+                      .to('#final-love-story .narrative-2023', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
+                      .to('#final-love-story .narrative-august', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
+                      .to('#final-love-story .vertical-line', { duration: 1, height: '4rem', opacity: 1, ease: "power2.out" }, "+=0.3")
+                      .to('#final-love-story .narrative-proposal', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
+                      .to('#final-love-story .narrative-forever', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
+                      .to('#final-love-story .narrative-yes', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
+                      .to('#final-love-story .narrative-question', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4");
+                    break;
+                    
+                case '#image-slider':
+                    const sliderTl = gsap.timeline();
+                    sliderTl.to('#image-slider .slider-quote-line1', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" })
+                      .to('#image-slider .slider-quote-line2', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
+                      .to('#image-slider .slider-quote-line3', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
+                      .to('#image-slider .slider-quote-line4', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
+                      .to('#image-slider .slider-quote-line5', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3")
+                      .to('#image-slider .slider-quote-line6', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
+                      .to('#image-slider .slider-quote-line7', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
+                      .to('#image-slider .slider-quote-line8', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
+                      .to('#image-slider .slider-image-placeholder', { duration: 1, opacity: 1, scale: 1, ease: "power2.out" }, "+=0.4")
+                      .to('#image-slider .slider-bottom-text', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3");
+                    break;
+            }
+        });
+    }
+    
+    // Desktop refresh (simpler)
+    if (!isMobileDevice) {
+        setTimeout(() => {
+            ScrollTrigger.refresh();
+            console.log('🖥️ Desktop ScrollTrigger refreshed');
+        }, 1000);
+    }
     
     // Click handler for sticky RSVP button
     const rsvpScrollBtn = document.querySelector('.rsvp-scroll-btn');
