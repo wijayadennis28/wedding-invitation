@@ -18,36 +18,35 @@ if (isset($_POST['action'])) {
         $family_member_data = [];
         if (isset($_POST['guest_names']) && is_array($_POST['guest_names'])) {
             $guest_names = $_POST['guest_names'];
-            $guest_titles = $_POST['guest_titles'] ?? [];
-            $guest_genders = $_POST['guest_genders'] ?? [];
             
             for ($i = 0; $i < count($guest_names); $i++) {
                 if (!empty(trim($guest_names[$i]))) {
-                    $family_member_data[] = [
-                        'name' => sanitize_text_field(trim($guest_names[$i])),
-                        'title' => sanitize_text_field($guest_titles[$i] ?? 'Mr.'),
-                        'gender' => sanitize_text_field($guest_genders[$i] ?? 'Male')
-                    ];
+                    $family_member_data[] = sanitize_text_field(trim($guest_names[$i]));
                 }
             }
         }
         
         $guest_data = [
+            'family_id' => 0, // Will be updated after insert
             'primary_guest_name' => sanitize_text_field($_POST['primary_guest_name']),
-            'title' => sanitize_text_field($_POST['title']),
-            'gender' => sanitize_text_field($_POST['gender']),
             'phone_number' => sanitize_text_field($_POST['phone_number']),
             'pax_num' => intval($_POST['pax_num']),
             'invitation_type' => sanitize_text_field($_POST['invitation_type']),
             'relationship_type' => sanitize_text_field($_POST['relationship_type']),
-            'is_primary' => true,
             'family_members' => json_encode($family_member_data)
         ];
         
         $result = $wpdb->insert('wp_wedding_guests', $guest_data);
         $guest_id = $wpdb->insert_id;
         
+        // Debug output
+        if ($wpdb->last_error) {
+            echo '<div class="notice notice-error"><p>Database Error: ' . $wpdb->last_error . '</p></div>';
+        }
+        
+        // Update family_id to be the same as guest_id for primary guests
         if ($guest_id) {
+            $wpdb->update('wp_wedding_guests', ['family_id' => $guest_id], ['id' => $guest_id]);
             // Get event IDs
             $events = $wpdb->get_results("SELECT id, event_type FROM wp_wedding_events ORDER BY id");
             
@@ -78,25 +77,17 @@ if (isset($_POST['action'])) {
         $family_member_data = [];
         if (isset($_POST['guest_names']) && is_array($_POST['guest_names'])) {
             $guest_names = $_POST['guest_names'];
-            $guest_titles = $_POST['guest_titles'] ?? [];
-            $guest_genders = $_POST['guest_genders'] ?? [];
             
             for ($i = 0; $i < count($guest_names); $i++) {
                 if (!empty(trim($guest_names[$i]))) {
-                    $family_member_data[] = [
-                        'name' => sanitize_text_field(trim($guest_names[$i])),
-                        'title' => sanitize_text_field($guest_titles[$i] ?? 'Mr.'),
-                        'gender' => sanitize_text_field($guest_genders[$i] ?? 'Male')
-                    ];
+                    $family_member_data[] = sanitize_text_field(trim($guest_names[$i]));
                 }
             }
         }
         
-        // Update guest data
+                // Update guest data
         $guest_data = [
             'primary_guest_name' => sanitize_text_field($_POST['primary_guest_name']),
-            'title' => sanitize_text_field($_POST['title']),
-            'gender' => sanitize_text_field($_POST['gender']),
             'phone_number' => sanitize_text_field($_POST['phone_number']),
             'pax_num' => intval($_POST['pax_num']),
             'invitation_type' => sanitize_text_field($_POST['invitation_type']),
@@ -105,6 +96,11 @@ if (isset($_POST['action'])) {
         ];
         
         $result = $wpdb->update('wp_wedding_guests', $guest_data, ['id' => $family_id]);
+        
+        // Debug output
+        if ($wpdb->last_error) {
+            echo '<div class="notice notice-error"><p>Database Error: ' . $wpdb->last_error . '</p></div>';
+        }
         
         if ($result !== false) {
             // Get event IDs
@@ -610,8 +606,6 @@ $reception_invited = $wpdb->get_var("
                 <tr>
                     <th>ID</th>
                     <th>Primary Guest</th>
-                    <th>Title</th>
-                    <th>Gender</th>
                     <th>Phone</th>
                     <th>Guests</th>
                     <th>Type</th>
@@ -653,8 +647,6 @@ $reception_invited = $wpdb->get_var("
                     <tr data-family-id="<?php echo $family->id; ?>">
                         <td><?php echo $family->id; ?></td>
                         <td><strong><?php echo htmlspecialchars($family->primary_guest_name); ?></strong></td>
-                        <td><span style="background: <?php echo in_array($family->title ?? 'Mr.', ['Dr.', 'Prof.', 'Rev.', 'Hon.']) ? '#007cba' : '#6c757d'; ?>; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px;"><?php echo htmlspecialchars($family->title ?? 'Mr.'); ?></span></td>
-                        <td><span style="background: <?php echo ($family->gender ?? 'Male') == 'Male' ? '#0073aa' : (($family->gender ?? 'Male') == 'Female' ? '#d63384' : '#6c757d'); ?>; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px;"><?php echo htmlspecialchars($family->gender ?? 'Male'); ?></span></td>
                         <td><?php echo htmlspecialchars($family->phone_number ?: '-'); ?></td>
                         <td><?php echo $member_count; ?> / <?php echo $family->pax_num; ?></td>
                         <td><span style="background: <?php echo $family->invitation_type == 'Printed' ? '#ffc107' : '#17a2b8'; ?>; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px;"><?php echo $family->invitation_type; ?></span></td>
@@ -722,32 +714,9 @@ $reception_invited = $wpdb->get_var("
                         </div>
                         
                         <div class="form-group">
-                            <label>Title *</label>
-                            <select name="title" required>
-                                <option value="Mr.">Mr.</option>
-                                <option value="Mrs.">Mrs.</option>
-                                <option value="Ms.">Ms.</option>
-                                <option value="Miss">Miss</option>
-                                <option value="Dr.">Dr.</option>
-                                <option value="Prof.">Prof.</option>
-                                <option value="Rev.">Rev.</option>
-                                <option value="Hon.">Hon.</option>
-                                <option value="Capt.">Capt.</option>
-                                <option value="Col.">Col.</option>
-                                <option value="Gen.">Gen.</option>
-                                <option value="Adm.">Adm.</option>
-                                <option value="Sir">Sir</option>
-                                <option value="Dame">Dame</option>
-                                <option value="Lord">Lord</option>
-                                <option value="Lady">Lady</option>
-                            </select>
+                            <label>Phone Number</label>
+                            <input type="text" name="phone_number" placeholder="+628123456789">
                         </div>
-                        
-                        <div class="form-group">
-                            <label>Gender *</label>
-                            <select name="gender" required>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
                                 <option value="Other">Other</option>
                             </select>
                         </div>
@@ -846,37 +815,6 @@ $reception_invited = $wpdb->get_var("
                         <div class="form-group">
                             <label>Primary Guest Name *</label>
                             <input type="text" name="primary_guest_name" id="edit_primary_guest_name" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Title *</label>
-                            <select name="title" id="edit_title" required>
-                                <option value="Mr.">Mr.</option>
-                                <option value="Mrs.">Mrs.</option>
-                                <option value="Ms.">Ms.</option>
-                                <option value="Miss">Miss</option>
-                                <option value="Dr.">Dr.</option>
-                                <option value="Prof.">Prof.</option>
-                                <option value="Rev.">Rev.</option>
-                                <option value="Hon.">Hon.</option>
-                                <option value="Capt.">Capt.</option>
-                                <option value="Col.">Col.</option>
-                                <option value="Gen.">Gen.</option>
-                                <option value="Adm.">Adm.</option>
-                                <option value="Sir">Sir</option>
-                                <option value="Dame">Dame</option>
-                                <option value="Lord">Lord</option>
-                                <option value="Lady">Lady</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Gender *</label>
-                            <select name="gender" id="edit_gender" required>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Other">Other</option>
-                            </select>
                         </div>
                         
                         <div class="form-group">
@@ -980,30 +918,7 @@ $reception_invited = $wpdb->get_var("
             <div class="form-group">
                 <label>Family Member ${index + 1}</label>
                 <div class="guest-input-group" style="display: flex; gap: 10px; align-items: center;">
-                    <select name="guest_titles[]" style="width: 80px;">
-                        <option value="Mr.">Mr.</option>
-                        <option value="Mrs.">Mrs.</option>
-                        <option value="Ms.">Ms.</option>
-                        <option value="Miss">Miss</option>
-                        <option value="Dr.">Dr.</option>
-                        <option value="Prof.">Prof.</option>
-                        <option value="Rev.">Rev.</option>
-                        <option value="Hon.">Hon.</option>
-                        <option value="Capt.">Capt.</option>
-                        <option value="Col.">Col.</option>
-                        <option value="Gen.">Gen.</option>
-                        <option value="Adm.">Adm.</option>
-                        <option value="Sir">Sir</option>
-                        <option value="Dame">Dame</option>
-                        <option value="Lord">Lord</option>
-                        <option value="Lady">Lady</option>
-                    </select>
                     <input type="text" name="guest_names[]" placeholder="Enter name" style="flex: 1;">
-                    <select name="guest_genders[]" style="width: 80px;">
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
-                    </select>
                     <button type="button" class="remove-guest" onclick="removeGuestField(this)">Remove</button>
                 </div>
             </div>

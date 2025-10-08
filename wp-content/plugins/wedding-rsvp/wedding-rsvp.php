@@ -784,7 +784,7 @@ class WeddingRSVP {
         $message .= "⚠️ Kindly RSVP through the website by *19 October 2025*\n";
         $message .= "Please note that we may not be able to accommodate confirmations beyond that date.\n\n";
         $message .= "Warm regards,\n";
-        $message .= "Mr. Saleh Widjaja & Mrs. Soesi Wijaya";
+        $message .= "Dennis Wijaya & Emilia Pramudi Bewintara";
         
         // Don't encode on server side, let JavaScript handle it properly
         $message = trim($message);
@@ -842,11 +842,7 @@ class WeddingRSVP {
                 for ($i = 2; $i <= 6; $i++) {
                     $guest_key = 'guest_' . $i;
                     if (!empty($csv_data[$guest_key])) {
-                        $family_members[] = [
-                            'name' => sanitize_text_field($csv_data[$guest_key]),
-                            'title' => 'Mr.', // Default title
-                            'gender' => 'Male' // Default gender
-                        ];
+                        $family_members[] = sanitize_text_field($csv_data[$guest_key]);
                     }
                 }
                 
@@ -862,8 +858,6 @@ class WeddingRSVP {
                 // Insert guest data
                 $guest_data = [
                     'primary_guest_name' => sanitize_text_field($csv_data['guest_name']),
-                    'title' => 'Mr.', // Default title
-                    'gender' => 'Male', // Default gender
                     'phone_number' => sanitize_text_field($csv_data['phone_num'] ?? ''),
                     'pax_num' => intval($csv_data['pax_num'] ?? 1),
                     'invitation_type' => sanitize_text_field($csv_data['type'] ?? 'Digital'),
@@ -924,39 +918,13 @@ class WeddingRSVP {
                 for ($i = 2; $i <= 6; $i++) {
                     $guest_key = 'guest_' . $i;
                     if (!empty($csv_data[$guest_key])) {
-                        // Smart title detection
-                        $name = $csv_data[$guest_key];
-                        $title = 'Mr.';
-                        $gender = 'Male';
-                        
-                        // Female name patterns
-                        if (stripos($name, 'emilia') !== false || 
-                            stripos($name, 'patricia') !== false || 
-                            stripos($name, 'linarti') !== false ||
-                            stripos($name, 'estherina') !== false ||
-                            stripos($name, 'odelia') !== false ||
-                            stripos($name, 'maria') !== false ||
-                            stripos($name, 'veronika') !== false ||
-                            stripos($name, 'yanti') !== false ||
-                            stripos($name, 'clarecia') !== false ||
-                            stripos($name, 'janet') !== false) {
-                            $title = 'Mrs.';
-                            $gender = 'Female';
-                        }
-                        
-                        $family_members[] = [
-                            'name' => sanitize_text_field($name),
-                            'title' => $title,
-                            'gender' => $gender
-                        ];
+                        $family_members[] = sanitize_text_field($csv_data[$guest_key]);
                     }
                 }
                 
-                // Determine relationship type and primary guest details
+                // Determine relationship type
                 $guest_name = $csv_data['guest_name'];
                 $relationship_type = 'friend'; // Default
-                $title = 'Mr.';
-                $gender = 'Male';
                 
                 // Family relationship detection
                 if (stripos($guest_name, 'wijaya') !== false || stripos($guest_name, 'widjaja') !== false) {
@@ -965,33 +933,9 @@ class WeddingRSVP {
                     $relationship_type = 'bride_family';
                 }
                 
-                // Gender and title detection for primary guest
-                if (stripos($guest_name, 'dennis') !== false || 
-                    stripos($guest_name, 'nikolas') !== false ||
-                    stripos($guest_name, 'glenn') !== false ||
-                    stripos($guest_name, 'albertus') !== false ||
-                    stripos($guest_name, 'kevin') !== false ||
-                    stripos($guest_name, 'andi') !== false ||
-                    stripos($guest_name, 'eric') !== false ||
-                    stripos($guest_name, 'edmund') !== false ||
-                    stripos($guest_name, 'sebastian') !== false ||
-                    stripos($guest_name, 'joseph') !== false) {
-                    $title = 'Mr.';
-                    $gender = 'Male';
-                } elseif (stripos($guest_name, 'emilia') !== false ||
-                          stripos($guest_name, 'linarti') !== false ||
-                          stripos($guest_name, 'maria') !== false ||
-                          stripos($guest_name, 'janet') !== false ||
-                          stripos($guest_name, 'clarecia') !== false) {
-                    $title = 'Mrs.';
-                    $gender = 'Female';
-                }
-                
                 // Insert guest data
                 $guest_data = [
                     'primary_guest_name' => sanitize_text_field($guest_name),
-                    'title' => $title,
-                    'gender' => $gender,
                     'phone_number' => sanitize_text_field($csv_data['phone_num'] ?? ''),
                     'pax_num' => intval($csv_data['pax_num'] ?? 1),
                     'invitation_type' => sanitize_text_field($csv_data['type'] ?? 'Digital'),
@@ -1156,95 +1100,62 @@ function format_smart_wedding_greeting($family_data, $guests_data) {
     
     // If only one guest (primary)
     if (empty($family_members)) {
-        $title = $primary_guest->title ?? 'Mr.';
         $name = $primary_guest->primary_guest_name;
-        return 'DEAR ' . $title . ' ' . strtoupper($name) . ',';
+        return 'DEAR ' . strtoupper($name) . ',';
     }
     
-    // Multiple guests - format based on relationships
+    // Multiple guests - simple format
     $total_guests = count($family_members) + 1; // +1 for primary guest
     
     // Handle couples (2 people)
     if ($total_guests == 2) {
-        $primary_title = $primary_guest->title ?? 'Mr.';
         $primary_name = $primary_guest->primary_guest_name;
-        $secondary = $family_members[0];
-        $secondary_title = $secondary['title'] ?? 'Mrs.';
-        $secondary_name = $secondary['name'];
+        $secondary_name = $family_members[0]; // Direct string now
         
-        // Extract first and last names
+        // Get last names
         $primary_parts = explode(' ', trim($primary_name));
-        $secondary_parts = explode(' ', trim($secondary_name));
-        
         $primary_first = $primary_parts[0];
-        $secondary_first = $secondary_parts[0];
-        
-        // Check if they have the same last name
         $primary_last = count($primary_parts) > 1 ? $primary_parts[count($primary_parts) - 1] : '';
+        
+        $secondary_parts = explode(' ', trim($secondary_name));
+        $secondary_first = $secondary_parts[0];
         $secondary_last = count($secondary_parts) > 1 ? $secondary_parts[count($secondary_parts) - 1] : '';
         
-        // Professional titles handling
-        $professional_titles = ['Dr.', 'Prof.', 'Rev.', 'Hon.', 'Capt.', 'Col.', 'Gen.', 'Adm.'];
-        $primary_is_professional = in_array($primary_title, $professional_titles);
-        $secondary_is_professional = in_array($secondary_title, $professional_titles);
-        
-        // Both have same professional title and same last name
-        if ($primary_is_professional && $secondary_is_professional && 
-            $primary_title === $secondary_title && $primary_last === $secondary_last && !empty($primary_last)) {
-            $title_plural = ($primary_title === 'Dr.') ? 'DRS.' : $primary_title . 'S';
-            return 'DEAR ' . $title_plural . ' ' . strtoupper($primary_last) . ',';
+        // If same last name, use family format
+        if (!empty($primary_last) && $primary_last === $secondary_last) {
+            return 'DEAR ' . strtoupper($primary_first) . ' AND ' . strtoupper($secondary_first) . ' ' . strtoupper($primary_last) . ',';
         }
         
-        // Traditional couple formatting (same last name)
-        if ($primary_last === $secondary_last && !empty($primary_last) && 
-            (($primary_title === 'Mr.' && $secondary_title === 'Mrs.') || 
-             ($primary_title === 'Mrs.' && $secondary_title === 'Mr.'))) {
-            return 'DEAR MR. AND MRS. ' . strtoupper($primary_last) . ',';
-        }
-        
-        // Different names or professional titles
-        if ($primary_is_professional || $secondary_is_professional || $primary_last !== $secondary_last) {
-            return 'DEAR ' . $primary_title . ' ' . strtoupper($primary_first) . ' ' . strtoupper($primary_last) . 
-                   ' AND ' . $secondary_title . ' ' . strtoupper($secondary_first) . ' ' . strtoupper($secondary_last) . ',';
-        }
-        
-        // Default couple format
-        return 'DEAR ' . $primary_title . ' ' . strtoupper($primary_first) . 
-               ' AND ' . $secondary_title . ' ' . strtoupper($secondary_first) . ' ' . strtoupper($primary_last) . ',';
+        // Different names - use full names
+        return 'DEAR ' . strtoupper($primary_first) . ' ' . strtoupper($primary_last) . 
+               ' AND ' . strtoupper($secondary_first) . ' ' . strtoupper($secondary_last) . ',';
     }
     
     // Family with children (3+ people)
     if ($total_guests >= 3) {
-        $professional_titles = ['Dr.', 'Prof.', 'Rev.', 'Hon.', 'Capt.', 'Col.', 'Gen.', 'Adm.'];
-        $primary_title = $primary_guest->title ?? 'Mr.';
         $primary_name = $primary_guest->primary_guest_name;
         $primary_parts = explode(' ', trim($primary_name));
         $primary_first = $primary_parts[0];
         $primary_last = count($primary_parts) > 1 ? $primary_parts[count($primary_parts) - 1] : $primary_name;
         
         // Check if there's a spouse (assume first family member)
-        $spouse = $family_members[0] ?? null;
-        if ($spouse) {
-            $spouse_title = $spouse['title'] ?? 'Mrs.';
+        $spouse_name = $family_members[0] ?? null;
+        if ($spouse_name) {
+            $spouse_parts = explode(' ', trim($spouse_name));
+            $spouse_last = count($spouse_parts) > 1 ? $spouse_parts[count($spouse_parts) - 1] : $spouse_name;
             
-            // Traditional family format with full primary name
-            if (($primary_title === 'Mr.' && $spouse_title === 'Mrs.') || 
-                ($primary_title === 'Mrs.' && $spouse_title === 'Mr.')) {
-                return 'DEAR ' . $primary_title . ' ' . strtoupper($primary_name) . ' AND FAMILY,';
-            }
-            
-            // Professional family format with full primary name
-            if (in_array($primary_title, $professional_titles)) {
-                return 'DEAR ' . $primary_title . ' ' . strtoupper($primary_name) . ' AND FAMILY,';
+            // If same last name, use family format
+            if (!empty($primary_last) && $primary_last === $spouse_last) {
+                return 'DEAR ' . strtoupper($primary_first) . ' AND ' . strtoupper($spouse_parts[0]) . ' ' . strtoupper($primary_last) . ' AND FAMILY,';
             }
         }
         
-        // Default family format with full primary name
-        return 'DEAR ' . $primary_title . ' ' . strtoupper($primary_name) . ' AND FAMILY,';
+        // Default family format
+        return 'DEAR ' . strtoupper($primary_name) . ' AND FAMILY,';
     }
     
     // Fallback
-    return 'DEAR ' . ($primary_guest->title ?? 'Mr.') . ' ' . strtoupper($primary_guest->primary_guest_name) . ',';
+    return 'DEAR ' . strtoupper($primary_guest->primary_guest_name) . ',';
 }
 
 // Initialize the plugin
