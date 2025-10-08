@@ -47,6 +47,22 @@ function wedding_invitation_scripts() {
     // Custom theme styles
     wp_enqueue_style('wedding-styles', get_template_directory_uri() . '/assets/css/wedding-styles.css', array(), '1.0.0');
     
+    // Wedding Details Container Script - New Single Container Implementation
+    wp_enqueue_script('wedding-details-container', get_template_directory_uri() . '/assets/js/wedding-details-container.js', array('gsap', 'gsap-scrolltrigger'), '1.0.0', true);
+    
+    // Localize script with wedding data
+    wp_localize_script('wedding-details-container', 'weddingData', array(
+        'templateUri' => get_template_directory_uri(),
+        'groomName' => get_theme_mod('groom_name', 'Dennis'),
+        'brideName' => get_theme_mod('bride_name', 'Emilia'),
+        'isMobile' => wp_is_mobile(),
+        'weddingImages' => array(
+            'wedding_details' => function_exists('get_wedding_section_image') ? get_wedding_section_image('wedding_details') : get_template_directory_uri() . '/assets/images/s.jpg',
+            'ceremony_reception' => function_exists('get_wedding_section_image') ? get_wedding_section_image('ceremony_reception') : get_template_directory_uri() . '/assets/images/s.jpg',
+            'rsvp' => function_exists('get_wedding_section_image') ? get_wedding_section_image('rsvp') : get_template_directory_uri() . '/assets/images/s.jpg',
+        )
+    ));
+    
     // Custom theme scripts - commented out since we're using inline scripts in front-page.php
     // wp_enqueue_script('wedding-scripts', get_template_directory_uri() . '/assets/js/wedding-scripts.js', array('gsap'), '1.0.0', true);
     

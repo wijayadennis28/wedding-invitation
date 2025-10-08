@@ -4,8 +4,8 @@
 
 get_header(); ?>
 
-<!-- Single Dynamic Section -->
-<section class="dynamic-section relative" style="margin: 0; padding: 0; height: 100vh; height: 100dvh; min-height: 100vh; min-height: 100dvh;">
+<!-- Single Dynamic Div -->
+<div class="dynamic-section relative" style="margin: 0; padding: 0; height: 100vh; height: 100dvh; min-height: 100vh; min-height: 100dvh;">
     <!-- Dynamic Background Image -->
     <div class="background-container fixed inset-0 z-0" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg'); background-size: cover; background-position: center;">
         <img id="background-image" src="<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg" alt="" class="w-full h-full object-cover transition-opacity duration-1000 responsive-bg-image" loading="eager" decoding="async" onload="console.log('Image loaded successfully')" onerror="console.log('Image failed to load')">
@@ -70,7 +70,7 @@ get_header(); ?>
                         We apologise for any misspellings of names or titles.
                     </p>
                     
-                    <button class="hero-open-invitation-btn bg-transparent border border-white text-white px-4 xs:px-6 sm:px-8 py-2 xs:py-3 text-xs xs:text-sm font-light tracking-wider xs:tracking-widest hover:bg-white hover:text-black transition-all duration-300">
+                    <button id="hero-open-invitation-btn" class="hero-open-invitation-btn bg-transparent border border-white text-white px-4 xs:px-6 sm:px-8 py-2 xs:py-3 text-xs xs:text-sm font-light tracking-wider xs:tracking-widest hover:bg-white hover:text-black transition-all duration-300">
                         OPEN THE INVITATION
                     </button>
                 </div>
@@ -101,7 +101,7 @@ get_header(); ?>
                 </div>
                 
                 <div class="invitation-button-container">
-                    <button class="open-invitation-btn bg-transparent border border-white text-white px-8 py-3 text-sm font-light tracking-widest hover:bg-white hover:text-black transition-all duration-300">
+                    <button id="open-invitation-btn" class="open-invitation-btn bg-transparent border border-white text-white px-8 py-3 text-sm font-light tracking-widest hover:bg-white hover:text-black transition-all duration-300">
                         OPEN THE INVITATION
                     </button>
                     <p class="reveal-text text-white text-sm mt-4 italic font-light">
@@ -110,390 +110,345 @@ get_header(); ?>
                 </div>
             </div>
             
+            <!-- NEW: Single Wedding Details Container - MOVED TO RSVP SECTION -->
+            <!-- All 6 sections now integrated into RSVP section below -->
+            
             
         </div>
     </div>
     
-</section>
+</div>
 
-
-
-<!-- Wedding Details Section -->
-<section id="wedding-details" class="wedding-details-section relative" style="margin: 0; padding: 0; height: 100vh; height: 100dvh; min-height: 100vh; min-height: 100dvh;">
-    <!-- Background Image -->
-    <div class="absolute inset-0 z-0">
-        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('wedding_details') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="Wedding Details" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-black/50"></div>
-    </div>
-    
-    <div class="relative z-10 flex items-center justify-center" style="height: 100vh; height: 100dvh; min-height: 100vh; min-height: 100dvh;">
-        <div class="max-w-xs xs:max-w-sm sm:max-w-lg md:max-w-2xl mx-auto px-3 xs:px-4 sm:px-6 py-6 xs:py-8 md:py-12 text-center">
-            <!-- Wedding Title -->
-            <div class="wedding-title-section mb-4 xs:mb-6 md:mb-8 text-center">
-                <h2 class="wedding-title text-sm xs:text-base md:text-xl font-light text-white mb-2 xs:mb-3 md:mb-4 tracking-wider italic">
-                    The wedding of
-                </h2>
-                <h1 class="wedding-couple-names text-lg xs:text-xl sm:text-2xl md:text-3xl font-medium text-white tracking-wider leading-tight">
-                    <?php echo strtoupper($groom_name . ' AND ' . $bride_name); ?>
-                </h1>
-            </div>
-            
-            <!-- Wedding Date -->
-            <div class="wedding-date-section mt-3 xs:mt-4 md:mt-8 mb-6 xs:mb-8 md:mb-12 text-center">
-                <p class="wedding-date text-xs xs:text-sm md:text-lg text-white font-light tracking-wide">
-                    Saturday, 22 November 2025
-                </p>
-            </div>
-            
-            <!-- Bible Verse -->
-            <div class="bible-verse-section mb-6 xs:mb-8 md:mb-12 text-center">
-                <p class="bible-verse text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light leading-relaxed max-w-xs xs:max-w-sm sm:max-w-lg mx-auto px-2 xs:px-4">
-                    "Love knows no limit to its endurance, <br>
-                    no end to its trust, love still stands <br>
-                    when all else has fallen."<br>
-                    <span class="verse-reference mt-4 xs:mt-6 md:mt-12 text-2xs xs:text-xs tracking-wider block">1 Corinthians 13:7-8</span>
-                </p>
-            </div>
-            
-            <!-- Wedding Details -->
-            <div class="wedding-info-section mb-6 xs:mb-8 md:mb-12 text-center">
-                <div class="grid grid-cols-2 gap-3 xs:gap-4 sm:gap-6 md:gap-8 max-w-xs xs:max-w-sm sm:max-w-lg mx-auto">
-                    <div class="groom-info">
-                        <h3 class="person-name text-sm xs:text-base md:text-lg text-white font-medium mb-1 xs:mb-2">Dennis <br>Wijaya</h3>
-                        <p class="person-details text-2xs xs:text-xs md:text-sm text-white font-light">
-                            First son of<br>
-                            <b>Saleh Widjaja </b> and<br>
-                            <b>Soesi Wijaya </b>
-                        </p>
-                    </div>
-                    
-                    <div class="bride-info">
-                        <h3 class="person-name text-sm xs:text-base md:text-lg text-white font-medium mb-1 xs:mb-2">Emilia Bewintara</h3>
-                        <p class="person-details text-2xs xs:text-xs md:text-sm text-white font-light">
-                            Second daughter of<br>
-                            <b>Budy Bewintara </b> and<br>
-                            <b>Lindawati</b>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Ceremony & Reception Section -->
-<section id="ceremony-reception" class="ceremony-reception-section relative min-h-screen">
-    <!-- Background Image -->
-    <div class="absolute inset-0 z-0">
-        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('ceremony_reception') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="Ceremony Reception" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-black/60"></div>
-    </div>
-    
-    <div class="relative z-10 flex items-center justify-center min-h-screen">
-        <div class="max-w-xs xs:max-w-sm sm:max-w-lg md:max-w-2xl mx-auto px-3 xs:px-4 sm:px-6 py-6 xs:py-8 md:py-12 text-center">
-            
-            <?php 
-            // Check if this is a family page and get invitation details
-            $show_church = true; // Default: show both for non-guest list users
-            $show_reception = true;
-            
-            if (function_exists('is_wedding_family_page') && is_wedding_family_page()) {
-                $family_data = function_exists('get_wedding_family_data') ? get_wedding_family_data() : null;
-                
-                if ($family_data && isset($family_data->invitations)) {
-                    // Check specific invitations for family users
-                    $show_church = isset($family_data->invitations->church) && $family_data->invitations->church->invited;
-                    $show_reception = isset($family_data->invitations->reception) && $family_data->invitations->reception->invited;
-                    
-                    // If neither is specifically invited, show both as fallback
-                    if (!$show_church && !$show_reception) {
-                        $show_church = true;
-                        $show_reception = true;
-                    }
-                }
-            }
-            ?>
-            
-            <?php if ($show_church): ?>
-            <!-- Ceremony Section -->
-            <div class="ceremony-section <?php echo ($show_church && $show_reception) ? 'mb-4 xs:mb-6 md:mb-8' : ''; ?>">
-                <p class="ceremony-intro text-2xs xs:text-xs md:text-sm text-white font-light mb-1 xs:mb-2">We request the blessing of your presence as we are united in</p>
-                <h2 class="ceremony-title text-base xs:text-lg md:text-xl tracking-widest mb-1 xs:mb-2 text-white font-semibold">HOLY MATRIMONY</h2>
-                <div class="ceremony-time text-xs xs:text-sm md:text-base tracking-wider mb-3 xs:mb-4 text-white font-medium">9 AM ONWARD</div>
-                <div class="ceremony-location mb-4 xs:mb-6 text-white">
-                    <div class="ceremony-place font-semibold tracking-widest text-xs xs:text-sm md:text-lg">GEREJA KATOLIK<br>SANTO LAURENSIUS</div>
-                    <div class="ceremony-address text-2xs xs:text-xs md:text-sm font-light italic mt-1 xs:mt-2 mb-2 xs:mb-3">Jl. Sutera Utama No. 2, Alam Sutera<br>Tangerang, Banten 15326</div>
-                    <a href="https://maps.app.goo.gl/wWV4HAQFGC6D9Xy76" target="_blank" class="ceremony-map-link text-2xs xs:text-xs underline text-white tracking-wider">VIEW MAP</a>
-                </div>
-            </div>
-            <?php endif; ?>
-            
-            <?php if ($show_church && $show_reception): ?>
-            <!-- Divider between sections -->
-            <hr class="ceremony-divider my-4 xs:my-6 md:my-8 border-white/30">
-            <?php endif; ?>
-            
-            <?php if ($show_reception): ?>
-            <!-- Reception Section -->
-            <div class="reception-section">
-                <p class="reception-intro text-2xs xs:text-xs md:text-sm text-white font-light mb-1 xs:mb-2">We request the pleasure of your company at our</p>
-                <h2 class="reception-title text-base xs:text-lg md:text-xl font-light text-white tracking-widest mb-1 xs:mb-2">EVENING RECEPTION</h2>
-                <div class="reception-time text-xs xs:text-sm md:text-base text-white font-semibold tracking-wider mb-3 xs:mb-4">6 PM ONWARD</div>
-                <div class="reception-location text-white mb-4 xs:mb-6">
-                    <div class="reception-place font-semibold tracking-widest text-xs xs:text-sm md:text-lg">JHL SOLITAIRE</div>
-                    <div class="reception-address text-2xs xs:text-xs md:text-sm font-light italic mt-1 xs:mt-2 mb-2 xs:mb-3">Jl. Gading Serpong Boulevard,<br>Blok S no. 5, Gading Serpong,<br>Tangerang, Banten 15810</div>
-                    <a href="https://maps.app.goo.gl/xPCwuyatC8ghgDd79" target="_blank" class="reception-map-link text-2xs xs:text-xs underline text-white tracking-wider">VIEW MAP</a>
-                </div>
-            </div>
-            <?php endif; ?>
-            
-        </div>
-    </div>
-</section>
-
-<!-- Love Story Section -->
-<section id="love-story" class="love-story-section relative min-h-screen">
-    <!-- Background Image -->
-    <div class="absolute inset-0 z-0">
-        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="Love Story" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-black/60"></div>
-    </div>
-    
-    <div class="relative z-10 flex items-center justify-center min-h-screen">
-        <div class="max-w-xs xs:max-w-sm sm:max-w-lg md:max-w-2xl mx-auto px-3 xs:px-4 sm:px-6 py-6 xs:py-8 md:py-12 text-center">
-            <!-- Love Story Title -->
-            <h2 class="love-story-title text-base xs:text-lg md:text-2xl font-bold mb-4 xs:mb-6 md:mb-8 tracking-wider italic text-white">
-                The Love Story
-            </h2>
-            
-            <!-- Video Container -->
-            <div class="love-story-video-container mb-4 xs:mb-6 md:mb-8 relative">
-                <div class="video-placeholder bg-gray-800 rounded-lg overflow-hidden relative aspect-video max-w-xs xs:max-w-sm md:max-w-md mx-auto">
-                    <!-- Placeholder for video -->
-                    <div class="video-overlay absolute inset-0 bg-black/50 flex items-center justify-center">
-                        <div class="play-button w-10 xs:w-12 md:w-16 h-10 xs:h-12 md:h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                            <div class="play-icon w-0 h-0 border-l-[12px] xs:border-l-[16px] md:border-l-[20px] border-l-white border-t-[8px] xs:border-t-[10px] md:border-t-[12px] border-t-transparent border-b-[8px] xs:border-b-[10px] md:border-b-[12px] border-b-transparent ml-1"></div>
-                        </div>
-                    </div>
-                    <!-- Placeholder image -->
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg" alt="Love Story" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
-                </div>
-            </div>
-            
-            <!-- Love Quote -->
-            <div class="love-quote-section mb-4 xs:mb-6 md:mb-8">
-                <p class="love-quote text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed max-w-xs xs:max-w-sm mx-auto px-2 xs:px-4">
-                    "..Their paths were always aligned,<br>
-                    <b>yet they never met,</b><br>
-                    as if the stars were never quite set."
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Detailed Love Story Section -->
-<section id="detailed-love-story" class="detailed-love-story-section relative min-h-screen">
-    <!-- Background Image -->
-    <div class="absolute inset-0 z-0">
-        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('detailed_love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="Detailed Love Story" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-black/60"></div>
-    </div>
-    
-    <div class="relative z-10 flex items-center justify-center min-h-screen">
-        <div class="max-w-xs xs:max-w-sm sm:max-w-lg md:max-w-2xl mx-auto px-3 xs:px-4 sm:px-6 py-4 xs:py-6 md:py-8 text-center">
-            <!-- Love Story Title -->
-            <h2 class="detailed-love-story-title text-base xs:text-xl md:text-2xl font-bold mb-4 xs:mb-6 mt-6 xs:mt-8 md:mt-10 tracking-wider italic text-white">
-                The Love Story
-            </h2>
-            
-            <!-- Love Story Narrative -->
-            <div class="love-story-narrative text-white text-2xs xs:text-xs sm:text-sm md:text-base leading-relaxed space-y-2 xs:space-y-3 max-w-xs xs:max-w-sm sm:max-w-lg mx-auto">
-                <p class="narrative-opening text-center mb-3 xs:mb-4">
-                    <strong>Their paths quietly overlapped.</strong><br>
-                    Always in the same places,<br>
-                    <strong>just never at the same time.</strong>
-                </p>
-                
-                <p class="narrative-college">
-                    During their college years in <strong>2018</strong>,<br>
-                    Emilia studied in Kelapa Gading but<br>
-                    had internships in Malaysia at UCSI University.<br>
-                    Dennis was studying nearby at SEGI College in Subang Jaya.
-                </p>
-                
-                <p class="narrative-malaysia">
-                    They visited the same places in Malaysia.<br>
-                    So close, so often, <strong>yet unaware</strong><br>
-                    that someone familiar was always there.
-                </p>
-                
-                <p class="narrative-return">
-                    When Dennis returned home to Kelapa Gading,<br>
-                    Emilia was there too...<br>
-                    <strong>Their paths aligned, yet never met,</strong><br>
-                    as if the stars were not quite set.
-                </p>
-                
-                <p class="narrative-2020">
-                    Then <strong>2020 came</strong>, two circles met in Discord's name.<br>
-                    A voice, a laugh. Something felt <strong>true</strong>, at least to him.<br>
-                    Before she knew.
-                </p>
-                
-                <p class="narrative-2022">
-                    <strong>In 2022</strong>, they met in person for the first time.<br>
-                    He liked her then. Clear and sincere.<br>
-                    But her heart wasn't ready, not yet near.
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Final Love Story Section -->
-<section id="final-love-story" class="final-love-story-section relative min-h-screen">
-    <!-- Background Image -->
-    <div class="absolute inset-0 z-0">
-        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('final_love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="Final Love Story" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-black/60"></div>
-    </div>
-    
-    <div class="relative z-10 flex items-center justify-center min-h-screen">
-        <div class="max-w-xs xs:max-w-sm sm:max-w-lg md:max-w-2xl mx-auto px-3 xs:px-4 sm:px-6 py-4 xs:py-6 md:py-8 text-center">
-            <!-- Love Story Title -->
-            <h2 class="final-love-story-title text-base xs:text-xl md:text-2xl font-bold mb-4 xs:mb-6 tracking-wider italic text-white">
-                The Love Story
-            </h2>
-            
-            <!-- Final Love Story Narrative -->
-            <div class="final-love-story-narrative text-white text-2xs xs:text-xs sm:text-sm md:text-base leading-relaxed space-y-2 xs:space-y-3 max-w-xs xs:max-w-sm sm:max-w-lg mx-auto">
-                <p class="narrative-time-kind text-center mb-3 xs:mb-4">
-                    Still, time was kind and gently played<br>
-                    through work and life, the bond was laid.
-                </p>
-                
-                <p class="narrative-2023">
-                    <strong>By 2023</strong>, she saw it too. The steady light she once outgrew.
-                </p>
-                
-                <p class="narrative-august">
-                    On August, he took the leap, for a love no longer fast asleep.<br>
-                    And this time, when he reached for her,<br>
-                    her heart was open, soft, and sure.
-                </p>
-                
-                <!-- Animated vertical line before proposal -->
-                <div class="proposal-divider flex justify-center my-4 xs:my-6">
-                    <div class="vertical-line w-px bg-white/50 h-12 xs:h-16"></div>
-                </div>
-                
-                <p class="narrative-proposal">
-                    <strong>On April 28th, 2024</strong>,<br>
-                    under a sky full of hope and love,<br>
-                    with steady hands and love nearby.<br>
-                    He asked again, his voice sincere.
-                </p>
-                
-                <p class="narrative-forever">
-                    This time, for forever, through every year.
-                </p>
-                
-                <p class="narrative-yes">
-                    And in that golden, honest light,<br>
-                    <strong>she said yes</strong>, to what felt right.
-                </p>
-                
-                <p class="narrative-question text-center font-semibold">
-                    We said yes, will you say yes to us?
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Image Slider Section -->
-<section id="image-slider" class="image-slider-section relative min-h-screen">
-    <!-- Background Image -->
-    <div class="absolute inset-0 z-0">
-        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('image_slider') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="Image Slider" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-black/60"></div>
-    </div>
-    
-    <div class="relative z-10 flex items-center justify-center min-h-screen">
-        <div class="max-w-xs xs:max-w-sm sm:max-w-lg md:max-w-2xl mx-auto px-3 xs:px-4 sm:px-6 py-4 xs:py-6 md:py-8 text-center">
-            <!-- Romantic Quote -->
-            <div class="slider-quote-section mb-6 xs:mb-8">
-                <p class="slider-quote-line1 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
-                    "Our paths always knew,
-                </p>
-                <p class="slider-quote-line2 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
-                    though we walked unaware.
-                </p>
-                <p class="slider-quote-line3 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
-                    A promise unspoken
-                </p>
-                <p class="slider-quote-line4 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center mb-4 xs:mb-6">
-                    that led us here.
-                </p>
-                <p class="slider-quote-line5 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
-                    We crossed many lifetimes
-                </p>
-                <p class="slider-quote-line6 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
-                    to stand side by side.
-                </p>
-                <p class="slider-quote-line7 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
-                    <strong>Wherever you are,</strong>
-                </p>
-                <p class="slider-quote-line8 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
-                    <strong>my heart will reside."</strong>
-                </p>
-            </div>
-            
-            <!-- Image Container -->
-            <div class="slider-image-container mb-6 xs:mb-8 relative">
-                <div class="slider-image-placeholder bg-gray-800 rounded-lg overflow-hidden relative aspect-square max-w-xs xs:max-w-sm mx-auto">
-                    <!-- Placeholder for slider image -->
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg" alt="Love Story Image" class="slider-main-image w-full h-full object-cover">
-                    
-                    <!-- Navigation arrows (for future slider functionality) -->
-                    <div class="slider-nav absolute inset-y-0 left-0 flex items-center">
-                        <button class="slider-prev bg-white/20 hover:bg-white/30 text-white p-1 xs:p-2 ml-1 xs:ml-2 rounded-full transition-all">
-                            <svg class="w-3 xs:w-4 h-3 xs:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="slider-nav absolute inset-y-0 right-0 flex items-center">
-                        <button class="slider-next bg-white/20 hover:bg-white/30 text-white p-1 xs:p-2 mr-1 xs:mr-2 rounded-full transition-all">
-                            <svg class="w-3 xs:w-4 h-3 xs:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Bottom Quote -->
-            <div class="slider-bottom-quote mb-6 xs:mb-8">
-                <p class="slider-bottom-text text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
-                    We said yes, <strong>will you say yes to us?</strong>
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- RSVP Section -->
-<section id="rsvp" class="rsvp-section relative" style="margin: 0; padding: 0; height: 100vh; height: 100dvh; min-height: 100vh; min-height: 100dvh;">
-    <!-- Background Image -->
-    <div class="absolute inset-0 z-0">
-        <img src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('rsvp') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="RSVP" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
+<!-- RSVP Div with Integrated Wedding Sections -->
+<div id="rsvp" class="rsvp-section relative" style="margin: 0; padding: 0;">
+    <!-- Background Image Container (dynamic, changes based on scroll) -->
+    <div class="absolute inset-0 z-0" id="rsvp-background-container">
+        <img id="rsvp-background-image" src="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('wedding_details') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" alt="Wedding" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
         <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-black/70"></div>
     </div>
     
-    <div class="relative z-10 flex items-center justify-center" style="height: 100vh; height: 100dvh; min-height: 100vh; min-height: 100dvh;">
-        <div class="max-w-xs xs:max-w-sm sm:max-w-lg md:max-w-2xl mx-auto px-3 xs:px-4 sm:px-6 py-6 xs:py-8 md:py-12 text-center">
+    <!-- Scrollable Container for All Wedding Content + RSVP -->
+    <div class="wedding-and-rsvp-wrapper relative z-10" style="height: 100vh; height: 100dvh; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; -webkit-overflow-scrolling: touch;">
+        
+        <!-- Section 1: Wedding Details -->
+        <div class="wedding-content-section" data-section="wedding-details" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('wedding_details') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: 100vh; min-height: 100dvh; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center;">
+            <div class="section-content max-w-lg mx-auto text-center">
+                <!-- Wedding Title -->
+                <div class="wedding-title-section mb-4 xs:mb-6 md:mb-8 text-center">
+                    <h2 class="wedding-title text-sm xs:text-base md:text-xl font-light text-white mb-2 xs:mb-3 md:mb-4 tracking-wider italic">
+                        The wedding of
+                    </h2>
+                    <h1 class="wedding-couple-names text-lg xs:text-xl sm:text-2xl md:text-3xl font-medium text-white tracking-wider leading-tight">
+                        <?php echo strtoupper($groom_name . ' AND ' . $bride_name); ?>
+                    </h1>
+                </div>
+                
+                <!-- Wedding Date -->
+                <div class="wedding-date-section mt-3 xs:mt-4 md:mt-8 mb-6 xs:mb-8 md:mb-12 text-center">
+                    <p class="wedding-date text-xs xs:text-sm md:text-lg text-white font-light tracking-wide">
+                        Saturday, 22 November 2025
+                    </p>
+                </div>
+                
+                <!-- Bible Verse -->
+                <div class="bible-verse-section mb-6 xs:mb-8 md:mb-12 text-center">
+                    <p class="bible-verse text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light leading-relaxed max-w-xs xs:max-w-sm sm:max-w-lg mx-auto px-2 xs:px-4">
+                        "Love knows no limit to its endurance, <br>
+                        no end to its trust, love still stands <br>
+                        when all else has fallen."<br>
+                        <span class="verse-reference mt-4 xs:mt-6 md:mt-12 text-2xs xs:text-xs tracking-wider block">1 Corinthians 13:7-8</span>
+                    </p>
+                </div>
+                
+                <!-- Wedding Details -->
+                <div class="wedding-info-section mb-6 xs:mb-8 md:mb-12 text-center">
+                    <div class="grid grid-cols-2 gap-3 xs:gap-4 sm:gap-6 md:gap-8 max-w-xs xs:max-w-sm sm:max-w-lg mx-auto">
+                        <div class="groom-info">
+                            <h3 class="person-name text-sm xs:text-base md:text-lg text-white font-medium mb-1 xs:mb-2">Dennis <br>Wijaya</h3>
+                            <p class="person-details text-2xs xs:text-xs md:text-sm text-white font-light">
+                                First son of<br>
+                                <b>Saleh Widjaja </b> and<br>
+                                <b>Soesi Wijaya </b>
+                            </p>
+                        </div>
+                        
+                        <div class="bride-info">
+                            <h3 class="person-name text-sm xs:text-base md:text-lg text-white font-medium mb-1 xs:mb-2">Emilia Bewintara</h3>
+                            <p class="person-details text-2xs xs:text-xs md:text-sm text-white font-light">
+                                Second daughter of<br>
+                                <b>Budy Bewintara </b> and<br>
+                                <b>Lindawati</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Ceremony & Reception -->
+        <div class="wedding-content-section" data-section="ceremony-reception" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('ceremony_reception') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: 100vh; min-height: 100dvh; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center;">
+            <div class="section-content max-w-lg mx-auto text-center">
+                <?php 
+                // Check if this is a family page and get invitation details
+                $show_church = true; // Default: show both for non-guest list users
+                $show_reception = true;
+                
+                if (function_exists('is_wedding_family_page') && is_wedding_family_page()) {
+                    $family_data = function_exists('get_wedding_family_data') ? get_wedding_family_data() : null;
+                    
+                    if ($family_data && isset($family_data->invitations)) {
+                        // Check specific invitations for family users
+                        $show_church = isset($family_data->invitations->church) && $family_data->invitations->church->invited;
+                        $show_reception = isset($family_data->invitations->reception) && $family_data->invitations->reception->invited;
+                        
+                        // If neither is specifically invited, show both as fallback
+                        if (!$show_church && !$show_reception) {
+                            $show_church = true;
+                            $show_reception = true;
+                        }
+                    }
+                }
+                ?>
+                
+                <?php if ($show_church): ?>
+                <!-- Ceremony Section -->
+                <div class="ceremony-section <?php echo ($show_church && $show_reception) ? 'mb-4 xs:mb-6 md:mb-8' : ''; ?>">
+                    <p class="ceremony-intro text-2xs xs:text-xs md:text-sm text-white font-light mb-1 xs:mb-2">We request the blessing of your presence as we are united in</p>
+                    <h2 class="ceremony-title text-base xs:text-lg md:text-xl tracking-widest mb-1 xs:mb-2 text-white font-semibold">HOLY MATRIMONY</h2>
+                    <div class="ceremony-time text-xs xs:text-sm md:text-base tracking-wider mb-3 xs:mb-4 text-white font-medium">9 AM ONWARD</div>
+                    <div class="ceremony-location mb-4 xs:mb-6 text-white">
+                        <div class="ceremony-place font-semibold tracking-widest text-xs xs:text-sm md:text-lg">GEREJA KATOLIK<br>SANTO LAURENSIUS</div>
+                        <div class="ceremony-address text-2xs xs:text-xs md:text-sm font-light italic mt-1 xs:mt-2 mb-2 xs:mb-3">Jl. Sutera Utama No. 2, Alam Sutera<br>Tangerang, Banten 15326</div>
+                        <a href="https://maps.app.goo.gl/wWV4HAQFGC6D9Xy76" target="_blank" class="ceremony-map-link text-2xs xs:text-xs underline text-white tracking-wider">VIEW MAP</a>
+                    </div>
+                </div>
+                <?php endif; ?>
+                
+                <?php if ($show_church && $show_reception): ?>
+                <!-- Divider between sections -->
+                <hr class="ceremony-divider my-4 xs:my-6 md:my-8 border-white/30">
+                <?php endif; ?>
+                
+                <?php if ($show_reception): ?>
+                <!-- Reception Section -->
+                <div class="reception-section">
+                    <p class="reception-intro text-2xs xs:text-xs md:text-sm text-white font-light mb-1 xs:mb-2">We request the pleasure of your company at our</p>
+                    <h2 class="reception-title text-base xs:text-lg md:text-xl font-light text-white tracking-widest mb-1 xs:mb-2">EVENING RECEPTION</h2>
+                    <div class="reception-time text-xs xs:text-sm md:text-base text-white font-semibold tracking-wider mb-3 xs:mb-4">6 PM ONWARD</div>
+                    <div class="reception-location text-white mb-4 xs:mb-6">
+                        <div class="reception-place font-semibold tracking-widest text-xs xs:text-sm md:text-lg">JHL SOLITAIRE</div>
+                        <div class="reception-address text-2xs xs:text-xs md:text-sm font-light italic mt-1 xs:mt-2 mb-2 xs:mb-3">Jl. Gading Serpong Boulevard,<br>Blok S no. 5, Gading Serpong,<br>Tangerang, Banten 15810</div>
+                        <a href="https://maps.app.goo.gl/xPCwuyatC8ghgDd79" target="_blank" class="reception-map-link text-2xs xs:text-xs underline text-white tracking-wider">VIEW MAP</a>
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- Section 3: Love Story -->
+        <div class="wedding-content-section" data-section="love-story" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: 100vh; min-height: 100dvh; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center;">
+            <div class="section-content max-w-lg mx-auto text-center">
+                <!-- Love Story Title -->
+                <h2 class="love-story-title text-base xs:text-lg md:text-2xl font-bold mb-4 xs:mb-6 md:mb-8 tracking-wider italic text-white">
+                    The Love Story
+                </h2>
+                
+                <!-- Video Container -->
+                <div class="love-story-video-container mb-4 xs:mb-6 md:mb-8 relative">
+                    <div class="video-placeholder bg-gray-800 rounded-lg overflow-hidden relative aspect-video max-w-xs xs:max-w-sm md:max-w-md mx-auto">
+                        <!-- Placeholder for video -->
+                        <div class="video-overlay absolute inset-0 bg-black/50 flex items-center justify-center">
+                            <div class="play-button w-10 xs:w-12 md:w-16 h-10 xs:h-12 md:h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                                <div class="play-icon w-0 h-0 border-l-[12px] xs:border-l-[16px] md:border-l-[20px] border-l-white border-t-[8px] xs:border-t-[10px] md:border-t-[12px] border-t-transparent border-b-[8px] xs:border-b-[10px] md:border-b-[12px] border-b-transparent ml-1"></div>
+                            </div>
+                        </div>
+                        <!-- Placeholder image -->
+                        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg" alt="Love Story" class="w-full h-full object-cover responsive-bg-image" loading="lazy" decoding="async">
+                    </div>
+                </div>
+                
+                <!-- Love Quote -->
+                <div class="love-quote-section mb-4 xs:mb-6 md:mb-8">
+                    <p class="love-quote text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed max-w-xs xs:max-w-sm mx-auto px-2 xs:px-4">
+                        "..Their paths were always aligned,<br>
+                        <b>yet they never met,</b><br>
+                        as if the stars were never quite set."
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Detailed Love Story -->
+        <div class="wedding-content-section" data-section="detailed-love-story" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('detailed_love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: 100vh; min-height: 100dvh; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center;">
+            <div class="section-content max-w-lg mx-auto text-center">
+                <!-- Love Story Title -->
+                <h2 class="detailed-love-story-title text-base xs:text-xl md:text-2xl font-bold mb-4 xs:mb-6 mt-6 xs:mt-8 md:mt-10 tracking-wider italic text-white">
+                    The Love Story
+                </h2>
+                
+                <!-- Love Story Narrative -->
+                <div class="love-story-narrative text-white text-2xs xs:text-xs sm:text-sm md:text-base leading-relaxed space-y-2 xs:space-y-3 max-w-xs xs:max-w-sm sm:max-w-lg mx-auto">
+                    <p class="narrative-opening text-center mb-3 xs:mb-4">
+                        <strong>Their paths quietly overlapped.</strong><br>
+                        Always in the same places,<br>
+                        <strong>just never at the same time.</strong>
+                    </p>
+                    
+                    <p class="narrative-college">
+                        During their college years in <strong>2018</strong>,<br>
+                        Emilia studied in Kelapa Gading but<br>
+                        had internships in Malaysia at UCSI University.<br>
+                        Dennis was studying nearby at SEGI College in Subang Jaya.
+                    </p>
+                    
+                    <p class="narrative-malaysia">
+                        They visited the same places in Malaysia.<br>
+                        So close, so often, <strong>yet unaware</strong><br>
+                        that someone familiar was always there.
+                    </p>
+                    
+                    <p class="narrative-return">
+                        When Dennis returned home to Kelapa Gading,<br>
+                        Emilia was there too...<br>
+                        <strong>Their paths aligned, yet never met,</strong><br>
+                        as if the stars were not quite set.
+                    </p>
+                    
+                    <p class="narrative-2020">
+                        Then <strong>2020 came</strong>, two circles met in Discord's name.<br>
+                        A voice, a laugh. Something felt <strong>true</strong>, at least to him.<br>
+                        Before she knew.
+                    </p>
+                    
+                    <p class="narrative-2022">
+                        <strong>In 2022</strong>, they met in person for the first time.<br>
+                        He liked her then. Clear and sincere.<br>
+                        But her heart wasn't ready, not yet near.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Final Love Story -->
+        <div class="wedding-content-section" data-section="final-love-story" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('final_love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: 100vh; min-height: 100dvh; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center;">
+            <div class="section-content max-w-lg mx-auto text-center">
+                <!-- Love Story Title -->
+                <h2 class="final-love-story-title text-base xs:text-xl md:text-2xl font-bold mb-4 xs:mb-6 tracking-wider italic text-white">
+                    The Love Story
+                </h2>
+                
+                <!-- Final Love Story Narrative -->
+                <div class="final-love-story-narrative text-white text-2xs xs:text-xs sm:text-sm md:text-base leading-relaxed space-y-2 xs:space-y-3 max-w-xs xs:max-w-sm sm:max-w-lg mx-auto">
+                    <p class="narrative-time-kind text-center mb-3 xs:mb-4">
+                        Still, time was kind and gently played<br>
+                        through work and life, the bond was laid.
+                    </p>
+                    
+                    <p class="narrative-2023">
+                        <strong>By 2023</strong>, she saw it too. The steady light she once outgrew.
+                    </p>
+                    
+                    <p class="narrative-august">
+                        On August, he took the leap, for a love no longer fast asleep.<br>
+                        And this time, when he reached for her,<br>
+                        her heart was open, soft, and sure.
+                    </p>
+                    
+                    <!-- Animated vertical line before proposal -->
+                    <div class="proposal-divider flex justify-center my-4 xs:my-6">
+                        <div class="vertical-line w-px bg-white/50 h-12 xs:h-16"></div>
+                    </div>
+                    
+                    <p class="narrative-proposal">
+                        <strong>On April 28th, 2024</strong>,<br>
+                        under a sky full of hope and love,<br>
+                        with steady hands and love nearby.<br>
+                        He asked again, his voice sincere.
+                    </p>
+                    
+                    <p class="narrative-forever">
+                        This time, for forever, through every year.
+                    </p>
+                    
+                    <p class="narrative-yes">
+                        And in that golden, honest light,<br>
+                        <strong>she said yes</strong>, to what felt right.
+                    </p>
+                    
+                    <p class="narrative-question text-center font-semibold">
+                        We said yes, will you say yes to us?
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 6: Image Slider -->
+        <div class="wedding-content-section" data-section="image-slider" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('image_slider') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: 100vh; min-height: 100dvh; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center;">
+            <div class="section-content max-w-lg mx-auto text-center">
+                <!-- Romantic Quote -->
+                <div class="slider-quote-section mb-6 xs:mb-8">
+                    <p class="slider-quote-line1 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
+                        "Our paths always knew,
+                    </p>
+                    <p class="slider-quote-line2 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
+                        though we walked unaware.
+                    </p>
+                    <p class="slider-quote-line3 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
+                        A promise unspoken
+                    </p>
+                    <p class="slider-quote-line4 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center mb-4 xs:mb-6">
+                        that led us here.
+                    </p>
+                    <p class="slider-quote-line5 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
+                        We crossed many lifetimes
+                    </p>
+                    <p class="slider-quote-line6 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
+                        to stand side by side.
+                    </p>
+                    <p class="slider-quote-line7 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
+                        <strong>Wherever you are,</strong>
+                    </p>
+                    <p class="slider-quote-line8 text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
+                        <strong>my heart will reside."</strong>
+                    </p>
+                </div>
+                
+                <!-- Image Container -->
+                <div class="slider-image-container mb-6 xs:mb-8 relative">
+                    <div class="slider-image-placeholder bg-gray-800 rounded-lg overflow-hidden relative aspect-square max-w-xs xs:max-w-sm mx-auto">
+                        <!-- Placeholder for slider image -->
+                        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg" alt="Love Story Image" class="slider-main-image w-full h-full object-cover">
+                        
+                        <!-- Navigation arrows (for future slider functionality) -->
+                        <div class="slider-nav absolute inset-y-0 left-0 flex items-center">
+                            <button class="slider-prev bg-white/20 hover:bg-white/30 text-white p-1 xs:p-2 ml-1 xs:ml-2 rounded-full transition-all">
+                                <svg class="w-3 xs:w-4 h-3 xs:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="slider-nav absolute inset-y-0 right-0 flex items-center">
+                            <button class="slider-next bg-white/20 hover:bg-white/30 text-white p-1 xs:p-2 mr-1 xs:mr-2 rounded-full transition-all">
+                                <svg class="w-3 xs:w-4 h-3 xs:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bottom Quote -->
+                <div class="slider-bottom-quote mb-6 xs:mb-8">
+                    <p class="slider-bottom-text text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
+                        We said yes, <strong>will you say yes to us?</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 7: RSVP Form -->
+        <div class="rsvp-form-section" data-section="rsvp-form" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('rsvp') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: 100vh; min-height: 100dvh; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center;">
+            <div class="max-w-xs xs:max-w-sm sm:max-w-lg md:max-w-2xl mx-auto text-center">
             
             <?php if (function_exists('is_wedding_family_page') && is_wedding_family_page()): ?>
                 <!-- Family-specific Multi-step RSVP Form -->
@@ -745,9 +700,22 @@ get_header(); ?>
                 </div>
             <?php endif; ?>
             
+            </div>
         </div>
+        
+        <!-- Navigation dots for scrolling between sections -->
+        <div class="scroll-navigation fixed right-4 top-1/2 transform -translate-y-1/2 flex flex-col gap-3 z-50">
+            <div class="nav-dot active" data-section="wedding-details" data-index="0" title="Wedding Details"></div>
+            <div class="nav-dot" data-section="ceremony-reception" data-index="1" title="Ceremony & Reception"></div>
+            <div class="nav-dot" data-section="love-story" data-index="2" title="Love Story"></div>
+            <div class="nav-dot" data-section="detailed-love-story" data-index="3" title="Their Story"></div>
+            <div class="nav-dot" data-section="final-love-story" data-index="4" title="Proposal"></div>
+            <div class="nav-dot" data-section="image-slider" data-index="5" title="Gallery"></div>
+            <div class="nav-dot" data-section="rsvp-form" data-index="6" title="RSVP"></div>
+        </div>
+        
     </div>
-</section>
+</div>
 
 
 
@@ -782,8 +750,8 @@ body.home, body.page {
     padding: 0 !important;
 }
 
-/* Ensure sections connect seamlessly - NO GAPS */
-section {
+/* Ensure sections and divs connect seamlessly - NO GAPS */
+section, div {
     margin: 0 !important;
     padding: 0 !important;
     display: block;
@@ -1233,6 +1201,181 @@ input, select, textarea {
     }
 }
 
+/* Wedding Details Container Styles - Single Container with Background Changes */
+.wedding-details-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.wedding-details-container.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.details-scroll-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Individual content sections in the single container */
+.wedding-content-section {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 3rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.wedding-content-section .section-content {
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    z-index: 3;
+}
+
+/* Close button for the container */
+.close-details-btn {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    width: 48px;
+    height: 48px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.close-details-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+/* Navigation dots for sections */
+.scroll-navigation {
+    position: fixed;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 1000;
+}
+
+.nav-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-dot.active {
+    background: white;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.nav-dot:hover {
+    background: rgba(255, 255, 255, 0.7);
+    transform: scale(1.2);
+}
+
+/* Mobile adjustments for navigation */
+@media (max-width: 768px) {
+    .close-details-btn {
+        top: 1rem;
+        right: 1rem;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .scroll-navigation {
+        right: 1rem;
+    }
+    
+    .nav-dot {
+        width: 10px;
+        height: 10px;
+    }
+    
+    .wedding-content-section {
+        padding: 2rem 1rem;
+    }
+    
+    .wedding-content-section .section-content {
+        max-width: 100%;
+        padding: 0 1rem;
+    }
+}
+
+/* Background container for changing images */
+.wedding-details-container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1;
+    transition: opacity 0.8s ease;
+}
+
+.wedding-details-container::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
+    z-index: 1;
+}
+
+/* Smooth content spacing */
+.wedding-content-section + .wedding-content-section {
+    margin-top: -20vh; /* Overlap sections for closer content */
+}
+
+/* Text content adjustments for better readability */
+.wedding-content-section h1,
+.wedding-content-section h2,
+.wedding-content-section h3 {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.wedding-content-section p {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
 /* Wedding Section Monogram - appears after fly-away animation */
 .wedding-section-monogram {
     position: fixed;
@@ -1534,6 +1677,17 @@ input, select, textarea {
 </style>
 
 <script>
+// Wedding Data Variables for JS
+window.templateUri = '<?php echo get_template_directory_uri(); ?>';
+window.groomName = '<?php echo get_theme_mod('groom_name', 'Dennis'); ?>';
+window.brideName = '<?php echo get_theme_mod('bride_name', 'Emilia'); ?>';
+window.isMobile = <?php echo wp_is_mobile() ? 'true' : 'false'; ?>;
+window.weddingImages = {
+    wedding_details: '<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('wedding_details') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>',
+    ceremony_reception: '<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('ceremony_reception') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>',
+    rsvp: '<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('rsvp') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>'
+};
+
 // Force scroll to top on any page load (including refresh)
 window.addEventListener('beforeunload', function() {
     window.scrollTo(0, 0);
@@ -1667,57 +1821,6 @@ document.addEventListener('DOMContentLoaded', function() {
     gsap.set('.invitation-message', { opacity: 0, y: 30 });
     gsap.set('.open-invitation-btn', { opacity: 0, y: 30 });
     gsap.set('.reveal-text', { opacity: 0, y: 30 });
-    
-    // Set initial positions for all section elements
-    gsap.set('#wedding-details .wedding-title', { opacity: 0, y: 30 });
-    gsap.set('#wedding-details .wedding-couple-names', { opacity: 0, y: 30 });
-    gsap.set('#wedding-details .wedding-date', { opacity: 0, y: 30 });
-    gsap.set('#wedding-details .bible-verse', { opacity: 0, y: 30 });
-    gsap.set('#wedding-details .groom-info', { opacity: 0, y: 30 });
-    gsap.set('#wedding-details .bride-info', { opacity: 0, y: 30 });
-    
-    gsap.set('#ceremony-reception .ceremony-intro', { opacity: 0, y: 30 });
-    gsap.set('#ceremony-reception .ceremony-title', { opacity: 0, y: 30 });
-    gsap.set('#ceremony-reception .ceremony-time', { opacity: 0, y: 30 });
-    gsap.set('#ceremony-reception .ceremony-location', { opacity: 0, y: 30 });
-    gsap.set('#ceremony-reception .ceremony-divider', { opacity: 0, scaleX: 0 });
-    gsap.set('#ceremony-reception .reception-intro', { opacity: 0, y: 30 });
-    gsap.set('#ceremony-reception .reception-title', { opacity: 0, y: 30 });
-    gsap.set('#ceremony-reception .reception-time', { opacity: 0, y: 30 });
-    gsap.set('#ceremony-reception .reception-location', { opacity: 0, y: 30 });
-    
-    gsap.set('#love-story .love-story-title', { opacity: 0, y: 30 });
-    gsap.set('#love-story .video-placeholder', { opacity: 0, y: 30 });
-    gsap.set('#love-story .love-quote', { opacity: 0, y: 30 });
-    
-    gsap.set('#detailed-love-story .detailed-love-story-title', { opacity: 0, y: 30 });
-    gsap.set('#detailed-love-story .narrative-opening', { opacity: 0, y: 30 });
-    gsap.set('#detailed-love-story .narrative-college', { opacity: 0, y: 30 });
-    gsap.set('#detailed-love-story .narrative-malaysia', { opacity: 0, y: 30 });
-    gsap.set('#detailed-love-story .narrative-return', { opacity: 0, y: 30 });
-    gsap.set('#detailed-love-story .narrative-2020', { opacity: 0, y: 30 });
-    gsap.set('#detailed-love-story .narrative-2022', { opacity: 0, y: 30 });
-    
-    gsap.set('#final-love-story .final-love-story-title', { opacity: 0, y: 30 });
-    gsap.set('#final-love-story .narrative-time-kind', { opacity: 0, y: 30 });
-    gsap.set('#final-love-story .narrative-2023', { opacity: 0, y: 30 });
-    gsap.set('#final-love-story .narrative-august', { opacity: 0, y: 30 });
-    gsap.set('#final-love-story .vertical-line', { height: 0, opacity: 0 });
-    gsap.set('#final-love-story .narrative-proposal', { opacity: 0, y: 30 });
-    gsap.set('#final-love-story .narrative-forever', { opacity: 0, y: 30 });
-    gsap.set('#final-love-story .narrative-yes', { opacity: 0, y: 30 });
-    gsap.set('#final-love-story .narrative-question', { opacity: 0, y: 30 });
-    
-    gsap.set('#image-slider .slider-quote-line1', { opacity: 0, y: 30 });
-    gsap.set('#image-slider .slider-quote-line2', { opacity: 0, y: 30 });
-    gsap.set('#image-slider .slider-quote-line3', { opacity: 0, y: 30 });
-    gsap.set('#image-slider .slider-quote-line4', { opacity: 0, y: 30 });
-    gsap.set('#image-slider .slider-quote-line5', { opacity: 0, y: 30 });
-    gsap.set('#image-slider .slider-quote-line6', { opacity: 0, y: 30 });
-    gsap.set('#image-slider .slider-quote-line7', { opacity: 0, y: 30 });
-    gsap.set('#image-slider .slider-quote-line8', { opacity: 0, y: 30 });
-    gsap.set('#image-slider .slider-image-placeholder', { opacity: 0, scale: 0.9 });
-    gsap.set('#image-slider .slider-bottom-text', { opacity: 0, y: 30 });
     
     // Set initial positions for RSVP section elements - visible by default
     gsap.set('#rsvp .rsvp-title', { opacity: 1, y: 0 });
@@ -1885,12 +1988,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Create the main hero animation timeline
     const heroTimeline = gsap.timeline();
     
+    console.log('🎬 Starting hero timeline animations...');
+    
     // Step 1: Monogram slides down and becomes visible
     heroTimeline.to('.monogram-combined', {
         duration: 1.5,
         y: 0,
         opacity: 1,
-        ease: "power2.out"
+        ease: "power2.out",
+        onComplete: () => console.log('✅ Monogram animation complete')
     })
     // Step 2: Couple names fade in
     .to('.couple-names', {
@@ -1927,7 +2033,8 @@ document.addEventListener('DOMContentLoaded', function() {
         duration: 0.8,
         opacity: 1,
         y: 0,
-        ease: "power2.out"
+        ease: "power2.out",
+        onComplete: () => console.log('✅ Button animation complete - button should be visible and clickable')
     }, "+=0.3")
     // Enable scrolling after animation completes with hidden scrollbars
     .call(() => {
@@ -1937,6 +2044,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const openBtn = document.querySelector('.hero-open-invitation-btn');
         if (openBtn) {
             openBtn.style.pointerEvents = 'auto';
+            console.log('✅ Button click enabled - ready for user interaction');
         }
     });
     
@@ -1986,35 +2094,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Still in hero section
         }
         
-        // Mobile fallback animation triggers using getBoundingClientRect
-        if (isMobileDevice) {
-            const sections = [
-                '#ceremony-reception',
-                '#love-story', 
-                '#detailed-love-story',
-                '#final-love-story',
-                '#image-slider'
-            ];
-            
-            sections.forEach(sectionId => {
-                const section = document.querySelector(sectionId);
-                if (section) {
-                    const rect = section.getBoundingClientRect();
-                    const isInView = rect.top < windowHeight * 0.8 && rect.bottom > 0;
-                    
-                    if (isInView && !section.dataset.mobileAnimated) {
-                        section.dataset.mobileAnimated = 'true';
-                        console.log(`📱 Mobile fallback trigger for ${sectionId}`);
-                        
-                        // Trigger the same animations as ScrollTrigger
-                        const event = new CustomEvent('mobileScrollTrigger', { 
-                            detail: { sectionId } 
-                        });
-                        window.dispatchEvent(event);
-                    }
-                }
-            });
-        }
+        // Mobile fallback animation triggers - not needed for single container
+        // All animations are now handled by the wedding details container
     };
     
     // Add scroll listener with passive flag for better mobile performance
@@ -2022,11 +2103,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // ScrollTrigger animations for all individual sections
     
-    // Button click handler for open invitation
+    // Button click handler for open invitation - Navigate to RSVP Section
     const openInvitationBtn = document.querySelector('.hero-open-invitation-btn');
     if (openInvitationBtn) {
-        openInvitationBtn.addEventListener('click', function() {
-            console.log('🚀 OPEN INVITATION CLICKED - FLY AWAY ANIMATION! 🚀');
+        openInvitationBtn.addEventListener('click', function(e) {
+            console.log('🚀 OPEN INVITATION CLICKED - Scrolling to Wedding Sections in RSVP! 🚀');
+            
+            // Prevent default behavior and stop propagation
+            e.preventDefault();
+            e.stopPropagation();
             
             // Only run if monogram hasn't been transformed yet
             if (monogramTransformed) return;
@@ -2035,10 +2120,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Mark as transformed to prevent duplicate animations
             monogramTransformed = true;
-            
-            // Enable scrolling when button is clicked
-            document.body.style.overflow = 'auto';
-            document.documentElement.style.overflow = 'auto';
             
             console.log('🎯 Phase 1: Fading out other content');
             // Phase 1: Fade out all other hero content but keep monogram visible
@@ -2058,397 +2139,80 @@ document.addEventListener('DOMContentLoaded', function() {
                     opacity: 0, // Completely fade out
                     ease: "power2.in",
                     onComplete: function() {
-                        console.log('🎬 Phase 3: Hiding hero section');
-                        // Hide the entire hero section after monogram flies away
-                        document.querySelector('.dynamic-section').style.display = 'none';
+                        console.log('🎬 Phase 3: Scrolling directly to Wedding Details section');
                         
-                        // Scroll to the wedding details section to ensure it's visible
-                        window.scrollTo({
-                            top: 0,
-                            behavior: 'smooth'
-                        });
+                        // Enable scrolling again
+                        document.body.style.overflow = 'auto';
+                        document.documentElement.style.overflow = 'auto';
                         
-                        // Small delay to ensure section is visible before adding monogram
-                        setTimeout(() => {
+                        // Find the first wedding section and scroll directly to it
+                        const firstWeddingSection = document.querySelector('.wedding-content-section[data-section="wedding-details"]');
                         
-                        console.log('📄 Phase 4: Creating new monogram for wedding section');
-                        // Create a new monogram that will slide down from top and stick there
-                        const newMonogram = document.createElement('div');
-                        newMonogram.className = 'wedding-section-monogram';
-                        newMonogram.innerHTML = '<span class="monogram-combined"><span class="groom-initial">d</span><span class="bride-initial">e</span></span>';
-                        
-                        // Attach to body so it stays fixed at top throughout all sections
-                        document.body.appendChild(newMonogram);
-                        
-                        console.log('⬇️ Phase 5: New monogram sliding down from top');
-                        // Set initial position WAY off-screen and tiny scale
-                        gsap.set(newMonogram, {
-                            y: -window.innerHeight - 100, // Start way above screen
-                            opacity: 0,
-                            scale: 0.3 // Start very small
-                        });
-                        
-                        console.log('💒 Phase 6: Animating monogram sliding down to fixed position');
-                        // Animate the new monogram sliding down from top
-                        gsap.to(newMonogram, {
-                            duration: 2,
-                            y: 0, // Slide to final position
-                            opacity: 1, // Fade in
-                            scale: 1, // Grow to full size
-                            ease: "power2.out",
-                            onComplete: function() {
-                                console.log('✅ Monogram slide-down animation complete - now fixed at top!');
-                                
-                                // After monogram slides down, animate the wedding section content
-                                console.log('💒 Phase 6: Animating wedding section content');
-                                
-                                // After monogram slides down, animate the wedding section content
-                                const weddingTl = gsap.timeline();
-                                weddingTl.to('#wedding-details .wedding-title', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" })
-                                        .to('#wedding-details .wedding-couple-names', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
-                                        .to('#wedding-details .wedding-date', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
-                                        .to('#wedding-details .bible-verse', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
-                                        .to('#wedding-details .groom-info', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
-                                        .to('#wedding-details .bride-info', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "-=0.4")
-                                        .call(() => {
-                                            console.log('✅ Animation complete - Wedding section fully loaded!');
-                                        });
+                        if (firstWeddingSection) {
+                            console.log('📍 Found wedding details section, scrolling to it...');
+                            
+                            // Use native scroll instead of GSAP for more reliable scrolling
+                            firstWeddingSection.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                            
+                            console.log('✅ Scrolled to Wedding Details section!');
+                        } else {
+                            console.error('❌ Could not find wedding details section');
+                            // Fallback: scroll to RSVP div
+                            const rsvpDiv = document.getElementById('rsvp');
+                            if (rsvpDiv) {
+                                rsvpDiv.scrollIntoView({
+                                    behavior: 'smooth',
+                                    block: 'start'
+                                });
                             }
-                        });
+                        }
                         
-                        }, 200); // End of setTimeout
+                        // Create new monogram for wedding sections
+                        setTimeout(() => {
+                            console.log('📄 Phase 4: Creating new monogram for wedding sections');
+                            const newMonogram = document.createElement('div');
+                            newMonogram.className = 'wedding-section-monogram';
+                            newMonogram.innerHTML = '<span class="monogram-combined"><span class="groom-initial">d</span><span class="bride-initial">e</span></span>';
+                            
+                            // Attach to body so it stays fixed at top throughout all sections
+                            document.body.appendChild(newMonogram);
+                            
+                            console.log('⬇️ Phase 5: New monogram sliding down from top');
+                            // Set initial position WAY off-screen and tiny scale
+                            gsap.set(newMonogram, {
+                                y: -window.innerHeight - 100, // Start way above screen
+                                opacity: 0,
+                                scale: 0.3 // Start very small
+                            });
+                            
+                            console.log('💒 Phase 6: Animating monogram sliding down to fixed position');
+                            // Animate the new monogram sliding down from top
+                            gsap.to(newMonogram, {
+                                duration: 2,
+                                y: 0, // Slide to final position
+                                opacity: 1, // Fade in
+                                scale: 1, // Grow to full size
+                                ease: "power2.out",
+                                onComplete: function() {
+                                    console.log('✅ Monogram slide-down animation complete - Wedding sections ready!');
+                                }
+                            });
+                        }, 1000); // Wait for scroll to complete
                     }
                 });
             }, 500);
         });
     }
     
-    // Wedding Details Section (content only, transition handled above)
-    
-    // Ceremony & Reception Section
-    ScrollTrigger.create({
-        trigger: "#ceremony-reception",
-        start: "top 80%",
-        end: "bottom 20%",
-        toggleActions: "play none none reverse",
-        refreshPriority: -1,
-        invalidateOnRefresh: true,
-        onEnter: () => {
-            console.log('🎬 Ceremony & Reception section entering...');
-            const tl = gsap.timeline();
-            tl.to('#ceremony-reception .ceremony-intro', { duration: 0.7, opacity: 1, y: 0, ease: "power2.out" })
-              .to('#ceremony-reception .ceremony-title', { duration: 0.7, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
-              .to('#ceremony-reception .ceremony-time', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
-              .to('#ceremony-reception .ceremony-location', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
-              .to('#ceremony-reception .ceremony-divider', { duration: 0.8, opacity: 1, scaleX: 1, ease: "power2.out" }, "+=0.2")
-              .to('#ceremony-reception .reception-intro', { duration: 0.7, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
-              .to('#ceremony-reception .reception-title', { duration: 0.7, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
-              .to('#ceremony-reception .reception-time', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
-              .to('#ceremony-reception .reception-location', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1");
-        },
-        onEnterBack: () => {
-            const tl = gsap.timeline();
-            tl.to('#ceremony-reception .ceremony-intro', { duration: 0.7, opacity: 1, y: 0, ease: "power2.out" })
-              .to('#ceremony-reception .ceremony-title', { duration: 0.7, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
-              .to('#ceremony-reception .ceremony-time', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
-              .to('#ceremony-reception .ceremony-location', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
-              .to('#ceremony-reception .ceremony-divider', { duration: 0.8, opacity: 1, scaleX: 1, ease: "power2.out" }, "+=0.2")
-              .to('#ceremony-reception .reception-intro', { duration: 0.7, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
-              .to('#ceremony-reception .reception-title', { duration: 0.7, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
-              .to('#ceremony-reception .reception-time', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1")
-              .to('#ceremony-reception .reception-location', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.1");
-        }
-    });
-    
-    // Love Story Section
-    ScrollTrigger.create({
-        trigger: "#love-story",
-        start: "top 80%",
-        end: "bottom 20%",
-        toggleActions: "play none none reverse",
-        refreshPriority: -1,
-        invalidateOnRefresh: true,
-        onEnter: () => {
-            console.log('💕 Love Story section entering...');
-            const tl = gsap.timeline();
-            tl.to('#love-story .love-story-title', { duration: 1, opacity: 1, y: 0, ease: "power2.out" })
-              .to('#love-story .video-placeholder', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3")
-              .to('#love-story .love-quote', { duration: 1, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3");
-        },
-        onEnterBack: () => {
-            const tl = gsap.timeline();
-            tl.to('#love-story .love-story-title', { duration: 1, opacity: 1, y: 0, ease: "power2.out" })
-              .to('#love-story .video-placeholder', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3")
-              .to('#love-story .love-quote', { duration: 1, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3");
-        }
-    });
-    
-    // Detailed Love Story Section
-    ScrollTrigger.create({
-        trigger: "#detailed-love-story",
-        start: "top 80%",
-        end: "bottom 20%",
-        toggleActions: "play none none reverse",
-        refreshPriority: -1,
-        invalidateOnRefresh: true,
-        onEnter: () => {
-            console.log('📖 Detailed Love Story section entering...');
-            const tl = gsap.timeline();
-            tl.to('#detailed-love-story .detailed-love-story-title', { duration: 1, opacity: 1, y: 0, ease: "power2.out" })
-              .to('#detailed-love-story .narrative-opening', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3")
-              .to('#detailed-love-story .narrative-college', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
-              .to('#detailed-love-story .narrative-malaysia', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
-              .to('#detailed-love-story .narrative-return', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
-              .to('#detailed-love-story .narrative-2020', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
-              .to('#detailed-love-story .narrative-2022', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4");
-        },
-        onEnterBack: () => {
-            const tl = gsap.timeline();
-            tl.to('#detailed-love-story .detailed-love-story-title', { duration: 1, opacity: 1, y: 0, ease: "power2.out" })
-              .to('#detailed-love-story .narrative-opening', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3")
-              .to('#detailed-love-story .narrative-college', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
-              .to('#detailed-love-story .narrative-malaysia', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
-              .to('#detailed-love-story .narrative-return', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
-              .to('#detailed-love-story .narrative-2020', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
-              .to('#detailed-love-story .narrative-2022', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4");
-        }
-    });
-    
-    // Final Love Story Section
-    ScrollTrigger.create({
-        trigger: "#final-love-story",
-        start: "top 80%",
-        end: "bottom 20%",
-        toggleActions: "play none none reverse",
-        refreshPriority: -1,
-        invalidateOnRefresh: true,
-        onEnter: () => {
-            console.log('💍 Final Love Story section entering...');
-            const tl = gsap.timeline();
-            tl.to('#final-love-story .final-love-story-title', { duration: 1, opacity: 1, y: 0, ease: "power2.out" })
-              .to('#final-love-story .narrative-time-kind', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3")
-              .to('#final-love-story .narrative-2023', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
-              .to('#final-love-story .narrative-august', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
-              .to('#final-love-story .vertical-line', { duration: 1, height: '4rem', opacity: 1, ease: "power2.out" }, "+=0.3")
-              .to('#final-love-story .narrative-proposal', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
-              .to('#final-love-story .narrative-forever', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
-              .to('#final-love-story .narrative-yes', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
-              .to('#final-love-story .narrative-question', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4");
-        },
-        onEnterBack: () => {
-            const tl = gsap.timeline();
-            tl.to('#final-love-story .final-love-story-title', { duration: 1, opacity: 1, y: 0, ease: "power2.out" })
-              .to('#final-love-story .narrative-time-kind', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3")
-              .to('#final-love-story .narrative-2023', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
-              .to('#final-love-story .narrative-august', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
-              .to('#final-love-story .vertical-line', { duration: 1, height: '4rem', opacity: 1, ease: "power2.out" }, "+=0.3")
-              .to('#final-love-story .narrative-proposal', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
-              .to('#final-love-story .narrative-forever', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
-              .to('#final-love-story .narrative-yes', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4")
-              .to('#final-love-story .narrative-question', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.4");
-        }
-    });
-    
-    // Image Slider Section
-    ScrollTrigger.create({
-        trigger: "#image-slider",
-        start: "top 80%",
-        end: "bottom 20%",
-        toggleActions: "play none none reverse",
-        refreshPriority: -1,
-        invalidateOnRefresh: true,
-        onEnter: () => {
-            console.log('🖼️ Image Slider section entering...');
-            const tl = gsap.timeline();
-            tl.to('#image-slider .slider-quote-line1', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" })
-              .to('#image-slider .slider-quote-line2', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
-              .to('#image-slider .slider-quote-line3', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
-              .to('#image-slider .slider-quote-line4', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
-              .to('#image-slider .slider-quote-line5', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3")
-              .to('#image-slider .slider-quote-line6', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
-              .to('#image-slider .slider-quote-line7', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
-              .to('#image-slider .slider-quote-line8', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
-              .to('#image-slider .slider-image-placeholder', { duration: 1, opacity: 1, scale: 1, ease: "power2.out" }, "+=0.4")
-              .to('#image-slider .slider-bottom-text', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3");
-        },
-        onEnterBack: () => {
-            const tl = gsap.timeline();
-            tl.to('#image-slider .slider-quote-line1', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" })
-              .to('#image-slider .slider-quote-line2', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
-              .to('#image-slider .slider-quote-line3', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
-              .to('#image-slider .slider-quote-line4', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
-              .to('#image-slider .slider-quote-line5', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3")
-              .to('#image-slider .slider-quote-line6', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
-              .to('#image-slider .slider-quote-line7', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
-              .to('#image-slider .slider-quote-line8', { duration: 0.6, opacity: 1, y: 0, ease: "power2.out" }, "+=0.2")
-              .to('#image-slider .slider-image-placeholder', { duration: 1, opacity: 1, scale: 1, ease: "power2.out" }, "+=0.4")
-              .to('#image-slider .slider-bottom-text', { duration: 0.8, opacity: 1, y: 0, ease: "power2.out" }, "+=0.3");
-        }
-    });
+    // Initialize the wedding details container functionality
+    // This will be handled by the separate JS file
     
     // RSVP Section - No ScrollTrigger, elements visible by default
     
-    // Button click animation and functionality - improved smooth transition
-    const heroOpenInvitationBtn = document.querySelector('.hero-open-invitation-btn');
-    if (heroOpenInvitationBtn) {
-        heroOpenInvitationBtn.addEventListener('click', function(e) {
-            // Prevent multiple clicks during animation
-            if (monogramTransformed) return;
-            
-            // Disable button to prevent multiple clicks
-            e.target.style.pointerEvents = 'none';
-            
-            // Smooth button press animation - no stutter
-            gsap.to(e.target, {
-                scale: 0.96,
-                duration: 0.1,
-                ease: "power1.out",
-                onComplete: () => {
-                    // Return to normal size smoothly
-                    gsap.to(e.target, {
-                        scale: 1,
-                        duration: 0.2,
-                        ease: "back.out(1.2)",
-                        onComplete: () => {
-                            // Mark as transformed to prevent ScrollTrigger conflicts
-                            monogramTransformed = true;
-                            
-                            // Start the smooth transition immediately
-                            transitionToWeddingDetails();
-                        }
-                    });
-                }
-            });
-        });
-    }
-    
-    // Function to smoothly transition to wedding details section
-    function transitionToWeddingDetails() {
-        // No scroll blocking during transition - scroll stays enabled
-        
-        const heroMonogram = document.querySelector('.monogram-combined');
-        const heroContent = document.getElementById('hero-content');
-        const contentWrapper = document.querySelector('.content-wrapper');
-        const weddingDetailsSection = document.getElementById('wedding-details');
-        
-        // Create smooth transition timeline - simplified and improved
-        const transitionTl = gsap.timeline();
-        
-        // No automatic scroll enabling - only on button click
-        
-        // Step 1: Smooth scale down while keeping centered
-        transitionTl.to(heroMonogram, {
-            duration: 1.5,
-            scale: 0.5,
-            ease: "power2.inOut"
-        })
-        // Step 2: Fade out other content smoothly
-        .to('.hero-greeting-title, .hero-invitation-message, .hero-open-invitation-btn, .couple-names', {
-            duration: 1.0,
-            opacity: 0,
-            y: -20,
-            ease: "power2.inOut",
-            stagger: 0.1
-        }, "-=1.2")
-        // Step 3: Move monogram to top center position
-        .to(heroMonogram, {
-            duration: 1.2,
-            y: -window.innerHeight * 0.35,
-            scale: 0.4,
-            ease: "power2.inOut"
-        }, "-=0.8")
-        // Step 4: Create the fixed positioned small monogram
-        .call(() => {
-            // Create new small monogram for the header
-            const smallMonogram = heroMonogram.cloneNode(true);
-            smallMonogram.classList.add('small-monogram-fixed');
-            smallMonogram.style.cssText = `
-                position: fixed;
-                top: 20px;
-                left: 50%;
-                transform: translateX(-50%) scale(0.3);
-                z-index: 1000;
-                opacity: 0;
-            `;
-            document.body.appendChild(smallMonogram);
-            
-            // Fade in the new small monogram
-            gsap.to(smallMonogram, {
-                duration: 0.8,
-                opacity: 1,
-                ease: "power2.out"
-            });
-            
-            // Hide the original monogram
-            gsap.to(heroMonogram, {
-                duration: 0.5,
-                opacity: 0,
-                ease: "power2.out"
-            });
-        })
-        // Step 5: Change background and show wedding details
-        .call(() => {
-            changeBackgroundImage('<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('wedding_details') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>');
-        })
-        .to(weddingDetailsSection, {
-            duration: 1.0,
-            opacity: 1,
-            ease: "power2.out"
-        });
-    }
-    
-    // Function to animate wedding details content
-    function animateWeddingDetailsContent() {
-        const detailsTl = gsap.timeline();
-        detailsTl.to('#wedding-details .wedding-title', { 
-            duration: 0.8, 
-            opacity: 1, 
-            y: 0, 
-            ease: "power2.out" 
-        })
-        .to('#wedding-details .wedding-couple-names', { 
-            duration: 0.8, 
-            opacity: 1, 
-            y: 0, 
-            ease: "power2.out" 
-        }, "+=0.05")
-        .to('#wedding-details .wedding-date', { 
-            duration: 0.6, 
-            opacity: 1, 
-            y: 0, 
-            ease: "power2.out" 
-        }, "+=0.05")
-        .to('#wedding-details .bible-verse', { 
-            duration: 0.8, 
-            opacity: 1, 
-            y: 0, 
-            ease: "power2.out" 
-        }, "+=0.1")
-        .to('#wedding-details .groom-info', { 
-            duration: 0.6, 
-            opacity: 1, 
-            y: 0, 
-            ease: "power2.out" 
-        }, "+=0.05")
-        .to('#wedding-details .bride-info', { 
-            duration: 0.6, 
-            opacity: 1, 
-            y: 0, 
-            ease: "power2.out" 
-        }, "+=0.05")
-        .call(() => {
-            // Force show the sticky RSVP button
-            const stickyRSVP = document.getElementById('sticky-rsvp');
-            if (stickyRSVP) {
-                console.log('Forcing RSVP button visible after wedding details load');
-                gsap.set(stickyRSVP, { opacity: 1 });
-                stickyRSVP.style.pointerEvents = 'auto';
-                stickyRSVP.style.display = 'flex';
-            }
-        }, null, "+=0.2");
-    }
-    
-    // Sticky RSVP Button functionality - Show from wedding details (2nd page) onwards
+    // Sticky RSVP Button functionality
     const stickyRSVP = document.getElementById('sticky-rsvp');
     
     // Force show RSVP on mobile with multiple triggers
@@ -3070,7 +2834,84 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 100);
     });
+    
+    // RSVP Section Background Changing Functionality (Groove-style)
+    const rsvpSection = document.getElementById('rsvp');
+    const rsvpBackgroundImage = document.getElementById('rsvp-background-image');
+    const rsvpWrapper = document.querySelector('.wedding-and-rsvp-wrapper');
+    const rsvpSections = document.querySelectorAll('.wedding-content-section[data-bg-image], .rsvp-form-section[data-bg-image]');
+    const rsvpNavDots = document.querySelectorAll('.scroll-navigation .nav-dot');
+    
+    if (rsvpSection && rsvpBackgroundImage && rsvpWrapper && rsvpSections.length > 0) {
+        console.log(`🎯 Setting up RSVP section with ${rsvpSections.length} sections and background changes`);
+        
+        // Background image changing based on scroll position in RSVP wrapper
+        rsvpWrapper.addEventListener('scroll', function() {
+            const scrollTop = rsvpWrapper.scrollTop;
+            const wrapperHeight = rsvpWrapper.clientHeight;
+            
+            // Find which section is currently in view
+            let currentSectionIndex = 0;
+            rsvpSections.forEach((section, index) => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                
+                if (scrollTop >= sectionTop - wrapperHeight / 2 && 
+                    scrollTop < sectionTop + sectionHeight - wrapperHeight / 2) {
+                    currentSectionIndex = index;
+                }
+            });
+            
+            // Update background image smoothly (like Groove website)
+            const currentSection = rsvpSections[currentSectionIndex];
+            if (currentSection && currentSection.dataset.bgImage) {
+                const newBgImage = currentSection.dataset.bgImage;
+                const currentBg = rsvpBackgroundImage.src;
+                
+                if (currentBg !== newBgImage) {
+                    // Smooth transition like Groove
+                    rsvpBackgroundImage.style.opacity = '0.7';
+                    
+                    setTimeout(() => {
+                        rsvpBackgroundImage.src = newBgImage;
+                        rsvpBackgroundImage.style.opacity = '1';
+                        console.log(`📸 Background changed to section ${currentSectionIndex} (${currentSection.dataset.section})`);
+                    }, 300);
+                }
+            }
+            
+            // Update navigation dots
+            rsvpNavDots.forEach((dot, index) => {
+                if (index === currentSectionIndex) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        });
+        
+        // Navigation dot click handlers
+        rsvpNavDots.forEach((dot, index) => {
+            dot.addEventListener('click', function() {
+                const targetSection = rsvpSections[index];
+                if (targetSection) {
+                    rsvpWrapper.scrollTo({
+                        top: targetSection.offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        console.log('✅ RSVP section background changing functionality ready!');
+    }
 });
+
+// Beautiful GSAP Timeline Animations - No Emergency Overrides!
+// Timeline will run automatically and enable smooth user experience
 </script>
+
+<!-- Wedding Details Container functionality is now inline above -->
+<!-- Container opening and background changes handled by main script -->
 
 <?php get_footer(); ?>
