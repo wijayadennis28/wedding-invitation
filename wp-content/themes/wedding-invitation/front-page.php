@@ -5,9 +5,9 @@
 get_header(); ?>
 
 <!-- Single Dynamic Div -->
-<div class="dynamic-section relative" style="margin: 0; padding: 0; height: 100vh; height: 100dvh; min-height: 100vh; min-height: 100dvh;">
+<div class="dynamic-section" style="height: 100px !important;">
     <!-- Dynamic Background Image -->
-    <div class="background-container fixed inset-0 z-0" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg'); background-size: cover; background-position: center;">
+    <div class="background-container" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg'); background-size: cover;">
         <img id="background-image" src="<?php echo get_template_directory_uri(); ?>/assets/images/s.jpg" alt="" class="w-full h-full object-cover transition-opacity duration-1000 responsive-bg-image" loading="eager" decoding="async" onload="console.log('Image loaded successfully')" onerror="console.log('Image failed to load')">
         <div id="background-overlay" class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent transition-opacity duration-1000"></div>
     </div>
@@ -722,10 +722,16 @@ get_header(); ?>
 }
 
 html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow-x: hidden;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 100% !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    height: -webkit-fill-available !important;
+    overflow-x: hidden !important;
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+    min-height: -webkit-fill-available !important;
 }
 
 /* WordPress theme resets */
@@ -751,10 +757,13 @@ section, div {
 .dynamic-section, #wedding-details {
     height: 100vh !important;
     height: 100dvh !important;
+    height: calc(var(--vh, 1vh) * 100) !important;
     min-height: 100vh !important;
     min-height: 100dvh !important;
+    min-height: calc(var(--vh, 1vh) * 100) !important;
     max-height: 100vh !important;
     max-height: 100dvh !important;
+    max-height: calc(var(--vh, 1vh) * 100) !important;
     margin: 0 !important;
     padding: 0 !important;
     border: none !important;
@@ -1025,6 +1034,27 @@ body {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
+    /* Mobile Safari viewport fix */
+    height: 100vh;
+    height: 100dvh;
+    height: -webkit-fill-available;
+    min-height: 100vh;
+    min-height: 100dvh;
+    min-height: -webkit-fill-available;
+}
+
+/* Mobile Safari specific viewport fixes */
+@supports (-webkit-touch-callout: none) {
+    html, body {
+        height: -webkit-fill-available !important;
+        min-height: -webkit-fill-available !important;
+    }
+    
+    .dynamic-section {
+        height: -webkit-fill-available !important;
+        min-height: -webkit-fill-available !important;
+        max-height: -webkit-fill-available !important;
+    }
 }
 
 /* Fix viewport issues on Safari iOS */
@@ -1089,13 +1119,24 @@ input, select, textarea {
 /* Responsive fixes for orientation changes */
 @media screen and (max-width: 768px) {
     .dynamic-section {
-        min-height: 100vh;
-        min-height: -webkit-fill-available;
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
+        min-height: calc(var(--vh, 1vh) * 100) !important;
+        min-height: -webkit-fill-available !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        height: calc(var(--vh, 1vh) * 100) !important;
+        height: -webkit-fill-available !important;
+        max-height: 100vh !important;
+        max-height: 100dvh !important;
+        max-height: calc(var(--vh, 1vh) * 100) !important;
+        max-height: -webkit-fill-available !important;
     }
     
     .content-wrapper {
         padding: 1rem;
-        height: 100vh;
+        height: 100vh !important;
+        height: 100dvh !important;
         height: -webkit-fill-available;
     }
     
@@ -1683,6 +1724,12 @@ document.addEventListener('DOMContentLoaded', function() {
             weddingSection.style.height = `${window.innerHeight}px`;
             weddingSection.style.minHeight = `${window.innerHeight}px`;
             weddingSection.style.maxHeight = `${window.innerHeight}px`;
+        }
+        
+        // Additional mobile Safari fix
+        if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+            document.body.style.height = `${window.innerHeight}px`;
+            document.documentElement.style.height = `${window.innerHeight}px`;
         }
     }
     
