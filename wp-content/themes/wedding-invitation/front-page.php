@@ -2862,21 +2862,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
-            // Update background image smoothly (like Groove website)
+            // Update background image smoothly with fade animation
             const currentSection = rsvpSections[currentSectionIndex];
             if (currentSection && currentSection.dataset.bgImage) {
                 const newBgImage = currentSection.dataset.bgImage;
                 const currentBg = rsvpBackgroundImage.src;
                 
                 if (currentBg !== newBgImage) {
-                    // Smooth transition like Groove
-                    rsvpBackgroundImage.style.opacity = '0.7';
+                    console.log(`🎨 Starting fade transition to section ${currentSectionIndex} (${currentSection.dataset.section})`);
                     
-                    setTimeout(() => {
-                        rsvpBackgroundImage.src = newBgImage;
-                        rsvpBackgroundImage.style.opacity = '1';
-                        console.log(`📸 Background changed to section ${currentSectionIndex} (${currentSection.dataset.section})`);
-                    }, 300);
+                    // Use GSAP for smooth fade animation
+                    gsap.to(rsvpBackgroundImage, {
+                        duration: 0.6,
+                        opacity: 0,
+                        ease: "power2.out",
+                        onComplete: function() {
+                            // Change the image source
+                            rsvpBackgroundImage.src = newBgImage;
+                            
+                            // Fade back in
+                            gsap.to(rsvpBackgroundImage, {
+                                duration: 0.8,
+                                opacity: 1,
+                                ease: "power2.out",
+                                onComplete: function() {
+                                    console.log(`✨ Background fade complete for section ${currentSectionIndex}`);
+                                }
+                            });
+                        }
+                    });
                 }
             }
             
