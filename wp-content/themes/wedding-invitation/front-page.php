@@ -703,17 +703,6 @@ get_header(); ?>
             </div>
         </div>
         
-        <!-- Navigation dots for scrolling between sections -->
-        <div class="scroll-navigation fixed right-4 top-1/2 transform -translate-y-1/2 flex flex-col gap-3 z-50">
-            <div class="nav-dot active" data-section="wedding-details" data-index="0" title="Wedding Details"></div>
-            <div class="nav-dot" data-section="ceremony-reception" data-index="1" title="Ceremony & Reception"></div>
-            <div class="nav-dot" data-section="love-story" data-index="2" title="Love Story"></div>
-            <div class="nav-dot" data-section="detailed-love-story" data-index="3" title="Their Story"></div>
-            <div class="nav-dot" data-section="final-love-story" data-index="4" title="Proposal"></div>
-            <div class="nav-dot" data-section="image-slider" data-index="5" title="Gallery"></div>
-            <div class="nav-dot" data-section="rsvp-form" data-index="6" title="RSVP"></div>
-        </div>
-        
     </div>
 </div>
 
@@ -1286,42 +1275,13 @@ input, select, textarea {
     z-index: 1000;
 }
 
-.nav-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-.nav-dot.active {
-    background: white;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-}
-
-.nav-dot:hover {
-    background: rgba(255, 255, 255, 0.7);
-    transform: scale(1.2);
-}
-
-/* Mobile adjustments for navigation */
+/* Mobile adjustments */
 @media (max-width: 768px) {
     .close-details-btn {
         top: 1rem;
         right: 1rem;
         width: 40px;
         height: 40px;
-    }
-    
-    .scroll-navigation {
-        right: 1rem;
-    }
-    
-    .nav-dot {
-        width: 10px;
-        height: 10px;
     }
     
     .wedding-content-section {
@@ -2840,7 +2800,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const rsvpBackgroundImage = document.getElementById('rsvp-background-image');
     const rsvpWrapper = document.querySelector('.wedding-and-rsvp-wrapper');
     const rsvpSections = document.querySelectorAll('.wedding-content-section[data-bg-image], .rsvp-form-section[data-bg-image]');
-    const rsvpNavDots = document.querySelectorAll('.scroll-navigation .nav-dot');
     
     if (rsvpSection && rsvpBackgroundImage && rsvpWrapper && rsvpSections.length > 0) {
         console.log(`🎯 Setting up RSVP section with ${rsvpSections.length} sections and background changes`);
@@ -2893,15 +2852,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 }
             }
-            
-            // Update navigation dots
-            rsvpNavDots.forEach((dot, index) => {
-                if (index === currentSectionIndex) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
         });
         
         // ⏰ AUTO BACKGROUND ROTATION - Time-based slideshow
@@ -2972,21 +2922,72 @@ document.addEventListener('DOMContentLoaded', function() {
         startAutoBackgroundRotation();
         console.log('⏰ Auto background rotation started (4 second intervals)');
         
-        // Navigation dot click handlers
-        rsvpNavDots.forEach((dot, index) => {
-            dot.addEventListener('click', function() {
-                const targetSection = rsvpSections[index];
-                if (targetSection) {
-                    rsvpWrapper.scrollTo({
-                        top: targetSection.offsetTop,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-        
         console.log('✅ RSVP section background changing functionality ready!');
     }
+});
+
+// 🎬 SCROLL-TRIGGERED CONTENT ANIMATIONS
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🎭 Initializing scroll-triggered content animations...');
+    
+    // Set initial state - hide all content for animation
+    gsap.set('.section-content', {
+        opacity: 0,
+        y: 50,
+        scale: 0.95
+    });
+    
+    // Track which sections have been animated to prevent re-animation
+    const animatedSections = new Set();
+    
+    // Create Intersection Observer for scroll animations
+    const observerOptions = {
+        root: document.querySelector('.wedding-and-rsvp-wrapper'),
+        rootMargin: '-10% 0px -30% 0px', // Trigger when 10% visible from top
+        threshold: 0.2
+    };
+    
+    const contentObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const sectionContent = entry.target.querySelector('.section-content');
+            const sectionName = entry.target.dataset.section;
+            
+            // Only animate in when entering view for the first time
+            if (entry.isIntersecting && !animatedSections.has(sectionName)) {
+                console.log(`🎬 Animating in: ${sectionName} (first time)`);
+                
+                // Mark as animated
+                animatedSections.add(sectionName);
+                
+                // Animate content in with stagger effect
+                gsap.timeline()
+                    .to(sectionContent, {
+                        duration: 0.8,
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        ease: "power2.out"
+                    })
+                    .from(sectionContent.querySelectorAll('h1, h2, h3, p, .btn, .grid > div'), {
+                        duration: 0.6,
+                        opacity: 0,
+                        y: 30,
+                        stagger: 0.1,
+                        ease: "power2.out"
+                    }, "-=0.4");
+            }
+            // No animation out - content stays visible once animated
+        });
+    }, observerOptions);
+    
+    // Observe all wedding content sections
+    const sectionsToAnimate = document.querySelectorAll('.wedding-content-section, .rsvp-form-section');
+    sectionsToAnimate.forEach(section => {
+        contentObserver.observe(section);
+        console.log(`👁️ Observing section: ${section.dataset.section}`);
+    });
+    
+    console.log(`✨ Scroll animations ready for ${sectionsToAnimate.length} sections!`);
 });
 
 // Beautiful GSAP Timeline Animations - No Emergency Overrides!
