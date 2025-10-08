@@ -438,11 +438,11 @@ get_header(); ?>
                 </div>
                 
                 <!-- Bottom Quote -->
-                <div class="slider-bottom-quote mb-6 xs:mb-8">
+                <!-- <div class="slider-bottom-quote mb-6 xs:mb-8">
                     <p class="slider-bottom-text text-2xs xs:text-xs sm:text-sm md:text-base text-white font-light italic leading-relaxed text-center">
                         We said yes, <strong>will you say yes to us?</strong>
                     </p>
-                </div>
+                </div> -->
             </div>
         </div>
 
@@ -456,12 +456,8 @@ get_header(); ?>
                     <!-- Step 1: Will You Be Attending -->
                     <div id="family-step-1" class="rsvp-step active">
                         <h2 class="rsvp-title text-lg xs:text-xl md:text-2xl font-medium text-white mb-2 xs:mb-3 md:mb-4 tracking-wider">
-                            RSVP
+                            We said yes, will you say yes to us?
                         </h2>
-                        <h3 class="attendance-question text-sm xs:text-base md:text-lg text-white mb-6 xs:mb-8 md:mb-10 font-light tracking-wide">
-                            WILL YOU BE ATTENDING?
-                        </h3>
-                        
                         <div class="attendance-options mb-6 xs:mb-8 space-y-4">
                             <div class="attendance-button-wrapper">
                                 <button type="button" class="attendance-btn attendance-yes w-full max-w-sm mx-auto block bg-white/20 backdrop-blur-sm border-2 border-white/50 text-white px-8 py-4 text-xs xs:text-sm font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300 rounded-lg" data-answer="yes">
@@ -478,9 +474,6 @@ get_header(); ?>
                     
                     <!-- Step 2: Event Selection -->
                     <div id="family-step-2" class="rsvp-step hidden">
-                        <h2 class="rsvp-title text-lg xs:text-xl md:text-2xl font-medium text-white mb-2 xs:mb-3 md:mb-4 tracking-wider">
-                            RSVP
-                        </h2>
                         <h3 class="event-question text-sm xs:text-base md:text-lg text-white mb-6 xs:mb-8 md:mb-10 font-light tracking-wide">
                             WHICH EVENT WILL YOU ATTEND?
                         </h3>
@@ -511,7 +504,7 @@ get_header(); ?>
                     <!-- Step 3: Guest List -->
                     <div id="family-step-3" class="rsvp-step hidden">
                         <h2 class="rsvp-title text-lg xs:text-xl md:text-2xl font-medium text-white mb-2 xs:mb-3 md:mb-4 tracking-wider">
-                            RSVP
+                            We said yes, will you say yes to us?
                         </h2>
                         <h3 class="guest-list-title text-sm xs:text-base md:text-lg text-white mb-2 xs:mb-3 font-light tracking-wide">
                             GUEST LIST
@@ -583,7 +576,7 @@ get_header(); ?>
                     <!-- Step 1: Event Selection (No attendance question) -->
                     <div id="general-step-1" class="rsvp-step active">
                         <h2 class="rsvp-title text-lg xs:text-xl md:text-2xl font-medium text-white mb-2 xs:mb-3 md:mb-4 tracking-wider">
-                            RSVP
+                            We said yes, will you say yes to us?
                         </h2>
                         <h3 class="event-question text-sm xs:text-base md:text-lg text-white mb-6 xs:mb-8 md:mb-10 font-light tracking-wide">
                             WHICH EVENT WILL YOU ATTEND?
@@ -606,7 +599,7 @@ get_header(); ?>
                     <!-- Step 2: Guest Information -->
                     <div id="general-step-2" class="rsvp-step hidden">
                         <h2 class="rsvp-title text-lg xs:text-xl md:text-2xl font-medium text-white mb-2 xs:mb-3 md:mb-4 tracking-wider">
-                            RSVP
+                            We said yes, will you say yes to us?
                         </h2>
                         <h3 class="guest-info-title text-sm xs:text-base md:text-lg text-white mb-6 xs:mb-8 md:mb-10 font-light tracking-wide">
                             GUEST INFORMATION
@@ -1099,6 +1092,35 @@ input, select, textarea {
     font-weight: 400;
     font-style: normal;
     letter-spacing: 5px;
+}
+
+/* RSVP Form Custom Typography */
+.rsvp-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    letter-spacing: 2px;
+}
+
+/* All other RSVP form elements use Playfair Display */
+.rsvp-form-section,
+.rsvp-content,
+.attendance-question,
+.event-question,
+.guest-list-title,
+.guest-info-title,
+.guest-list-subtitle,
+.attendance-btn,
+.event-btn,
+.general-event-btn,
+.rsvp-submit-btn,
+.back-btn,
+.family-member-checkbox label,
+.thank-you-title,
+.thank-you-subtitle,
+.rsvp-form input,
+.rsvp-form textarea,
+.rsvp-form select {
+    font-family: 'Playfair Display', serif;
 }
 
 /* Mobile-specific fixes */
