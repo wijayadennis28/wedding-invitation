@@ -1222,8 +1222,7 @@ input, select, textarea {
 /* Individual content sections in the single container */
 .wedding-content-section {
     position: relative;
-    min-height: 100vh;
-    min-height: 100dvh;
+    min-height: auto;
     padding: 3rem 1rem;
     display: flex;
     align-items: center;
@@ -1339,19 +1338,24 @@ input, select, textarea {
 /* Wedding Section Monogram - appears after fly-away animation */
 .wedding-section-monogram {
     position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 120px;
     z-index: 999;
     color: white;
-    /* Removed font-size from container */
     line-height: 1;
     pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
 }
 
 .wedding-section-monogram .monogram-combined {
     position: relative;
-    z-index: 9999;
+    z-index: 1000;
     will-change: transform, opacity;
 }
 
@@ -2158,6 +2162,12 @@ document.addEventListener('DOMContentLoaded', function() {
                                 ease: "power2.out",
                                 onComplete: function() {
                                     console.log('✅ Monogram slide-down animation complete - Wedding sections ready!');
+                                    // Set global flag that monogram animation is done
+                                    window.weddingMonogramComplete = true;
+                                    // Trigger any waiting content animations
+                                    if (window.triggerContentAnimations) {
+                                        window.triggerContentAnimations();
+                                    }
                                 }
                             });
                         }, 1000); // Wait for scroll to complete
@@ -2939,55 +2949,69 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Track which sections have been animated to prevent re-animation
     const animatedSections = new Set();
+    let contentObserver;
     
-    // Create Intersection Observer for scroll animations
-    const observerOptions = {
-        root: document.querySelector('.wedding-and-rsvp-wrapper'),
-        rootMargin: '-10% 0px -30% 0px', // Trigger when 10% visible from top
-        threshold: 0.2
-    };
-    
-    const contentObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            const sectionContent = entry.target.querySelector('.section-content');
-            const sectionName = entry.target.dataset.section;
-            
-            // Only animate in when entering view for the first time
-            if (entry.isIntersecting && !animatedSections.has(sectionName)) {
-                console.log(`🎬 Animating in: ${sectionName} (first time)`);
+    // Function to start content animations (called after monogram completes)
+    function startContentAnimations() {
+        console.log('🎬 Starting content animations after monogram completion...');
+        
+        // Create Intersection Observer for scroll animations
+        const observerOptions = {
+            root: document.querySelector('.wedding-and-rsvp-wrapper'),
+            rootMargin: '-10% 0px -30% 0px', // Trigger when 10% visible from top
+            threshold: 0.2
+        };
+        
+        contentObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const sectionContent = entry.target.querySelector('.section-content');
+                const sectionName = entry.target.dataset.section;
                 
-                // Mark as animated
-                animatedSections.add(sectionName);
-                
-                // Animate content in with stagger effect
-                gsap.timeline()
-                    .to(sectionContent, {
-                        duration: 0.8,
-                        opacity: 1,
-                        y: 0,
-                        scale: 1,
-                        ease: "power2.out"
-                    })
-                    .from(sectionContent.querySelectorAll('h1, h2, h3, p, .btn, .grid > div'), {
-                        duration: 0.6,
-                        opacity: 0,
-                        y: 30,
-                        stagger: 0.1,
-                        ease: "power2.out"
-                    }, "-=0.4");
-            }
-            // No animation out - content stays visible once animated
+                // Only animate in when entering view for the first time
+                if (entry.isIntersecting && !animatedSections.has(sectionName)) {
+                    console.log(`🎬 Animating in: ${sectionName} (first time)`);
+                    
+                    // Mark as animated
+                    animatedSections.add(sectionName);
+                    
+                    // Animate content in with stagger effect
+                    gsap.timeline()
+                        .to(sectionContent, {
+                            duration: 0.8,
+                            opacity: 1,
+                            y: 0,
+                            scale: 1,
+                            ease: "power2.out"
+                        })
+                        .from(sectionContent.querySelectorAll('h1, h2, h3, p, .btn, .grid > div'), {
+                            duration: 0.6,
+                            opacity: 0,
+                            y: 30,
+                            stagger: 0.1,
+                            ease: "power2.out"
+                        }, "-=0.4");
+                }
+                // No animation out - content stays visible once animated
+            });
+        }, observerOptions);
+        
+        // Observe all wedding content sections
+        const sectionsToAnimate = document.querySelectorAll('.wedding-content-section, .rsvp-form-section');
+        sectionsToAnimate.forEach(section => {
+            contentObserver.observe(section);
+            console.log(`👁️ Observing section: ${section.dataset.section}`);
         });
-    }, observerOptions);
+        
+        console.log(`✨ Scroll animations ready for ${sectionsToAnimate.length} sections!`);
+    }
     
-    // Observe all wedding content sections
-    const sectionsToAnimate = document.querySelectorAll('.wedding-content-section, .rsvp-form-section');
-    sectionsToAnimate.forEach(section => {
-        contentObserver.observe(section);
-        console.log(`👁️ Observing section: ${section.dataset.section}`);
-    });
-    
-    console.log(`✨ Scroll animations ready for ${sectionsToAnimate.length} sections!`);
+    // Check if wedding monogram is already complete, or wait for it
+    if (window.weddingMonogramComplete) {
+        startContentAnimations();
+    } else {
+        console.log('⏳ Waiting for wedding monogram to complete before enabling content animations...');
+        window.triggerContentAnimations = startContentAnimations;
+    }
 });
 
 // Beautiful GSAP Timeline Animations - No Emergency Overrides!
@@ -3030,6 +3054,10 @@ document.addEventListener('DOMContentLoaded', function() {
         padding: 2rem 1rem !important; /* Compact but readable padding */
         scroll-snap-align: none !important; /* Remove snap points */
         scroll-snap-stop: normal !important; /* Allow free scrolling */
+    }
+    
+    .wedding-content-section[data-section="wedding-details"] {
+        padding-top: 15vh !important; /* Push first section below monogram */
     }
     
     .section-content {
