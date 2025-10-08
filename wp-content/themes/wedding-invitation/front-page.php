@@ -128,10 +128,10 @@ get_header(); ?>
     </div>
     
     <!-- Scrollable Container for All Wedding Content + RSVP -->
-    <div class="wedding-and-rsvp-wrapper relative z-10" style="height: 100vh; height: 100dvh; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; -webkit-overflow-scrolling: touch;">
+    <div class="wedding-and-rsvp-wrapper relative z-10" style="height: 100vh; height: 100dvh; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scroll-snap-type: y mandatory;">
         
         <!-- Section 1: Wedding Details -->
-        <div class="wedding-content-section" data-section="wedding-details" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('wedding_details') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: 100vh; min-height: 100dvh; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center;">
+        <div class="wedding-content-section" data-section="wedding-details" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('wedding_details') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: auto; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
             <div class="section-content max-w-lg mx-auto text-center">
                 <!-- Wedding Title -->
                 <div class="wedding-title-section mb-4 xs:mb-6 md:mb-8 text-center">
@@ -186,7 +186,7 @@ get_header(); ?>
         </div>
 
         <!-- Section 2: Ceremony & Reception -->
-        <div class="wedding-content-section" data-section="ceremony-reception" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('ceremony_reception') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: 100vh; min-height: 100dvh; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center;">
+        <div class="wedding-content-section" data-section="ceremony-reception" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('ceremony_reception') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: auto; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
             <div class="section-content max-w-lg mx-auto text-center">
                 <?php 
                 // Check if this is a family page and get invitation details
@@ -246,7 +246,7 @@ get_header(); ?>
         </div>
 
         <!-- Section 3: Love Story -->
-        <div class="wedding-content-section" data-section="love-story" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: 100vh; min-height: 100dvh; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center;">
+        <div class="wedding-content-section" data-section="love-story" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: auto; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
             <div class="section-content max-w-lg mx-auto text-center">
                 <!-- Love Story Title -->
                 <h2 class="love-story-title text-base xs:text-lg md:text-2xl font-bold mb-4 xs:mb-6 md:mb-8 tracking-wider italic text-white">
@@ -279,7 +279,7 @@ get_header(); ?>
         </div>
 
         <!-- Section 4: Detailed Love Story -->
-        <div class="wedding-content-section" data-section="detailed-love-story" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('detailed_love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: 100vh; min-height: 100dvh; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center;">
+        <div class="wedding-content-section" data-section="detailed-love-story" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('detailed_love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: auto; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
             <div class="section-content max-w-lg mx-auto text-center">
                 <!-- Love Story Title -->
                 <h2 class="detailed-love-story-title text-base xs:text-xl md:text-2xl font-bold mb-4 xs:mb-6 mt-6 xs:mt-8 md:mt-10 tracking-wider italic text-white">
@@ -330,7 +330,7 @@ get_header(); ?>
         </div>
 
         <!-- Section 5: Final Love Story -->
-        <div class="wedding-content-section" data-section="final-love-story" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('final_love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: 100vh; min-height: 100dvh; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center;">
+        <div class="wedding-content-section" data-section="final-love-story" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('final_love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: 80vh; min-height: 80dvh; padding: 2rem 1rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
             <div class="section-content max-w-lg mx-auto text-center">
                 <!-- Love Story Title -->
                 <h2 class="final-love-story-title text-base xs:text-xl md:text-2xl font-bold mb-4 xs:mb-6 tracking-wider italic text-white">
@@ -383,7 +383,7 @@ get_header(); ?>
         </div>
 
         <!-- Section 6: Image Slider -->
-        <div class="wedding-content-section" data-section="image-slider" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('image_slider') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: 100vh; min-height: 100dvh; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center;">
+        <div class="wedding-content-section" data-section="image-slider" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('image_slider') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: auto; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
             <div class="section-content max-w-lg mx-auto text-center">
                 <!-- Romantic Quote -->
                 <div class="slider-quote-section mb-6 xs:mb-8">
@@ -447,7 +447,7 @@ get_header(); ?>
         </div>
 
         <!-- Section 7: RSVP Form -->
-        <div class="rsvp-form-section" data-section="rsvp-form" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('rsvp') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: 100vh; min-height: 100dvh; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center;">
+        <div class="rsvp-form-section" data-section="rsvp-form" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('rsvp') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: auto; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
             <div class="max-w-xs xs:max-w-sm sm:max-w-lg md:max-w-2xl mx-auto text-center">
             
             <?php if (function_exists('is_wedding_family_page') && is_wedding_family_page()): ?>
@@ -2904,6 +2904,74 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
         
+        // ⏰ AUTO BACKGROUND ROTATION - Time-based slideshow
+        let autoRotationEnabled = true;
+        let currentAutoIndex = 0;
+        let isScrolling = false;
+        let scrollTimeout;
+        
+        // Track user scrolling to pause auto rotation
+        rsvpWrapper.addEventListener('scroll', function() {
+            isScrolling = true;
+            clearTimeout(scrollTimeout);
+            
+            // Resume auto rotation after user stops scrolling
+            scrollTimeout = setTimeout(function() {
+                isScrolling = false;
+                console.log('📖 User finished scrolling, resuming auto background rotation');
+            }, 3000); // Wait 3 seconds after scroll stops
+        });
+        
+        // Auto rotate backgrounds every 4 seconds
+        function startAutoBackgroundRotation() {
+            setInterval(function() {
+                // Only rotate if user isn't actively scrolling
+                if (!isScrolling && autoRotationEnabled && rsvpSections.length > 0) {
+                    // Get all background images from sections
+                    const backgroundImages = [];
+                    rsvpSections.forEach(section => {
+                        if (section.dataset.bgImage) {
+                            backgroundImages.push(section.dataset.bgImage);
+                        }
+                    });
+                    
+                    if (backgroundImages.length > 0) {
+                        // Move to next background
+                        currentAutoIndex = (currentAutoIndex + 1) % backgroundImages.length;
+                        const nextBgImage = backgroundImages[currentAutoIndex];
+                        
+                        // Only change if it's different from current
+                        if (rsvpBackgroundImage.src !== nextBgImage) {
+                            console.log(`⏰ Auto-rotating to background ${currentAutoIndex + 1}/${backgroundImages.length}`);
+                            
+                            // Use same smooth fade animation
+                            gsap.to(rsvpBackgroundImage, {
+                                duration: 0.8,
+                                opacity: 0,
+                                ease: "power2.out",
+                                onComplete: function() {
+                                    rsvpBackgroundImage.src = nextBgImage;
+                                    
+                                    gsap.to(rsvpBackgroundImage, {
+                                        duration: 1.0,
+                                        opacity: 1,
+                                        ease: "power2.out",
+                                        onComplete: function() {
+                                            console.log(`✨ Auto background rotation complete`);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }
+                }
+            }, 4000); // Change every 4 seconds
+        }
+        
+        // Start the auto rotation
+        startAutoBackgroundRotation();
+        console.log('⏰ Auto background rotation started (4 second intervals)');
+        
         // Navigation dot click handlers
         rsvpNavDots.forEach((dot, index) => {
             dot.addEventListener('click', function() {
@@ -2924,6 +2992,63 @@ document.addEventListener('DOMContentLoaded', function() {
 // Beautiful GSAP Timeline Animations - No Emergency Overrides!
 // Timeline will run automatically and enable smooth user experience
 </script>
+
+<style>
+/* Enhanced Smooth Scrolling CSS */
+.wedding-and-rsvp-wrapper {
+    scroll-padding-top: 0;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer */
+}
+
+.wedding-and-rsvp-wrapper::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.wedding-content-section, .rsvp-form-section {
+    scroll-margin-top: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Smooth section transitions */
+.section-content {
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+/* Optimize for mobile smooth scrolling */
+@media (max-width: 768px) {
+    .wedding-and-rsvp-wrapper {
+        scroll-snap-type: none !important; /* Disable scroll snap on mobile */
+        scroll-behavior: auto !important; /* More natural scrolling */
+        -webkit-overflow-scrolling: touch !important; /* Smooth iOS scrolling */
+        overscroll-behavior: contain; /* Prevent bounce effect */
+    }
+    
+    .wedding-content-section, .rsvp-form-section {
+        min-height: auto !important; /* Content-based height on mobile */
+        padding: 2rem 1rem !important; /* Compact but readable padding */
+        scroll-snap-align: none !important; /* Remove snap points */
+        scroll-snap-stop: normal !important; /* Allow free scrolling */
+    }
+    
+    .section-content {
+        max-width: 90% !important; /* Better mobile utilization */
+    }
+}
+
+/* Keep scroll snap only on desktop */
+@media (min-width: 769px) {
+    .wedding-and-rsvp-wrapper {
+        scroll-snap-type: y mandatory;
+        scroll-behavior: smooth;
+    }
+    
+    .wedding-content-section, .rsvp-form-section {
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+    }
+}
+</style>
 
 <!-- Wedding Details Container functionality is now inline above -->
 <!-- Container opening and background changes handled by main script -->
