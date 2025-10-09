@@ -44,6 +44,7 @@ class WeddingRSVP {
         $this->table_rsvp = $wpdb->prefix . 'wedding_rsvp_responses';
         $this->table_events = $wpdb->prefix . 'wedding_events';
         $this->table_guest_invitations = $wpdb->prefix . 'wedding_guest_invitations';
+        $this->table_rsvp_submissions = $wpdb->prefix . 'wedding_rsvp_submissions';
         
         // Initialize hooks
         $this->init_hooks();
@@ -69,6 +70,8 @@ class WeddingRSVP {
         // AJAX hooks
         add_action('wp_ajax_wedding_rsvp_submit', array($this, 'handle_rsvp_submission'));
         add_action('wp_ajax_nopriv_wedding_rsvp_submit', array($this, 'handle_rsvp_submission'));
+        add_action('wp_ajax_wedding_family_rsvp_submit', array($this, 'handle_family_rsvp_submission'));
+        add_action('wp_ajax_nopriv_wedding_family_rsvp_submit', array($this, 'handle_family_rsvp_submission'));
         add_action('wp_ajax_wedding_general_rsvp_submit', array($this, 'handle_general_rsvp_submission'));
         add_action('wp_ajax_nopriv_wedding_general_rsvp_submit', array($this, 'handle_general_rsvp_submission'));
         add_action('wp_ajax_get_family_data', array($this, 'handle_get_family_data'));
@@ -96,10 +99,10 @@ class WeddingRSVP {
      * Add rewrite rules for family URLs
      */
     public function add_rewrite_rules() {
-        // Add rewrite rule for family codes
-        add_rewrite_rule('^([^/]+)/?$', 'index.php?family_code=$matches[1]', 'top');
+        // Add rewrite rule for family codes - more specific pattern
+        add_rewrite_rule('^([a-zA-Z0-9\-]+)/?$', 'index.php?family_code=$matches[1]', 'top');
         
-        // Register the query variable
+        // Register the query variables
         add_filter('query_vars', array($this, 'add_query_vars'));
     }
     
@@ -108,6 +111,7 @@ class WeddingRSVP {
      */
     public function add_query_vars($vars) {
         $vars[] = 'family_code';
+        $vars[] = 'familly_code'; // Support the misspelled version too
         return $vars;
     }    /**
      * Plugin activation
@@ -175,6 +179,7 @@ class WeddingRSVP {
             guest_id int(11) NOT NULL,
             event_type varchar(50) NOT NULL,
             attendance_status enum('yes','no') DEFAULT 'no',
+            attending_members text,
             dietary_requirements text,
             additional_notes text,
             responded_at timestamp DEFAULT CURRENT_TIMESTAMP,
@@ -211,6 +216,28 @@ class WeddingRSVP {
             KEY idx_event (event_id)
         ) $charset_collate;";
         
+        // New comprehensive RSVP submissions table
+        $sql_rsvp_submissions = "CREATE TABLE {$this->table_rsvp_submissions} (
+            id int(11) NOT NULL AUTO_INCREMENT,
+            family_id int(11) NOT NULL,
+            guest_id int(11) NOT NULL,
+            primary_guest_name varchar(255) NOT NULL,
+            family_code varchar(100) NOT NULL,
+            attendance_status enum('yes','no') DEFAULT 'no',
+            selected_events text NOT NULL COMMENT 'JSON array of selected events',
+            attending_members text NOT NULL COMMENT 'JSON array of attending family member names',
+            dietary_requirements text,
+            additional_notes text,
+            wishes text COMMENT 'Wedding wishes/messages',
+            submitted_at timestamp DEFAULT CURRENT_TIMESTAMP,
+            updated_at timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            UNIQUE KEY unique_family_submission (family_id),
+            KEY idx_guest (guest_id),
+            KEY idx_family_code (family_code),
+            KEY idx_attendance (attendance_status)
+        ) $charset_collate;";
+        
         // Create tables
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql_families);
@@ -218,6 +245,13 @@ class WeddingRSVP {
         dbDelta($sql_rsvp);
         dbDelta($sql_events);
         dbDelta($sql_guest_invitations);
+        dbDelta($sql_rsvp_submissions);
+        
+        // Add attending_members column if it doesn't exist
+        $column_exists = $wpdb->get_results("SHOW COLUMNS FROM {$this->table_rsvp} LIKE 'attending_members'");
+        if (empty($column_exists)) {
+            $wpdb->query("ALTER TABLE {$this->table_rsvp} ADD COLUMN attending_members TEXT AFTER attendance_status");
+        }
         
         // Clean up legacy data
         $this->cleanup_legacy_data();
@@ -360,20 +394,37 @@ class WeddingRSVP {
      * Handle family-specific URLs
      */
     public function handle_wedding_urls() {
-        // Get the URL path
-        $request_uri = trim($_SERVER['REQUEST_URI'], '/');
-        $parts = explode('/', $request_uri);
+        $url_slug = '';
         
-        // For URLs like /wedding-invitation/dennis-wijaya, we want the last part
-        if (count($parts) >= 2 && $parts[0] === 'wedding-invitation' && !empty($parts[1])) {
-            $url_slug = sanitize_text_field($parts[1]);
+        // Method 1: Check for query parameter (e.g., ?familly_code=dennis-wijaya)
+        if (isset($_GET['familly_code']) && !empty($_GET['familly_code'])) {
+            $url_slug = sanitize_text_field($_GET['familly_code']);
+            // Remove trailing slash if present
+            $url_slug = rtrim($url_slug, '/');
+        }
+        // Method 2: Check for clean URL (e.g., /dennis-wijaya)
+        elseif (isset($_GET['family_code']) && !empty($_GET['family_code'])) {
+            $url_slug = sanitize_text_field($_GET['family_code']);
+        }
+        // Method 3: Parse URL path for /wedding-invitation/dennis-wijaya format
+        else {
+            $request_uri = trim($_SERVER['REQUEST_URI'], '/');
+            $parts = explode('/', $request_uri);
             
-            // Skip if it's a known WordPress path
-            $skip_paths = ['wp-admin', 'wp-content', 'wp-includes', 'admin-ajax.php', 'wp-json'];
-            if (in_array($url_slug, $skip_paths)) {
-                return;
+            // For URLs like /wedding-invitation/dennis-wijaya, we want the last part
+            if (count($parts) >= 2 && $parts[0] === 'wedding-invitation' && !empty($parts[1])) {
+                $url_slug = sanitize_text_field($parts[1]);
+                
+                // Skip if it's a known WordPress path
+                $skip_paths = ['wp-admin', 'wp-content', 'wp-includes', 'admin-ajax.php', 'wp-json'];
+                if (in_array($url_slug, $skip_paths)) {
+                    return;
+                }
             }
-            
+        }
+        
+        // If we found a URL slug, process it
+        if (!empty($url_slug)) {
             // Convert URL slug back to name format (dennis-wijaya -> Dennis Wijaya)
             $guest_name = str_replace('-', ' ', $url_slug);
             $guest_name = ucwords($guest_name); // Dennis Wijaya
@@ -532,6 +583,101 @@ class WeddingRSVP {
         }
         
         wp_send_json_success('RSVP submitted successfully');
+    }
+    
+    /**
+     * Handle Family RSVP form submission (new comprehensive table)
+     */
+    public function handle_family_rsvp_submission() {
+        // Verify nonce
+        if (!wp_verify_nonce($_POST['nonce'], 'wedding_rsvp_nonce')) {
+            wp_send_json_error('Security check failed');
+        }
+        
+        global $wpdb;
+        
+        // Get family data to validate
+        $family_code = sanitize_text_field($_POST['family_code'] ?? '');
+        
+        // First try to get guest data directly (for individual invitations)
+        global $wpdb;
+        $guest_data = null;
+        $family_data = null;
+        
+        // Convert family code back to guest name (dennis-wijaya -> Dennis Wijaya)
+        $guest_name = str_replace('-', ' ', $family_code);
+        $guest_name = ucwords($guest_name);
+        
+        // Look for guest by name
+        $guest_data = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM {$this->table_guests} WHERE primary_guest_name = %s",
+            $guest_name
+        ));
+        
+        if (!$guest_data) {
+            // Fallback: try to get family data
+            $family_data = $this->get_family_by_code($family_code);
+            if (!$family_data) {
+                wp_send_json_error('Invalid family/guest code');
+            }
+        }
+        
+        // Sanitize input data
+        $guest_id = intval($_POST['guest_id']);
+        $attendance_status = sanitize_text_field($_POST['attendance_status']);
+        $selected_events = isset($_POST['selected_events']) ? $_POST['selected_events'] : [];
+        $attending_members = isset($_POST['attending_members']) ? $_POST['attending_members'] : [];
+        $dietary_requirements = sanitize_textarea_field($_POST['dietary_requirements'] ?? '');
+        $additional_notes = sanitize_textarea_field($_POST['additional_notes'] ?? '');
+        $wedding_wishes = sanitize_textarea_field($_POST['wedding_wishes'] ?? '');
+        
+        // Validate attendance status
+        if (!in_array($attendance_status, ['yes', 'no'])) {
+            wp_send_json_error('Invalid attendance status');
+        }
+        
+        // Use guest data if available, otherwise use family data
+        $primary_guest_name = $guest_data ? $guest_data->primary_guest_name : ($family_data ? $family_data->family_name : 'Unknown');
+        $family_id = $guest_data ? $guest_data->id : ($family_data ? $family_data->id : 0);
+        $actual_guest_id = $guest_data ? $guest_data->id : $guest_id;
+        
+        // Convert arrays to JSON
+        $selected_events_json = json_encode(array_map('sanitize_text_field', $selected_events));
+        $attending_members_json = json_encode(array_map('sanitize_text_field', $attending_members));
+        
+        try {
+            // Insert or update the comprehensive RSVP submission
+            $result = $wpdb->replace(
+                $this->table_rsvp_submissions,
+                array(
+                    'family_id' => $family_data->id,
+                    'guest_id' => $guest_id,
+                    'primary_guest_name' => $family_data->primary_guest_name,
+                    'family_code' => $family_code,
+                    'attendance_status' => $attendance_status,
+                    'selected_events' => $selected_events_json,
+                    'attending_members' => $attending_members_json,
+                    'dietary_requirements' => $dietary_requirements,
+                    'additional_notes' => $additional_notes,
+                    'wishes' => $wedding_wishes
+                ),
+                array('%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')
+            );
+            
+            if ($result === false) {
+                throw new Exception('Database error: ' . $wpdb->last_error);
+            }
+            
+            wp_send_json_success(array(
+                'message' => 'RSVP submitted successfully',
+                'attendance' => $attendance_status,
+                'submission_id' => $wpdb->insert_id ?: $wpdb->get_var("SELECT id FROM {$this->table_rsvp_submissions} WHERE family_id = {$family_data->id}")
+            ));
+            
+        } catch (Exception $e) {
+            error_log('Wedding RSVP Submission Error: ' . $e->getMessage());
+            wp_send_json_error('Failed to save RSVP. Please try again.');
+        }
     }
     
     /**
@@ -1084,18 +1230,24 @@ function get_hero_background_image($is_mobile = false) {
     }
 }
 
-function format_smart_wedding_greeting($family_data, $guests_data) {
-    if (empty($guests_data)) {
+function format_smart_wedding_greeting($guest_data) {
+    // Simplified function - just takes the guest data directly
+    if (empty($guest_data)) {
         return 'DEAR GUEST,';
     }
     
-    // Primary guest is the main guest
-    $primary_guest = $guests_data[0];
+    // Use guest_data directly
+    $primary_guest = $guest_data;
     
-    // Get family members from JSON
+    // Get family members - they're already an array, no need to decode
     $family_members = [];
     if (!empty($primary_guest->family_members)) {
-        $family_members = json_decode($primary_guest->family_members, true) ?? [];
+        // Check if it's already an array or needs decoding
+        if (is_array($primary_guest->family_members)) {
+            $family_members = $primary_guest->family_members;
+        } else {
+            $family_members = json_decode($primary_guest->family_members, true) ?? [];
+        }
     }
     
     // If only one guest (primary)

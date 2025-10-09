@@ -33,32 +33,42 @@ get_header(); ?>
                 <!-- Invitation greeting (initially hidden) -->
                 <h2 class="hero-greeting-title text-xs xs:text-sm sm:text-base md:text-lg lg:text-2xl font-light text-white mb-3 xs:mb-4 md:mb-6 tracking-wide text-center px-2 leading-relaxed">
                     <?php 
-                    // Debug: Check if global variables are set
-                    global $wedding_family_data, $wedding_guests_data;
-                    if ($wedding_family_data || $wedding_guests_data) {
-                        echo "<!-- DEBUG: Global variables are set -->";
-                    } else {
-                        echo "<!-- DEBUG: Global variables NOT set -->";
-                    }
-                    
-                    // Smart greeting based on titles and relationships
-                    if (function_exists('is_wedding_family_page') && is_wedding_family_page()) {
-                        $family_data = function_exists('get_wedding_family_data') ? get_wedding_family_data() : null;
-                        $guests_data = function_exists('get_wedding_guests_data') ? get_wedding_guests_data() : null;
-                        
-                        if ($family_data && $guests_data && function_exists('format_smart_wedding_greeting')) {
-                            echo format_smart_wedding_greeting($family_data, $guests_data);
-                        } else {
-                            // Fallback to simple greeting
-                            $guest_names = function_exists('get_formatted_guest_names') ? get_formatted_guest_names() : '';
-                            if ($guest_names) {
-                                echo 'DEAR ' . strtoupper($guest_names) . ',';
-                            } else {
-                                echo 'DEAR OUR BELOVED FAMILY & FRIENDS,';
-                            }
-                        }
-                    } else {
+                    // Debug: Check function availability
+                    if (!function_exists('is_wedding_family_page')) {
+                        echo '<!-- DEBUG: is_wedding_family_page function NOT found -->';
                         echo 'DEAR OUR BELOVED FAMILY & FRIENDS,';
+                    } elseif (!function_exists('get_wedding_family_data')) {
+                        echo '<!-- DEBUG: get_wedding_family_data function NOT found -->';
+                        echo 'DEAR OUR BELOVED FAMILY & FRIENDS,';
+                    } elseif (!function_exists('format_smart_wedding_greeting')) {
+                        echo '<!-- DEBUG: format_smart_wedding_greeting function NOT found -->';
+                        echo 'DEAR OUR BELOVED FAMILY & FRIENDS,';
+                    } elseif (!is_wedding_family_page()) {
+                        echo '<!-- DEBUG: Not a wedding family page -->';
+                        echo 'DEAR OUR BELOVED FAMILY & FRIENDS,';
+                    } else {
+                        echo '<!-- DEBUG: All functions found, proceeding with smart greeting -->';
+                        try {
+                            $family_data = get_wedding_family_data();
+                            
+                            echo '<!-- DEBUG: Family data: ' . ($family_data ? 'EXISTS' : 'NULL') . ' -->';
+                            
+                            if ($family_data) {
+                                echo '<!-- DEBUG: Calling format_smart_wedding_greeting with single parameter -->';
+                                echo format_smart_wedding_greeting($family_data);
+                            } else {
+                                echo '<!-- DEBUG: Missing data, using fallback -->';
+                                $guest_names = function_exists('get_formatted_guest_names') ? get_formatted_guest_names() : '';
+                                if ($guest_names) {
+                                    echo 'DEAR ' . strtoupper($guest_names) . ',';
+                                } else {
+                                    echo 'DEAR OUR BELOVED FAMILY & FRIENDS,';
+                                }
+                            }
+                        } catch (Exception $e) {
+                            echo '<!-- DEBUG: Exception caught: ' . $e->getMessage() . ' -->';
+                            echo 'DEAR OUR BELOVED FAMILY & FRIENDS,';
+                        }
                     }
                     ?>
                 </h2>
@@ -131,7 +141,7 @@ get_header(); ?>
     <div class="wedding-and-rsvp-wrapper relative z-10" style="height: 100vh; height: 100dvh; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scroll-snap-type: y mandatory;">
         
         <!-- Section 1: Wedding Details -->
-        <div class="wedding-content-section" data-section="wedding-details" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('wedding_details') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: auto; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
+        <div class="wedding-content-section" data-section="wedding-details" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('wedding_details') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: auto; padding: 4rem 1.5rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
             <div class="section-content max-w-lg mx-auto text-center">
                 <!-- Wedding Title -->
                 <div class="wedding-title-section mb-4 xs:mb-6 md:mb-8 text-center">
@@ -161,7 +171,7 @@ get_header(); ?>
                 </div>
                 
                 <!-- Wedding Details -->
-                <div class="wedding-info-section mb-6 xs:mb-8 md:mb-12 text-center">
+                <div class="wedding-info-section !mt-12 !xs:mt-16 !md:mt-20 mb-6 xs:mb-8 md:mb-12 text-center">
                     <div class="grid grid-cols-2 gap-3 xs:gap-4 sm:gap-6 md:gap-8 max-w-xs xs:max-w-sm sm:max-w-lg mx-auto">
                         <div class="groom-info">
                             <h3 class="person-name text-sm xs:text-base md:text-lg text-white font-medium mb-1 xs:mb-2">Dennis <br>Wijaya</h3>
@@ -186,7 +196,7 @@ get_header(); ?>
         </div>
 
         <!-- Section 2: Ceremony & Reception -->
-        <div class="wedding-content-section" data-section="ceremony-reception" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('ceremony_reception') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: auto; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
+        <div class="wedding-content-section" data-section="ceremony-reception" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('ceremony_reception') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: auto; padding: 4rem 1.5rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
             <div class="section-content max-w-lg mx-auto text-center">
                 <?php 
                 // Check if this is a family page and get invitation details
@@ -246,7 +256,7 @@ get_header(); ?>
         </div>
 
         <!-- Section 3: Love Story -->
-        <div class="wedding-content-section" data-section="love-story" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: auto; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
+        <div class="wedding-content-section" data-section="love-story" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: auto; padding: 4rem 1.5rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
             <div class="section-content max-w-lg mx-auto text-center">
                 <!-- Love Story Title -->
                 <h2 class="love-story-title text-base xs:text-lg md:text-2xl font-bold mb-4 xs:mb-6 md:mb-8 tracking-wider italic text-white">
@@ -279,7 +289,7 @@ get_header(); ?>
         </div>
 
         <!-- Section 4: Detailed Love Story -->
-        <div class="wedding-content-section" data-section="detailed-love-story" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('detailed_love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: auto; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
+        <div class="wedding-content-section" data-section="detailed-love-story" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('detailed_love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: auto; padding: 4rem 1.5rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
             <div class="section-content max-w-lg mx-auto text-center">
                 <!-- Love Story Title -->
                 <h2 class="detailed-love-story-title text-base xs:text-xl md:text-2xl font-bold mb-4 xs:mb-6 mt-6 xs:mt-8 md:mt-10 tracking-wider italic text-white">
@@ -330,7 +340,7 @@ get_header(); ?>
         </div>
 
         <!-- Section 5: Final Love Story -->
-        <div class="wedding-content-section" data-section="final-love-story" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('final_love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: 80vh; min-height: 80dvh; padding: 2rem 1rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
+        <div class="wedding-content-section" data-section="final-love-story" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('final_love_story') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: 80vh; min-height: 80dvh; padding: 4rem 1.5rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
             <div class="section-content max-w-lg mx-auto text-center">
                 <!-- Love Story Title -->
                 <h2 class="final-love-story-title text-base xs:text-xl md:text-2xl font-bold mb-4 xs:mb-6 tracking-wider italic text-white">
@@ -383,7 +393,7 @@ get_header(); ?>
         </div>
 
         <!-- Section 6: Image Slider -->
-        <div class="wedding-content-section" data-section="image-slider" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('image_slider') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: auto; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
+        <div class="wedding-content-section" data-section="image-slider" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('image_slider') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: auto; padding: 4rem 1.5rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
             <div class="section-content max-w-lg mx-auto text-center">
                 <!-- Romantic Quote -->
                 <div class="slider-quote-section mb-6 xs:mb-8">
@@ -447,7 +457,7 @@ get_header(); ?>
         </div>
 
         <!-- Section 7: RSVP Form -->
-        <div class="rsvp-form-section" data-section="rsvp-form" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('rsvp') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: auto; padding: 3rem 1rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
+        <div class="rsvp-form-section" data-section="rsvp-form" data-bg-image="<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('rsvp') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>" style="min-height: auto; padding: 4rem 1.5rem; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; scroll-snap-stop: always;">
             <div class="max-w-xs xs:max-w-sm sm:max-w-lg md:max-w-2xl mx-auto text-center">
             
             <?php if (function_exists('is_wedding_family_page') && is_wedding_family_page()): ?>
@@ -514,29 +524,58 @@ get_header(); ?>
                         </p>
                         
                         <div id="family-members-list" class="guest-checkboxes mb-6 xs:mb-8 space-y-3 xs:space-y-4">
-                            <!-- Family members will be populated by JavaScript -->
+                            <?php 
+                            if (function_exists('is_wedding_family_page') && is_wedding_family_page()) {
+                                $family_data = function_exists('get_wedding_family_data') ? get_wedding_family_data() : null;
+                                if ($family_data) {
+                                    // Get all family members including primary guest
+                                    $all_members = [$family_data->primary_guest_name];
+                                    
+                                    if (!empty($family_data->family_members)) {
+                                        $family_members = is_array($family_data->family_members) ? $family_data->family_members : json_decode($family_data->family_members, true);
+                                        if ($family_members) {
+                                            $all_members = array_merge($all_members, $family_members);
+                                        }
+                                    }
+                                    
+                                    // Display each family member as a checkbox
+                                    foreach ($all_members as $index => $member_name) {
+                                        echo '<div class="family-member-checkbox flex items-center justify-center">';
+                                        echo '<label class="flex items-center text-white text-2xs xs:text-xs cursor-pointer bg-white/10 backdrop-blur-sm border border-white/30 rounded px-4 py-3 hover:bg-white/20 transition-all duration-300 w-full max-w-xs">';
+                                        echo '<input type="checkbox" name="family_members[]" value="' . $index . '" class="mr-3 w-4 h-4 accent-white border-2 border-white/50 rounded bg-transparent checked:bg-white checked:border-white focus:ring-2 focus:ring-white/50 focus:outline-none">';
+                                        echo '<span class="flex-1 text-center">' . esc_html($member_name) . '</span>';
+                                        echo '</label>';
+                                        echo '</div>';
+                                    }
+                                } else {
+                                    echo '<p class="text-white/70 text-xs italic">No family data found</p>';
+                                }
+                            } else {
+                                echo '<p class="text-white/70 text-xs italic">Not a family page</p>';
+                            }
+                            ?>
                         </div>
                         
-                        <div class="additional-info-section mb-6 xs:mb-8 space-y-3 xs:space-y-4">
+                        <div class="wishes-section !mt-8 !xs:mt-10 !md:mt-12 mb-6 xs:mb-8">
+                            <h4 class="wishes-title text-sm xs:text-base md:text-lg text-white mb-3 xs:mb-4 font-light tracking-wide">
+                                Wedding Wishes
+                            </h4>
+                            <p class="wishes-subtitle text-2xs xs:text-xs text-white/70 mb-4 font-light italic">
+                                Share your heartfelt wishes for the happy couple
+                            </p>
                             <div class="form-group">
-                                <textarea id="family-dietary-requirements" 
-                                          name="dietary_requirements" 
-                                          placeholder="Dietary requirements or allergies" 
-                                          rows="3" 
-                                          class="w-full px-3 xs:px-4 py-2 xs:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded text-white placeholder-white/70 text-2xs xs:text-xs resize-none focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <textarea id="family-additional-notes" 
-                                          name="additional_notes" 
-                                          placeholder="Additional notes or special requests" 
-                                          rows="3" 
-                                          class="w-full px-3 xs:px-4 py-2 xs:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded text-white placeholder-white/70 text-2xs xs:text-xs resize-none focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"></textarea>
+                                <textarea id="family-wedding-wishes" 
+                                          name="wedding_wishes" 
+                                          placeholder="Write your wedding wishes here..." 
+                                          rows="4" 
+                                          class="w-full px-8 py-4 bg-white/20 backdrop-blur-sm border-2 border-white/50 rounded-lg text-white placeholder-white/80 text-xs xs:text-sm font-light tracking-wider resize-none focus:outline-none focus:ring-2 focus:ring-white/70 focus:border-white hover:bg-white/30 transition-all duration-300"></textarea>
                             </div>
                         </div>
+                        
                         
                         <div class="step-actions space-y-4">
-                            <button type="button" id="family-submit-btn" class="rsvp-submit-btn w-full bg-transparent border border-white text-white px-6 py-3 text-2xs xs:text-xs font-light tracking-widest hover:bg-white hover:text-black transition-all duration-300 rounded">
-                                SUBMIT RSVP
+                            <button type="button" class="submit-btn w-full max-w-sm mx-auto block bg-white/20 backdrop-blur-sm border-2 border-white/50 text-white px-8 py-4 text-xs xs:text-sm font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300 rounded-lg">
+                                Submit
                             </button>
                             <button type="button" class="back-btn flex items-center text-white text-2xs xs:text-xs font-light tracking-wider hover:text-white/70 transition-all duration-300" onclick="showFamilyStep(2)">
                                 <i class="fas fa-arrow-left mr-2"></i> BACK
@@ -1701,6 +1740,49 @@ input, select, textarea {
         gap: 1rem;
     }
 }
+
+/* Custom checkbox styling for family members */
+.family-member-checkbox input[type="checkbox"] {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    width: 18px !important;
+    height: 18px !important;
+    border: 2px solid rgba(255, 255, 255, 0.7) !important;
+    border-radius: 4px !important;
+    background-color: transparent !important;
+    position: relative !important;
+    cursor: pointer !important;
+    margin-right: 12px !important;
+    flex-shrink: 0 !important;
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+.family-member-checkbox input[type="checkbox"]:checked {
+    background-color: white !important;
+    border-color: white !important;
+}
+
+.family-member-checkbox input[type="checkbox"]:checked::after {
+    content: '✓' !important;
+    position: absolute !important;
+    top: -2px !important;
+    left: 2px !important;
+    color: black !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
+}
+
+.family-member-checkbox input[type="checkbox"]:hover {
+    border-color: white !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.family-member-checkbox input[type="checkbox"]:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5) !important;
+    outline-offset: 2px !important;
+}
 </style>
 
 <script>
@@ -1714,6 +1796,31 @@ window.weddingImages = {
     ceremony_reception: '<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('ceremony_reception') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>',
     rsvp: '<?php echo function_exists('get_wedding_section_image') ? get_wedding_section_image('rsvp') : get_template_directory_uri() . '/assets/images/s.jpg'; ?>'
 };
+
+// Set family members data for RSVP form
+<?php 
+if (function_exists('is_wedding_family_page') && is_wedding_family_page()) {
+    $family_data = function_exists('get_wedding_family_data') ? get_wedding_family_data() : null;
+    if ($family_data && !empty($family_data->family_members)) {
+        $family_members = is_array($family_data->family_members) ? $family_data->family_members : json_decode($family_data->family_members, true);
+        if ($family_members) {
+            // Add primary guest name to the list
+            $all_members = array_merge([$family_data->primary_guest_name], $family_members);
+            echo 'window.weddingFamilyMembers = ' . json_encode($all_members) . ';';
+        } else {
+            echo 'window.weddingFamilyMembers = [' . json_encode($family_data->primary_guest_name) . '];';
+        }
+    } else {
+        if ($family_data) {
+            echo 'window.weddingFamilyMembers = [' . json_encode($family_data->primary_guest_name) . '];';
+        } else {
+            echo 'window.weddingFamilyMembers = [];';
+        }
+    }
+} else {
+    echo 'window.weddingFamilyMembers = [];';
+}
+?>
 
 // Force scroll to top on any page load (including refresh)
 window.addEventListener('beforeunload', function() {
@@ -2469,6 +2576,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function initializeFamilyRsvp() {
+        console.log('🚀 initializeFamilyRsvp() called');
+        console.log('💾 window.weddingFamilyMembers:', window.weddingFamilyMembers);
+        
         // Check if family data exists and show teapai option if family category is "family"
         if (window.weddingFamilyData && window.weddingFamilyData.relationship_type === 'Family') {
             const teapaiOption = document.getElementById('teapai-option');
@@ -2477,27 +2587,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // Populate family members list
-        if (window.weddingFamilyMembers && window.weddingFamilyMembers.length > 0) {
-            const familyMembersList = document.getElementById('family-members-list');
-            if (familyMembersList) {
-                familyMembersList.innerHTML = '';
-                window.weddingFamilyMembers.forEach((member, index) => {
-                    const memberDiv = document.createElement('div');
-                    memberDiv.className = 'family-member-checkbox flex items-center justify-center';
-                    memberDiv.innerHTML = `
-                        <label class="flex items-center text-white text-2xs xs:text-xs cursor-pointer bg-white/10 backdrop-blur-sm border border-white/30 rounded px-4 py-3 hover:bg-white/20 transition-all duration-300 w-full max-w-xs">
-                            <input type="checkbox" 
-                                   name="family_members[]" 
-                                   value="${index}" 
-                                   class="mr-3 w-4 h-4 text-white bg-white/10 border-white/30 rounded focus:ring-white/50 focus:ring-2">
-                            <span class="flex-1 text-center">${member}</span>
-                        </label>
-                    `;
-                    familyMembersList.appendChild(memberDiv);
-                });
-            }
-        }
+        // Family members are now populated directly by PHP, no JavaScript needed
+        console.log('✅ Family members populated by PHP server-side');
     }
     
     // General RSVP Functions
@@ -2563,6 +2654,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         showFamilyStep(2);
                     } else {
                         console.log('Submitting decline');
+                        // Set default values for decline response
+                        familyRsvpData.selectedEvents = [];
+                        familyRsvpData.attendingMembers = [];
+                        familyRsvpData.dietaryRequirements = '';
+                        familyRsvpData.additionalNotes = '';
+                        familyRsvpData.weddingWishes = '';
                         submitFamilyRsvp();
                     }
                 });
@@ -2596,6 +2693,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Collect additional info
                 familyRsvpData.dietaryRequirements = document.getElementById('family-dietary-requirements').value;
                 familyRsvpData.additionalNotes = document.getElementById('family-additional-notes').value;
+                familyRsvpData.weddingWishes = document.getElementById('family-wedding-wishes').value;
+                
+                submitFamilyRsvp();
+            });
+            
+            // Main submit button (directly below wishes)
+            document.getElementById('family-submit-btn-main').addEventListener('click', function() {
+                // Collect attending family members
+                const checkedMembers = document.querySelectorAll('#family-members-list input[type="checkbox"]:checked');
+                familyRsvpData.attendingMembers = Array.from(checkedMembers).map(cb => cb.value);
+                
+                // Collect wishes
+                familyRsvpData.weddingWishes = document.getElementById('family-wedding-wishes').value;
+                
+                // Set empty values for dietary and additional notes since we removed them
+                familyRsvpData.dietaryRequirements = '';
+                familyRsvpData.additionalNotes = '';
+                
+                // Set default values if no specific selection was made
+                if (!familyRsvpData.selectedEvents || familyRsvpData.selectedEvents.length === 0) {
+                    familyRsvpData.selectedEvents = ['church', 'reception']; // Default events
+                }
+                
+                if (!familyRsvpData.attendingMembers || familyRsvpData.attendingMembers.length === 0) {
+                    // If no specific members selected, include primary guest
+                    if (window.weddingFamilyData) {
+                        familyRsvpData.attendingMembers = [window.weddingFamilyData.primary_guest_name];
+                    }
+                }
                 
                 submitFamilyRsvp();
             });
@@ -2652,17 +2778,32 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.disabled = true;
         }
         
-        // Prepare data for submission
+        // Get the family data
+        const familyData = window.weddingFamilyData;
+        if (!familyData || !familyData.family_code) {
+            alert('Error: Family data not found');
+            if (submitBtn) {
+                submitBtn.textContent = 'SUBMIT RSVP';
+                submitBtn.disabled = false;
+            }
+            return;
+        }
+        
+        // Prepare data for new comprehensive submission
         const formData = {
-            action: 'wedding_rsvp_submit',
-            guest_id: window.weddingMainGuest ? window.weddingMainGuest.id : null,
-            attendance: familyRsvpData.attendance,
-            events: familyRsvpData.selectedEvents,
+            action: 'wedding_family_rsvp_submit',
+            family_code: familyData.family_code,
+            guest_id: familyData.id,
+            attendance_status: familyRsvpData.attendance,
+            selected_events: familyRsvpData.selectedEvents,
             attending_members: familyRsvpData.attendingMembers,
-            dietary_requirements: familyRsvpData.dietaryRequirements,
-            additional_notes: familyRsvpData.additionalNotes,
+            dietary_requirements: familyRsvpData.dietaryRequirements || '',
+            additional_notes: familyRsvpData.additionalNotes || '',
+            wedding_wishes: familyRsvpData.weddingWishes || '',
             nonce: '<?php echo wp_create_nonce('wedding_rsvp_nonce'); ?>'
         };
+        
+        console.log('Submitting comprehensive family RSVP:', formData);
         
         // Submit via AJAX
         fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
@@ -2674,6 +2815,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
+            console.log('RSVP Response:', data);
             if (data.success) {
                 // Check if this was a decline response
                 if (familyRsvpData.attendance === 'no') {
