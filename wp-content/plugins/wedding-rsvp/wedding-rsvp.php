@@ -27,6 +27,7 @@ class WeddingRSVP {
     private $table_rsvp;
     private $table_events;
     private $table_guest_invitations;
+    private $table_rsvp_submissions;
     
     public static function get_instance() {
         if (self::$instance === null) {
@@ -650,9 +651,9 @@ class WeddingRSVP {
             $result = $wpdb->replace(
                 $this->table_rsvp_submissions,
                 array(
-                    'family_id' => $family_data->id,
-                    'guest_id' => $guest_id,
-                    'primary_guest_name' => $family_data->primary_guest_name,
+                    'family_id' => $family_id,
+                    'guest_id' => $actual_guest_id,
+                    'primary_guest_name' => $primary_guest_name,
                     'family_code' => $family_code,
                     'attendance_status' => $attendance_status,
                     'selected_events' => $selected_events_json,

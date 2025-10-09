@@ -1801,23 +1801,29 @@ window.weddingImages = {
 <?php 
 if (function_exists('is_wedding_family_page') && is_wedding_family_page()) {
     $family_data = function_exists('get_wedding_family_data') ? get_wedding_family_data() : null;
-    if ($family_data && !empty($family_data->family_members)) {
-        $family_members = is_array($family_data->family_members) ? $family_data->family_members : json_decode($family_data->family_members, true);
-        if ($family_members) {
-            // Add primary guest name to the list
-            $all_members = array_merge([$family_data->primary_guest_name], $family_members);
-            echo 'window.weddingFamilyMembers = ' . json_encode($all_members) . ';';
+    if ($family_data) {
+        // Set complete family data for submission
+        echo 'window.weddingFamilyData = ' . json_encode($family_data) . ';';
+        
+        // Set family members list for form display
+        if (!empty($family_data->family_members)) {
+            $family_members = is_array($family_data->family_members) ? $family_data->family_members : json_decode($family_data->family_members, true);
+            if ($family_members) {
+                // Add primary guest name to the list
+                $all_members = array_merge([$family_data->primary_guest_name], $family_members);
+                echo 'window.weddingFamilyMembers = ' . json_encode($all_members) . ';';
+            } else {
+                echo 'window.weddingFamilyMembers = [' . json_encode($family_data->primary_guest_name) . '];';
+            }
         } else {
             echo 'window.weddingFamilyMembers = [' . json_encode($family_data->primary_guest_name) . '];';
         }
     } else {
-        if ($family_data) {
-            echo 'window.weddingFamilyMembers = [' . json_encode($family_data->primary_guest_name) . '];';
-        } else {
-            echo 'window.weddingFamilyMembers = [];';
-        }
+        echo 'window.weddingFamilyData = null;';
+        echo 'window.weddingFamilyMembers = [];';
     }
 } else {
+    echo 'window.weddingFamilyData = null;';
     echo 'window.weddingFamilyMembers = [];';
 }
 ?>
@@ -2065,17 +2071,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             setTimeout(() => {
                 if (answer === 'no') {
-                    // Show decline message
-                    document.querySelectorAll('#family-rsvp-container .rsvp-step').forEach(stepEl => {
-                        stepEl.classList.add('hidden');
-                        stepEl.classList.remove('active');
-                    });
-                    
-                    const declineStep = document.getElementById('family-rsvp-decline');
-                    if (declineStep) {
-                        declineStep.classList.remove('hidden');
-                        declineStep.classList.add('active');
-                    }
+                    // Directly submit "can't attend" RSVP
+                    submitDeclineRsvp();
                 } else {
                     // Continue to event selection
                     showFamilyStep(2);
@@ -2771,6 +2768,89 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Submit functions
+    // Function to directly submit decline RSVP
+    function submitDeclineRsvp() {
+        console.log('Submitting decline RSVP...');
+        
+        // Get the family data
+        const familyData = window.weddingFamilyData;
+        console.log('Family data:', familyData);
+        console.log('Family data keys:', Object.keys(familyData));
+        
+        if (!familyData) {
+            alert('Error: Family data not found');
+            return;
+        }
+        
+        // Use primary_guest_name as the family code (this is what the plugin expects)
+        const familyCode = familyData.primary_guest_name;
+        console.log('Using primary guest name as family code:', familyCode);
+        
+        if (!familyCode) {
+            console.error('Available family data properties:', Object.keys(familyData));
+            console.error('Family data values:', familyData);
+            alert('Error: Primary guest name not found in family data. Check console for details.');
+            return;
+        }
+        
+        console.log('Using family code:', familyCode);
+        
+        // Prepare data for decline submission
+        const formData = {
+            action: 'wedding_family_rsvp_submit',
+            family_code: familyCode,
+            guest_id: familyData.id,
+            attendance_status: 'no',
+            selected_events: [],
+            attending_members: [],
+            dietary_requirements: '',
+            additional_notes: '',
+            wedding_wishes: '',
+            nonce: '<?php echo wp_create_nonce('wedding_rsvp_nonce'); ?>'
+        };
+        
+        console.log('Submitting decline RSVP:', formData);
+        
+        // Submit via AJAX
+        fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Decline RSVP Response:', data);
+            if (data.success) {
+                // Show decline message with animation
+                showFamilyDeclineStep();
+            } else {
+                alert('Error: ' + (data.data || 'Something went wrong. Please try again.'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Network error. Please try again.');
+        });
+    }
+    
+    // Function to show decline step with animation
+    function showFamilyDeclineStep() {
+        // Hide all steps
+        document.querySelectorAll('#family-rsvp-container .rsvp-step').forEach(stepEl => {
+            stepEl.classList.add('hidden');
+            stepEl.classList.remove('active');
+        });
+        
+        // Show decline step
+        const declineStep = document.getElementById('family-rsvp-decline');
+        if (declineStep) {
+            declineStep.classList.remove('hidden');
+            declineStep.classList.add('active');
+        }
+    }
+
     function submitFamilyRsvp() {
         const submitBtn = document.getElementById('family-submit-btn');
         if (submitBtn) {
@@ -2780,8 +2860,23 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Get the family data
         const familyData = window.weddingFamilyData;
-        if (!familyData || !familyData.family_code) {
+        if (!familyData) {
             alert('Error: Family data not found');
+            if (submitBtn) {
+                submitBtn.textContent = 'SUBMIT RSVP';
+                submitBtn.disabled = false;
+            }
+            return;
+        }
+        
+        // Use primary_guest_name as the family code (this is what the plugin expects)
+        const familyCode = familyData.primary_guest_name;
+        console.log('Using primary guest name as family code:', familyCode);
+        
+        if (!familyCode) {
+            console.error('Available family data properties:', Object.keys(familyData));
+            console.error('Family data values:', familyData);
+            alert('Error: Primary guest name not found in family data. Check console for details.');
             if (submitBtn) {
                 submitBtn.textContent = 'SUBMIT RSVP';
                 submitBtn.disabled = false;
@@ -2792,7 +2887,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Prepare data for new comprehensive submission
         const formData = {
             action: 'wedding_family_rsvp_submit',
-            family_code: familyData.family_code,
+            family_code: familyCode,
             guest_id: familyData.id,
             attendance_status: familyRsvpData.attendance,
             selected_events: familyRsvpData.selectedEvents,
