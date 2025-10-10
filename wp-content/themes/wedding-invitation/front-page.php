@@ -2647,141 +2647,47 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
     // Initialize multi-step RSVP
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('🚀 DOMContentLoaded fired - initializing RSVP');
-        
-        // Check what RSVP containers exist
-        const familyContainer = document.getElementById('family-rsvp-container');
-        const generalContainer = document.getElementById('general-rsvp-container');
-        
-        console.log('Family container found:', !!familyContainer);
-        console.log('General container found:', !!generalContainer);
-        
-        // Initialize family RSVP if on family page
-        if (familyContainer) {
-            // First initialize family data
-            initializeFamilyRsvp();
+    console.log('🚀 Initializing RSVP - already in DOMContentLoaded');
+    
+    // Initialize RSVP functionality
+    initializeFamilyRsvp();
+    
+    // Add event listener for family submit button
+    const familySubmitBtn = document.getElementById('family-submit-btn');
+    if (familySubmitBtn) {
+        console.log('✅ Found family submit button - attaching event listener');
+        familySubmitBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('🚀 Family submit button clicked!');
             
-            // Attach event listeners
-            const attendanceBtns = document.querySelectorAll('.attendance-btn');
-            console.log('Found attendance buttons:', attendanceBtns.length);
+            // Collect form data from current step
+            const checkedMembers = document.querySelectorAll('#family-members-list input[type="checkbox"]:checked');
+            familyRsvpData.attendingMembers = Array.from(checkedMembers).map(cb => cb.value);
             
-            attendanceBtns.forEach((btn, index) => {
-                console.log('Attaching listener to button', index, btn.textContent.trim());
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('Button clicked:', this.dataset.answer, this.textContent.trim());
-                    const answer = this.dataset.answer;
-                    familyRsvpData.attendance = answer;
-                    
-                    if (answer === 'yes') {
-                        console.log('Going to step 2');
-                        showFamilyStep(2);
-                    } else {
-                        console.log('Submitting decline');
-                        // Set default values for decline response
-                        familyRsvpData.selectedEvents = [];
-                        familyRsvpData.attendingMembers = [];
-                        familyRsvpData.dietaryRequirements = '';
-                        familyRsvpData.additionalNotes = '';
-                        familyRsvpData.weddingWishes = '';
-                        submitFamilyRsvp();
-                    }
-                });
-            });
-            
-            // Family Step 2: Event selection
-            document.querySelectorAll('.event-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const event = this.dataset.event;
-                    
-                    if (event === 'both') {
-                        // Select all available events
-                        familyRsvpData.selectedEvents = ['church', 'reception'];
-                        if (window.weddingFamilyData && window.weddingFamilyData.relationship_type === 'Family') {
-                            familyRsvpData.selectedEvents.push('teapai');
-                        }
-                    } else {
-                        familyRsvpData.selectedEvents = [event];
-                    }
-                    
-                    showFamilyStep(3);
-                });
-            });
-            
-            // Family Step 3: Submit
-            const familySubmitBtn = document.getElementById('family-submit-btn');
-            if (familySubmitBtn) {
-                console.log('Family submit button found, attaching event listener');
-                familySubmitBtn.addEventListener('click', function() {
-                    console.log('Family submit button clicked!');
-                    
-                    // Collect attending family members
-                    const checkedMembers = document.querySelectorAll('#family-members-list input[type="checkbox"]:checked');
-                    familyRsvpData.attendingMembers = Array.from(checkedMembers).map(cb => cb.value);
-                    
-                    console.log('Collected attending members:', familyRsvpData.attendingMembers);
-                    
-                    // Collect additional info
-                    familyRsvpData.dietaryRequirements = document.getElementById('family-dietary-requirements').value;
-                    familyRsvpData.additionalNotes = document.getElementById('family-additional-notes').value;
-                    familyRsvpData.weddingWishes = document.getElementById('family-wedding-wishes').value;
-                    
-                    console.log('About to call submitFamilyRsvp()');
-                    submitFamilyRsvp();
-                });
-            } else {
-                console.error('❌ Family submit button not found!');
-                console.log('Available elements with submit in ID:');
-                document.querySelectorAll('[id*="submit"]').forEach(el => {
-                    console.log('- Found element:', el.id, el.tagName);
-                });
+            // Collect events from step 2
+            const selectedEventBtn = document.querySelector('.event-btn.selected');
+            if (selectedEventBtn) {
+                const event = selectedEventBtn.dataset.event;
+                if (event === 'both') {
+                    familyRsvpData.selectedEvents = ['church', 'reception'];
+                } else {
+                    familyRsvpData.selectedEvents = [event];
+                }
             }
-        }
-        
-        // Initialize general RSVP
-        if (document.getElementById('general-rsvp-container')) {
-            // General Step 1: Event selection
-            document.querySelectorAll('.general-event-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const event = this.dataset.event;
-                    
-                    if (event === 'both') {
-                        generalRsvpData.selectedEvents = ['church', 'reception'];
-                    } else {
-                        generalRsvpData.selectedEvents = [event];
-                    }
-                    
-                    showGeneralStep(2);
-                });
-            });
             
-            // General guest count change
-            document.getElementById('general-guest-count').addEventListener('change', updateGeneralGuestNames);
+            // Collect additional info
+            familyRsvpData.dietaryRequirements = document.getElementById('family-dietary-requirements')?.value || '';
+            familyRsvpData.additionalNotes = document.getElementById('family-additional-notes')?.value || '';
+            familyRsvpData.weddingWishes = document.getElementById('family-wedding-wishes')?.value || '';
             
-            // Initialize with 1 guest
-            updateGeneralGuestNames();
+            console.log('📝 Collected form data:', familyRsvpData);
             
-            // General Step 2: Submit
-            document.getElementById('general-submit-btn').addEventListener('click', function() {
-                // Collect guest info
-                generalRsvpData.guestInfo.name = document.getElementById('general-guest-name').value;
-                generalRsvpData.guestInfo.email = document.getElementById('general-guest-email').value;
-                generalRsvpData.guestInfo.count = document.getElementById('general-guest-count').value;
-                
-                // Collect guest names
-                const guestNameInputs = document.querySelectorAll('#general-guest-names input[name="guest_names[]"]');
-                generalRsvpData.guestNames = Array.from(guestNameInputs).map(input => input.value);
-                
-                // Collect additional info
-                generalRsvpData.dietaryRequirements = document.getElementById('general-dietary-requirements').value;
-                generalRsvpData.additionalNotes = document.getElementById('general-additional-notes').value;
-                
-                submitGeneralRsvp();
-            });
-        }
-    });
+            // Call the submit function
+            submitFamilyRsvp();
+        });
+    } else {
+        console.error('❌ Family submit button not found!');
+    }
     
     // Submit functions
     // Function to directly submit decline RSVP
