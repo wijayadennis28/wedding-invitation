@@ -645,11 +645,59 @@ class WeddingRSVP {
             }
         }
         
+        // 🔍 DEBUG: Log raw POST data to see what's actually being received
+        error_log('🔍 === RAW POST DATA DEBUG ===');
+        error_log('🔍 Complete $_POST array: ' . print_r($_POST, true));
+        error_log('🔍 Raw selected_events: ' . var_export($_POST['selected_events'] ?? 'NOT_SET', true));
+        error_log('🔍 Raw attending_members: ' . var_export($_POST['attending_members'] ?? 'NOT_SET', true));
+        error_log('🔍 Type of selected_events: ' . gettype($_POST['selected_events'] ?? 'NOT_SET'));
+        error_log('🔍 Type of attending_members: ' . gettype($_POST['attending_members'] ?? 'NOT_SET'));
+        
         // Sanitize input data
         $guest_id = intval($_POST['guest_id']);
         $attendance_status = sanitize_text_field($_POST['attendance_status']);
         $selected_events = isset($_POST['selected_events']) ? $_POST['selected_events'] : [];
         $attending_members = isset($_POST['attending_members']) ? $_POST['attending_members'] : [];
+        
+        // 🔍 DEBUG: Check if we need to parse JSON strings
+        if (is_string($selected_events)) {
+            error_log('🔧 selected_events is a string, attempting JSON decode: ' . $selected_events);
+            
+            // Remove WordPress automatic slashes first
+            $clean_events_string = stripslashes($selected_events);
+            error_log('🧹 After stripslashes: ' . $clean_events_string);
+            
+            $decoded_events = json_decode($clean_events_string, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded_events)) {
+                $selected_events = $decoded_events;
+                error_log('✅ Successfully decoded selected_events: ' . print_r($selected_events, true));
+            } else {
+                error_log('❌ Failed to decode selected_events JSON, error: ' . json_last_error_msg());
+                // Try to parse as comma-separated string
+                $selected_events = array_map('trim', explode(',', $clean_events_string));
+                error_log('🔧 Parsed as comma-separated: ' . print_r($selected_events, true));
+            }
+        }
+        
+        if (is_string($attending_members)) {
+            error_log('🔧 attending_members is a string, attempting JSON decode: ' . $attending_members);
+            
+            // Remove WordPress automatic slashes first  
+            $clean_members_string = stripslashes($attending_members);
+            error_log('🧹 After stripslashes: ' . $clean_members_string);
+            
+            $decoded_members = json_decode($clean_members_string, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded_members)) {
+                $attending_members = $decoded_members;
+                error_log('✅ Successfully decoded attending_members: ' . print_r($attending_members, true));
+            } else {
+                error_log('❌ Failed to decode attending_members JSON, error: ' . json_last_error_msg());
+                // Try to parse as comma-separated string
+                $attending_members = array_map('trim', explode(',', $clean_members_string));
+                error_log('🔧 Parsed as comma-separated: ' . print_r($attending_members, true));
+            }
+        }
+        
         $dietary_requirements = sanitize_textarea_field($_POST['dietary_requirements'] ?? '');
         $additional_notes = sanitize_textarea_field($_POST['additional_notes'] ?? '');
         $wedding_wishes = sanitize_textarea_field($_POST['wedding_wishes'] ?? '');
@@ -676,13 +724,61 @@ class WeddingRSVP {
         error_log('- family_id: ' . $family_id);
         error_log('- actual_guest_id: ' . $actual_guest_id);
         
-        // Convert arrays to JSON
-        $selected_events_json = json_encode(array_map('sanitize_text_field', $selected_events));
-        $attending_members_json = json_encode(array_map('sanitize_text_field', $attending_members));
+        // 🔧 CLEAN JSON ENCODING - Avoid double escaping
+        error_log('🔧 Pre-JSON arrays:');
+        error_log('🔧 selected_events type: ' . gettype($selected_events) . ', content: ' . print_r($selected_events, true));
+        error_log('🔧 attending_members type: ' . gettype($attending_members) . ', content: ' . print_r($attending_members, true));
+        
+        // Only sanitize if arrays contain strings, avoid over-sanitizing already clean data
+        if (is_array($selected_events)) {
+            $clean_events = array_map(function($event) {
+                // Aggressively remove slashes and clean the data
+                if (is_string($event)) {
+                    $cleaned = $event;
+                    // Remove multiple levels of slashes
+                    while (strpos($cleaned, '\\') !== false) {
+                        $cleaned = stripslashes($cleaned);
+                    }
+                    return trim(strip_tags($cleaned));
+                }
+                return $event;
+            }, $selected_events);
+        } else {
+            $clean_events = [];
+        }
+        
+        if (is_array($attending_members)) {
+            $clean_members = array_map(function($member) {
+                // Aggressively remove slashes and clean the data
+                if (is_string($member)) {
+                    $cleaned = $member;
+                    // Remove multiple levels of slashes
+                    while (strpos($cleaned, '\\') !== false) {
+                        $cleaned = stripslashes($cleaned);
+                    }
+                    return trim(strip_tags($cleaned));
+                }
+                return $member;
+            }, $attending_members);
+        } else {
+            $clean_members = [];
+        }
+        
+        // Convert arrays to clean JSON without extra escaping
+        $selected_events_json = json_encode($clean_events, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        $attending_members_json = json_encode($clean_members, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         
         error_log('JSON data:');
         error_log('- selected_events_json: ' . $selected_events_json);
         error_log('- attending_members_json: ' . $attending_members_json);
+        
+        // 🔧 FINAL SLASH REMOVAL before database insertion
+        $final_events_json = wp_unslash($selected_events_json);
+        $final_members_json = wp_unslash($attending_members_json);
+        
+        error_log('🔧 Final JSON after wp_unslash:');
+        error_log('- final_events_json: ' . $final_events_json);
+        error_log('- final_members_json: ' . $final_members_json);
         
         try {
             error_log('Starting database insert/update...');
@@ -696,8 +792,8 @@ class WeddingRSVP {
                     'primary_guest_name' => $primary_guest_name,
                     'family_code' => $family_code,
                     'attendance_status' => $attendance_status,
-                    'selected_events' => $selected_events_json,
-                    'attending_members' => $attending_members_json,
+                    'selected_events' => $final_events_json,
+                    'attending_members' => $final_members_json,
                     'dietary_requirements' => $dietary_requirements,
                     'additional_notes' => $additional_notes,
                     'wishes' => $wedding_wishes

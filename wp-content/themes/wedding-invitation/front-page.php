@@ -2769,13 +2769,26 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Submitting decline RSVP:', formData);
         console.log('AJAX URL:', '<?php echo admin_url('admin-ajax.php'); ?>');
         
+        // 🔧 MANUAL FORM DATA BUILDING FOR DECLINE RSVP
+        const urlSearchParams = new URLSearchParams();
+        urlSearchParams.append('action', formData.action);
+        urlSearchParams.append('family_code', formData.family_code);
+        urlSearchParams.append('guest_id', formData.guest_id);
+        urlSearchParams.append('attendance_status', formData.attendance_status);
+        urlSearchParams.append('dietary_requirements', formData.dietary_requirements);
+        urlSearchParams.append('additional_notes', formData.additional_notes);
+        urlSearchParams.append('wedding_wishes', formData.wedding_wishes);
+        urlSearchParams.append('nonce', formData.nonce);
+        urlSearchParams.append('selected_events', JSON.stringify(formData.selected_events));
+        urlSearchParams.append('attending_members', JSON.stringify(formData.attending_members));
+        
         // Submit via AJAX
         fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: new URLSearchParams(formData)
+            body: urlSearchParams
         })
         .then(response => {
             console.log('Raw response status:', response.status);
@@ -2869,13 +2882,26 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Submitting accept RSVP:', formData);
         console.log('AJAX URL:', '<?php echo admin_url('admin-ajax.php'); ?>');
         
+        // 🔧 MANUAL FORM DATA BUILDING FOR ACCEPT RSVP
+        const urlSearchParams = new URLSearchParams();
+        urlSearchParams.append('action', formData.action);
+        urlSearchParams.append('family_code', formData.family_code);
+        urlSearchParams.append('guest_id', formData.guest_id);
+        urlSearchParams.append('attendance_status', formData.attendance_status);
+        urlSearchParams.append('dietary_requirements', formData.dietary_requirements);
+        urlSearchParams.append('additional_notes', formData.additional_notes);
+        urlSearchParams.append('wedding_wishes', formData.wedding_wishes);
+        urlSearchParams.append('nonce', formData.nonce);
+        urlSearchParams.append('selected_events', JSON.stringify(formData.selected_events));
+        urlSearchParams.append('attending_members', JSON.stringify(formData.attending_members));
+        
         // Submit via AJAX
         fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: new URLSearchParams(formData)
+            body: urlSearchParams
         })
         .then(response => {
             console.log('Raw response status:', response.status);
@@ -2974,6 +3000,63 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
+        // 🔍 PRE-SUBMISSION DATA VALIDATION AND DEBUGGING
+        console.log('🔍 === PRE-SUBMISSION VALIDATION ===');
+        console.log('🔍 familyRsvpData object:', familyRsvpData);
+        console.log('🔍 familyRsvpData.selectedEvents:', familyRsvpData.selectedEvents);
+        console.log('🔍 familyRsvpData.attendingMembers:', familyRsvpData.attendingMembers);
+        console.log('🔍 typeof selectedEvents:', typeof familyRsvpData.selectedEvents);
+        console.log('🔍 typeof attendingMembers:', typeof familyRsvpData.attendingMembers);
+        console.log('🔍 Array.isArray(selectedEvents):', Array.isArray(familyRsvpData.selectedEvents));
+        console.log('🔍 Array.isArray(attendingMembers):', Array.isArray(familyRsvpData.attendingMembers));
+        console.log('🔍 selectedEvents.length:', familyRsvpData.selectedEvents ? familyRsvpData.selectedEvents.length : 'UNDEFINED');
+        console.log('🔍 attendingMembers.length:', familyRsvpData.attendingMembers ? familyRsvpData.attendingMembers.length : 'UNDEFINED');
+        
+        // ⚠️ VALIDATION CHECKS FOR EMPTY DATA
+        if (!familyRsvpData.selectedEvents || familyRsvpData.selectedEvents.length === 0) {
+            console.error('❌ VALIDATION ERROR: selectedEvents is empty or undefined!');
+            console.error('❌ Attempting to recover selectedEvents from DOM...');
+            
+            // Try to recover from selected button
+            const selectedEventBtn = document.querySelector('.event-btn.selected');
+            if (selectedEventBtn) {
+                const event = selectedEventBtn.dataset.event;
+                console.log('🔧 Found selected event button:', event);
+                if (event === 'both') {
+                    familyRsvpData.selectedEvents = ['church', 'reception'];
+                } else {
+                    familyRsvpData.selectedEvents = [event];
+                }
+                console.log('✅ Recovered selectedEvents:', familyRsvpData.selectedEvents);
+            } else {
+                console.error('❌ No selected event button found - selectedEvents will be empty!');
+                alert('⚠️ ERROR: No events selected! Please go back and select which events you\'ll attend.');
+                return;
+            }
+        }
+        
+        if (!familyRsvpData.attendingMembers || familyRsvpData.attendingMembers.length === 0) {
+            console.error('❌ VALIDATION ERROR: attendingMembers is empty or undefined!');
+            console.error('❌ Attempting to recover attendingMembers from DOM...');
+            
+            // Try to recover from checkboxes
+            const checkedMembers = document.querySelectorAll('#family-members-list input[type="checkbox"]:checked');
+            console.log('🔧 Found checked members:', checkedMembers.length);
+            
+            if (checkedMembers.length > 0) {
+                familyRsvpData.attendingMembers = Array.from(checkedMembers).map(cb => cb.value);
+                console.log('✅ Recovered attendingMembers:', familyRsvpData.attendingMembers);
+            } else {
+                console.error('❌ No checked family members found - attendingMembers will be empty!');
+                alert('⚠️ ERROR: No family members selected! Please go back and select who will be attending.');
+                return;
+            }
+        }
+        
+        console.log('🔍 === POST-VALIDATION DATA ===');
+        console.log('🔍 Final selectedEvents:', familyRsvpData.selectedEvents);
+        console.log('🔍 Final attendingMembers:', familyRsvpData.attendingMembers);
+        
         // Prepare data for new comprehensive submission
         const formData = {
             action: 'wedding_family_rsvp_submit',
@@ -2988,7 +3071,34 @@ document.addEventListener('DOMContentLoaded', function() {
             nonce: '<?php echo wp_create_nonce('wedding_rsvp_nonce'); ?>'
         };
         
-        console.log('Submitting comprehensive family RSVP:', formData);
+        console.log('🚀 === FINAL SUBMISSION DATA ===');
+        console.log('🚀 Complete formData object:', formData);
+        console.log('🚀 formData.selected_events:', formData.selected_events);
+        console.log('🚀 formData.attending_members:', formData.attending_members);
+        console.log('🚀 JSON.stringify(formData):', JSON.stringify(formData, null, 2));
+        
+        // 🔧 MANUAL FORM DATA BUILDING TO HANDLE ARRAYS PROPERLY
+        console.log('🔧 Building URLSearchParams manually to handle arrays...');
+        const urlSearchParams = new URLSearchParams();
+        
+        // Add basic fields
+        urlSearchParams.append('action', formData.action);
+        urlSearchParams.append('family_code', formData.family_code);
+        urlSearchParams.append('guest_id', formData.guest_id);
+        urlSearchParams.append('attendance_status', formData.attendance_status);
+        urlSearchParams.append('dietary_requirements', formData.dietary_requirements);
+        urlSearchParams.append('additional_notes', formData.additional_notes);
+        urlSearchParams.append('wedding_wishes', formData.wedding_wishes);
+        urlSearchParams.append('nonce', formData.nonce);
+        
+        // Handle arrays properly by JSON encoding them
+        console.log('🔧 Adding selected_events as JSON:', JSON.stringify(formData.selected_events));
+        urlSearchParams.append('selected_events', JSON.stringify(formData.selected_events));
+        
+        console.log('🔧 Adding attending_members as JSON:', JSON.stringify(formData.attending_members));
+        urlSearchParams.append('attending_members', JSON.stringify(formData.attending_members));
+        
+        console.log('🚀 Final URLSearchParams string:', urlSearchParams.toString());
         
         // Submit via AJAX
         fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
@@ -2996,7 +3106,7 @@ document.addEventListener('DOMContentLoaded', function() {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: new URLSearchParams(formData)
+            body: urlSearchParams
         })
         .then(response => response.json())
         .then(data => {
@@ -3142,13 +3252,25 @@ document.addEventListener('DOMContentLoaded', function() {
             nonce: '<?php echo wp_create_nonce('wedding_rsvp_nonce'); ?>'
         };
         
+        // 🔧 MANUAL FORM DATA BUILDING FOR GENERAL RSVP
+        const urlSearchParams = new URLSearchParams();
+        urlSearchParams.append('action', formData.action);
+        urlSearchParams.append('guest_name', formData.guest_name);
+        urlSearchParams.append('guest_email', formData.guest_email);
+        urlSearchParams.append('guest_count', formData.guest_count);
+        urlSearchParams.append('dietary_requirements', formData.dietary_requirements);
+        urlSearchParams.append('additional_notes', formData.additional_notes);
+        urlSearchParams.append('nonce', formData.nonce);
+        urlSearchParams.append('guest_names', JSON.stringify(formData.guest_names));
+        urlSearchParams.append('events', JSON.stringify(formData.events));
+        
         // Submit via AJAX
         fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: new URLSearchParams(formData)
+            body: urlSearchParams
         })
         .then(response => response.json())
         .then(data => {
