@@ -542,7 +542,7 @@ get_header(); ?>
                                     foreach ($all_members as $index => $member_name) {
                                         echo '<div class="family-member-checkbox flex items-center justify-center">';
                                         echo '<label class="flex items-center text-white text-2xs xs:text-xs cursor-pointer bg-white/10 backdrop-blur-sm border border-white/30 rounded px-4 py-3 hover:bg-white/20 transition-all duration-300 w-full max-w-xs">';
-                                        echo '<input type="checkbox" name="family_members[]" value="' . $index . '" class="mr-3 w-4 h-4 accent-white border-2 border-white/50 rounded bg-transparent checked:bg-white checked:border-white focus:ring-2 focus:ring-white/50 focus:outline-none">';
+                                        echo '<input type="checkbox" name="family_members[]" value="' . esc_attr($member_name) . '" class="mr-3 w-4 h-4 accent-white border-2 border-white/50 rounded bg-transparent checked:bg-white checked:border-white focus:ring-2 focus:ring-white/50 focus:outline-none">';
                                         echo '<span class="flex-1 text-center">' . esc_html($member_name) . '</span>';
                                         echo '</label>';
                                         echo '</div>';
@@ -554,6 +554,26 @@ get_header(); ?>
                                 echo '<p class="text-white/70 text-xs italic">Not a family page</p>';
                             }
                             ?>
+                        </div>
+                        
+                        <div class="additional-info-section !mt-8 !xs:mt-10 mb-6 xs:mb-8">
+                            <h4 class="additional-info-title text-sm xs:text-base md:text-lg text-white mb-3 xs:mb-4 font-light tracking-wide">
+                                Additional Information
+                            </h4>
+                            <div class="form-group mb-4">
+                                <textarea id="family-dietary-requirements" 
+                                          name="dietary_requirements" 
+                                          placeholder="Dietary requirements or food allergies..." 
+                                          rows="3" 
+                                          class="w-full px-4 py-3 bg-white/20 backdrop-blur-sm border-2 border-white/50 rounded-lg text-white placeholder-white/80 text-xs xs:text-sm font-light tracking-wider resize-none focus:outline-none focus:ring-2 focus:ring-white/70 focus:border-white hover:bg-white/30 transition-all duration-300"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <textarea id="family-additional-notes" 
+                                          name="additional_notes" 
+                                          placeholder="Special requests or additional notes..." 
+                                          rows="3" 
+                                          class="w-full px-4 py-3 bg-white/20 backdrop-blur-sm border-2 border-white/50 rounded-lg text-white placeholder-white/80 text-xs xs:text-sm font-light tracking-wider resize-none focus:outline-none focus:ring-2 focus:ring-white/70 focus:border-white hover:bg-white/30 transition-all duration-300"></textarea>
+                            </div>
                         </div>
                         
                         <div class="wishes-section !mt-8 !xs:mt-10 !md:mt-12 mb-6 xs:mb-8">
@@ -574,7 +594,7 @@ get_header(); ?>
                         
                         
                         <div class="step-actions space-y-4">
-                            <button type="button" class="submit-btn w-full max-w-sm mx-auto block bg-white/20 backdrop-blur-sm border-2 border-white/50 text-white px-8 py-4 text-xs xs:text-sm font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300 rounded-lg">
+                            <button type="button" id="family-submit-btn" class="submit-btn w-full max-w-sm mx-auto block bg-white/20 backdrop-blur-sm border-2 border-white/50 text-white px-8 py-4 text-xs xs:text-sm font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300 rounded-lg">
                                 Submit
                             </button>
                             <button type="button" class="back-btn flex items-center text-white text-2xs xs:text-xs font-light tracking-wider hover:text-white/70 transition-all duration-300" onclick="showFamilyStep(2)">
@@ -2071,10 +2091,13 @@ document.addEventListener('DOMContentLoaded', function() {
             
             setTimeout(() => {
                 if (answer === 'no') {
+                    // Store attendance answer
+                    familyRsvpData.attendance = 'no';
                     // Directly submit "can't attend" RSVP
                     submitDeclineRsvp();
                 } else {
-                    // Continue to event selection
+                    // Store attendance answer and proceed to event selection
+                    familyRsvpData.attendance = 'yes';
                     showFamilyStep(2);
                 }
             }, 800);
@@ -2621,24 +2644,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+
+    
     // Initialize multi-step RSVP
     document.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 DOMContentLoaded fired - initializing RSVP');
+        
         // Check what RSVP containers exist
         const familyContainer = document.getElementById('family-rsvp-container');
         const generalContainer = document.getElementById('general-rsvp-container');
+        
+        console.log('Family container found:', !!familyContainer);
+        console.log('General container found:', !!generalContainer);
         
         // Initialize family RSVP if on family page
         if (familyContainer) {
             // First initialize family data
             initializeFamilyRsvp();
             
-            // Attach event listeners with debugging
+            // Attach event listeners
             const attendanceBtns = document.querySelectorAll('.attendance-btn');
             console.log('Found attendance buttons:', attendanceBtns.length);
             
             attendanceBtns.forEach((btn, index) => {
                 console.log('Attaching listener to button', index, btn.textContent.trim());
-                btn.style.border = '2px solid red'; // Debug: make buttons obvious
                 btn.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -2682,46 +2711,33 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             // Family Step 3: Submit
-            document.getElementById('family-submit-btn').addEventListener('click', function() {
-                // Collect attending family members
-                const checkedMembers = document.querySelectorAll('#family-members-list input[type="checkbox"]:checked');
-                familyRsvpData.attendingMembers = Array.from(checkedMembers).map(cb => cb.value);
-                
-                // Collect additional info
-                familyRsvpData.dietaryRequirements = document.getElementById('family-dietary-requirements').value;
-                familyRsvpData.additionalNotes = document.getElementById('family-additional-notes').value;
-                familyRsvpData.weddingWishes = document.getElementById('family-wedding-wishes').value;
-                
-                submitFamilyRsvp();
-            });
-            
-            // Main submit button (directly below wishes)
-            document.getElementById('family-submit-btn-main').addEventListener('click', function() {
-                // Collect attending family members
-                const checkedMembers = document.querySelectorAll('#family-members-list input[type="checkbox"]:checked');
-                familyRsvpData.attendingMembers = Array.from(checkedMembers).map(cb => cb.value);
-                
-                // Collect wishes
-                familyRsvpData.weddingWishes = document.getElementById('family-wedding-wishes').value;
-                
-                // Set empty values for dietary and additional notes since we removed them
-                familyRsvpData.dietaryRequirements = '';
-                familyRsvpData.additionalNotes = '';
-                
-                // Set default values if no specific selection was made
-                if (!familyRsvpData.selectedEvents || familyRsvpData.selectedEvents.length === 0) {
-                    familyRsvpData.selectedEvents = ['church', 'reception']; // Default events
-                }
-                
-                if (!familyRsvpData.attendingMembers || familyRsvpData.attendingMembers.length === 0) {
-                    // If no specific members selected, include primary guest
-                    if (window.weddingFamilyData) {
-                        familyRsvpData.attendingMembers = [window.weddingFamilyData.primary_guest_name];
-                    }
-                }
-                
-                submitFamilyRsvp();
-            });
+            const familySubmitBtn = document.getElementById('family-submit-btn');
+            if (familySubmitBtn) {
+                console.log('Family submit button found, attaching event listener');
+                familySubmitBtn.addEventListener('click', function() {
+                    console.log('Family submit button clicked!');
+                    
+                    // Collect attending family members
+                    const checkedMembers = document.querySelectorAll('#family-members-list input[type="checkbox"]:checked');
+                    familyRsvpData.attendingMembers = Array.from(checkedMembers).map(cb => cb.value);
+                    
+                    console.log('Collected attending members:', familyRsvpData.attendingMembers);
+                    
+                    // Collect additional info
+                    familyRsvpData.dietaryRequirements = document.getElementById('family-dietary-requirements').value;
+                    familyRsvpData.additionalNotes = document.getElementById('family-additional-notes').value;
+                    familyRsvpData.weddingWishes = document.getElementById('family-wedding-wishes').value;
+                    
+                    console.log('About to call submitFamilyRsvp()');
+                    submitFamilyRsvp();
+                });
+            } else {
+                console.error('❌ Family submit button not found!');
+                console.log('Available elements with submit in ID:');
+                document.querySelectorAll('[id*="submit"]').forEach(el => {
+                    console.log('- Found element:', el.id, el.tagName);
+                });
+            }
         }
         
         // Initialize general RSVP
@@ -2770,6 +2786,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Submit functions
     // Function to directly submit decline RSVP
     function submitDeclineRsvp() {
+        console.log('=== STARTING submitDeclineRsvp ===');
         console.log('Submitting decline RSVP...');
         
         // Get the family data
@@ -2782,9 +2799,9 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Use primary_guest_name as the family code (this is what the plugin expects)
-        const familyCode = familyData.primary_guest_name;
-        console.log('Using primary guest name as family code:', familyCode);
+        // Use primary_guest_name as the family code (convert to URL format)
+        const familyCode = familyData.primary_guest_name.toLowerCase().replace(/\s+/g, '-');
+        console.log('Converting', familyData.primary_guest_name, 'to family code:', familyCode);
         
         if (!familyCode) {
             console.error('Available family data properties:', Object.keys(familyData));
@@ -2810,6 +2827,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         
         console.log('Submitting decline RSVP:', formData);
+        console.log('AJAX URL:', '<?php echo admin_url('admin-ajax.php'); ?>');
         
         // Submit via AJAX
         fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
@@ -2819,7 +2837,23 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: new URLSearchParams(formData)
         })
-        .then(response => response.json())
+        .then(response => {
+            console.log('Raw response status:', response.status);
+            console.log('Raw response headers:', response.headers);
+            return response.text();
+        })
+        .then(text => {
+            console.log('Raw response text:', text);
+            try {
+                const data = JSON.parse(text);
+                console.log('Parsed JSON response:', data);
+                return data;
+            } catch (e) {
+                console.error('Failed to parse JSON:', e);
+                console.error('Raw text was:', text);
+                throw new Error('Invalid JSON response');
+            }
+        })
         .then(data => {
             console.log('Decline RSVP Response:', data);
             if (data.success) {
@@ -2833,6 +2867,122 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error:', error);
             alert('Network error. Please try again.');
         });
+    }
+    
+    // Function to directly submit accept RSVP
+    function submitAcceptRsvp() {
+        console.log('=== STARTING submitAcceptRsvp ===');
+        
+        // Get the family data
+        const familyData = window.weddingFamilyData;
+        console.log('Family data:', familyData);
+        console.log('Family data keys:', Object.keys(familyData));
+        
+        if (!familyData) {
+            alert('Error: Family data not found');
+            return;
+        }
+        
+        // Use primary_guest_name as the family code (convert to URL format)
+        const familyCode = familyData.primary_guest_name.toLowerCase().replace(/\s+/g, '-');
+        console.log('Converting', familyData.primary_guest_name, 'to family code:', familyCode);
+        
+        if (!familyCode) {
+            console.error('Available family data properties:', Object.keys(familyData));
+            console.error('Family data values:', familyData);
+            alert('Error: Primary guest name not found in family data. Check console for details.');
+            return;
+        }
+        
+        console.log('Using family code:', familyCode);
+        
+        // Collect all events (church, reception, and teapai if available)
+        const selectedEvents = ['church', 'reception'];
+        // Check if teapai is available for this family
+        if (familyData.invitations && familyData.invitations.teapai && familyData.invitations.teapai.invited) {
+            selectedEvents.push('teapai');
+        }
+        
+        // Collect all family members (primary guest + family members)
+        const attendingMembers = [familyData.primary_guest_name];
+        if (familyData.family_members && Array.isArray(familyData.family_members)) {
+            attendingMembers.push(...familyData.family_members);
+        }
+        
+        console.log('Selected events:', selectedEvents);
+        console.log('Attending members:', attendingMembers);
+        
+        // Prepare data for accept submission
+        const formData = {
+            action: 'wedding_family_rsvp_submit',
+            family_code: familyCode,
+            guest_id: familyData.id,
+            attendance_status: 'yes',
+            selected_events: selectedEvents,
+            attending_members: attendingMembers,
+            dietary_requirements: '',
+            additional_notes: '',
+            wedding_wishes: '',
+            nonce: '<?php echo wp_create_nonce('wedding_rsvp_nonce'); ?>'
+        };
+        
+        console.log('Submitting accept RSVP:', formData);
+        console.log('AJAX URL:', '<?php echo admin_url('admin-ajax.php'); ?>');
+        
+        // Submit via AJAX
+        fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams(formData)
+        })
+        .then(response => {
+            console.log('Raw response status:', response.status);
+            console.log('Raw response headers:', response.headers);
+            return response.text();
+        })
+        .then(text => {
+            console.log('Raw response text:', text);
+            try {
+                const data = JSON.parse(text);
+                console.log('Parsed JSON response:', data);
+                return data;
+            } catch (e) {
+                console.error('Failed to parse JSON:', e);
+                console.error('Raw text was:', text);
+                throw new Error('Invalid JSON response');
+            }
+        })
+        .then(data => {
+            console.log('Accept RSVP Response:', data);
+            if (data.success) {
+                // Show success message
+                showFamilySuccessStep();
+            } else {
+                alert('Error: ' + (data.data || 'Something went wrong. Please try again.'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Network error. Please try again.');
+        });
+    }
+    
+    // Function to show success step with animation
+    function showFamilySuccessStep() {
+        // Hide all steps
+        document.querySelectorAll('#family-rsvp-container .rsvp-step').forEach(stepEl => {
+            stepEl.classList.add('hidden');
+            stepEl.classList.remove('active');
+        });
+        
+        // Show success step
+        const successStep = document.getElementById('family-rsvp-success');
+        if (successStep) {
+            successStep.classList.remove('hidden');
+            successStep.classList.add('active');
+        }
     }
     
     // Function to show decline step with animation
@@ -2869,9 +3019,9 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Use primary_guest_name as the family code (this is what the plugin expects)
-        const familyCode = familyData.primary_guest_name;
-        console.log('Using primary guest name as family code:', familyCode);
+        // Use primary_guest_name as the family code (convert to URL format)
+        const familyCode = familyData.primary_guest_name.toLowerCase().replace(/\s+/g, '-');
+        console.log('Converting', familyData.primary_guest_name, 'to family code:', familyCode);
         
         if (!familyCode) {
             console.error('Available family data properties:', Object.keys(familyData));
@@ -2914,10 +3064,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) {
                 // Check if this was a decline response
                 if (familyRsvpData.attendance === 'no') {
-                    showFamilyDecline();
+                    showFamilyDeclineStep();
                 } else {
-                    showFamilyStep('success');
-                    document.getElementById('family-rsvp-success').classList.remove('hidden');
+                    showFamilySuccessStep();
                 }
             } else {
                 alert('Error: ' + (data.data || 'Something went wrong. Please try again.'));
@@ -2937,7 +3086,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Animated decline functions
     function showFamilyDecline() {
-        showFamilyStep('decline');
+        showFamilyDeclineStep();
         
         // Reset and trigger animations
         const thankYouAnimation = document.querySelector('#family-rsvp-decline .thank-you-animation');

@@ -590,15 +590,29 @@ class WeddingRSVP {
      * Handle Family RSVP form submission (new comprehensive table)
      */
     public function handle_family_rsvp_submission() {
+        // Log the start of the function
+        error_log('=== Wedding RSVP Submission Started ===');
+        error_log('POST data: ' . print_r($_POST, true));
+        
         // Verify nonce
         if (!wp_verify_nonce($_POST['nonce'], 'wedding_rsvp_nonce')) {
+            error_log('Nonce verification failed');
             wp_send_json_error('Security check failed');
         }
+        
+        error_log('Nonce verification passed');
         
         global $wpdb;
         
         // Get family data to validate
         $family_code = sanitize_text_field($_POST['family_code'] ?? '');
+        error_log('Family code received: ' . $family_code);
+        
+        // If no family_code, try to get it from guest name
+        if (empty($family_code)) {
+            error_log('No family_code provided, checking for alternative ways to identify guest');
+            wp_send_json_error('Family code is required');
+        }
         
         // First try to get guest data directly (for individual invitations)
         global $wpdb;
@@ -608,6 +622,7 @@ class WeddingRSVP {
         // Convert family code back to guest name (dennis-wijaya -> Dennis Wijaya)
         $guest_name = str_replace('-', ' ', $family_code);
         $guest_name = ucwords($guest_name);
+        error_log('Looking for guest name: ' . $guest_name);
         
         // Look for guest by name
         $guest_data = $wpdb->get_row($wpdb->prepare(
@@ -615,10 +630,17 @@ class WeddingRSVP {
             $guest_name
         ));
         
+        error_log('Guest data found: ' . ($guest_data ? 'YES' : 'NO'));
+        if ($guest_data) {
+            error_log('Guest data: ' . print_r($guest_data, true));
+        }
+        
         if (!$guest_data) {
             // Fallback: try to get family data
             $family_data = $this->get_family_by_code($family_code);
+            error_log('Family data found: ' . ($family_data ? 'YES' : 'NO'));
             if (!$family_data) {
+                error_log('No guest or family data found - sending error');
                 wp_send_json_error('Invalid family/guest code');
             }
         }
@@ -632,8 +654,15 @@ class WeddingRSVP {
         $additional_notes = sanitize_textarea_field($_POST['additional_notes'] ?? '');
         $wedding_wishes = sanitize_textarea_field($_POST['wedding_wishes'] ?? '');
         
+        error_log('Sanitized data:');
+        error_log('- guest_id: ' . $guest_id);
+        error_log('- attendance_status: ' . $attendance_status);
+        error_log('- selected_events: ' . print_r($selected_events, true));
+        error_log('- attending_members: ' . print_r($attending_members, true));
+        
         // Validate attendance status
         if (!in_array($attendance_status, ['yes', 'no'])) {
+            error_log('Invalid attendance status: ' . $attendance_status);
             wp_send_json_error('Invalid attendance status');
         }
         
@@ -642,11 +671,22 @@ class WeddingRSVP {
         $family_id = $guest_data ? $guest_data->id : ($family_data ? $family_data->id : 0);
         $actual_guest_id = $guest_data ? $guest_data->id : $guest_id;
         
+        error_log('Final data for database:');
+        error_log('- primary_guest_name: ' . $primary_guest_name);
+        error_log('- family_id: ' . $family_id);
+        error_log('- actual_guest_id: ' . $actual_guest_id);
+        
         // Convert arrays to JSON
         $selected_events_json = json_encode(array_map('sanitize_text_field', $selected_events));
         $attending_members_json = json_encode(array_map('sanitize_text_field', $attending_members));
         
+        error_log('JSON data:');
+        error_log('- selected_events_json: ' . $selected_events_json);
+        error_log('- attending_members_json: ' . $attending_members_json);
+        
         try {
+            error_log('Starting database insert/update...');
+            
             // Insert or update the comprehensive RSVP submission
             $result = $wpdb->replace(
                 $this->table_rsvp_submissions,
@@ -665,20 +705,28 @@ class WeddingRSVP {
                 array('%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')
             );
             
+            error_log('Database operation result: ' . ($result ? 'SUCCESS' : 'FAILED'));
+            error_log('wpdb->last_error: ' . $wpdb->last_error);
+            error_log('wpdb->insert_id: ' . $wpdb->insert_id);
+            
             if ($result === false) {
                 throw new Exception('Database error: ' . $wpdb->last_error);
             }
             
+            error_log('Sending success response...');
             wp_send_json_success(array(
                 'message' => 'RSVP submitted successfully',
                 'attendance' => $attendance_status,
-                'submission_id' => $wpdb->insert_id ?: $wpdb->get_var("SELECT id FROM {$this->table_rsvp_submissions} WHERE family_id = {$family_data->id}")
+                'submission_id' => $wpdb->insert_id ?: $wpdb->get_var("SELECT id FROM {$this->table_rsvp_submissions} WHERE family_id = {$family_id}")
             ));
             
         } catch (Exception $e) {
             error_log('Wedding RSVP Submission Error: ' . $e->getMessage());
+            error_log('Exception trace: ' . $e->getTraceAsString());
             wp_send_json_error('Failed to save RSVP. Please try again.');
         }
+        
+        error_log('=== Wedding RSVP Submission Ended ===');
     }
     
     /**
