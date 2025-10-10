@@ -454,7 +454,7 @@ class WeddingRSVP {
                     'pax_num' => $guest->pax_num,
                     'invitation_type' => $guest->invitation_type,
                     'relationship_type' => $guest->relationship_type ?? 'Friend',
-                    'family_members' => json_decode($guest->family_members, true) ?? [],
+                    'family_members' => is_array($guest->family_members) ? $guest->family_members : (is_string($guest->family_members) ? json_decode($guest->family_members, true) ?? [] : []),
                     'invitations' => []
                 ];
                 
@@ -964,8 +964,15 @@ class WeddingRSVP {
                 'invitations' => []
             ];
             
-            // Convert family members to array format
-            $family_members_raw = json_decode($family->family_members, true);
+            // Convert family members to array format with type checking
+            if (is_array($family->family_members)) {
+                $family_members_raw = $family->family_members;
+            } else if (is_string($family->family_members)) {
+                $family_members_raw = json_decode($family->family_members, true);
+            } else {
+                $family_members_raw = [];
+            }
+            
             if ($family_members_raw && is_array($family_members_raw)) {
                 $family_data['family_members'] = array_filter($family_members_raw, function($member) {
                     return !empty(trim($member));
@@ -1032,7 +1039,7 @@ class WeddingRSVP {
         }
         
         // Generate personalized greeting
-        $family_members = json_decode($family->family_members, true) ?? [];
+        $family_members = is_array($family->family_members) ? $family->family_members : (is_string($family->family_members) ? json_decode($family->family_members, true) ?? [] : []);
         $guests_data = [$family]; // Convert to array for the greeting function
         
         $greeting = 'Guest';
@@ -1058,7 +1065,7 @@ class WeddingRSVP {
         $message .= "📍 JHL Solitaire Gading Serpong\n\n";
         $message .= "Please see the full invitation & RSVP via the link below 👇\n";
         $message .= "🔗 {$invitation_url}\n\n";
-        $message .= "⚠️ Kindly RSVP through the website by *19 October 2025*\n";
+        $message .= "⚠️ Kindly RSVP through the website by *18 October 2025*\n";
         $message .= "Please note that we may not be able to accommodate confirmations beyond that date.\n\n";
         $message .= "Warm regards,\n";
         $message .= "Dennis Wijaya & Emilia Pramudi Bewintara";
@@ -1101,6 +1108,13 @@ class WeddingRSVP {
         }
         
         global $wpdb;
+        
+        // Clear existing data if requested
+        if (isset($_POST['clear_existing']) && $_POST['clear_existing'] === '1') {
+            $wpdb->query("DELETE FROM wp_wedding_guest_invitations");
+            $wpdb->query("DELETE FROM wp_wedding_guests");
+        }
+        
         $imported = 0;
         $errors = [];
         
@@ -1134,21 +1148,51 @@ class WeddingRSVP {
                 
                 // Insert guest data
                 $guest_data = [
+                    'family_id' => 0, // Will be updated after insert
                     'primary_guest_name' => sanitize_text_field($csv_data['guest_name']),
                     'phone_number' => sanitize_text_field($csv_data['phone_num'] ?? ''),
                     'pax_num' => intval($csv_data['pax_num'] ?? 1),
-                    'invitation_type' => sanitize_text_field($csv_data['type'] ?? 'Digital'),
-                    'relationship_type' => $relationship_type,
-                    'is_primary' => true,
+                    'invitation_type' => ucfirst(strtolower(sanitize_text_field($csv_data['type'] ?? 'digital'))),
+                    'is_primary_contact' => true,
                     'family_members' => !empty($family_members) ? json_encode($family_members) : null
                 ];
                 
                 $result = $wpdb->insert('wp_wedding_guests', $guest_data);
+                $guest_id = $wpdb->insert_id;
                 
-                if ($result) {
+                if ($result && $guest_id) {
+                    // Update family_id to be the same as guest_id for primary guests
+                    $wpdb->update('wp_wedding_guests', ['family_id' => $guest_id], ['id' => $guest_id]);
+                    
+                    // Insert event invitations based on CSV data
+                    $events = [
+                        'church' => ['inv' => $csv_data['church_inv'] ?? 'no', 'souvenir' => $csv_data['church_souvenir'] ?? 'no'],
+                        'teapai' => ['inv' => $csv_data['teapai_inv'] ?? 'no', 'souvenir' => $csv_data['teapai_souvenir'] ?? 'no'],
+                        'reception' => ['inv' => $csv_data['reception_inv'] ?? 'no', 'souvenir' => $csv_data['reception_souvenir'] ?? 'no']
+                    ];
+                    
+                    foreach ($events as $event_type => $event_data) {
+                        // Get event ID
+                        $event_id = $wpdb->get_var($wpdb->prepare(
+                            "SELECT id FROM wp_wedding_events WHERE event_type = %s",
+                            $event_type
+                        ));
+                        
+                        if ($event_id) {
+                            $invitation_data = [
+                                'guest_id' => $guest_id,
+                                'event_id' => $event_id,
+                                'is_invited' => strtolower($event_data['inv']) === 'yes' ? 'yes' : 'no',
+                                'gets_souvenir' => strtolower($event_data['souvenir']) === 'yes' ? 'yes' : 'no'
+                            ];
+                            
+                            $wpdb->insert('wp_wedding_guest_invitations', $invitation_data);
+                        }
+                    }
+                    
                     $imported++;
                 } else {
-                    $errors[] = "Failed to import: " . $csv_data['guest_name'];
+                    $errors[] = "Failed to import: " . $csv_data['guest_name'] . " - " . $wpdb->last_error;
                 }
             }
             fclose($handle);
@@ -1212,21 +1256,51 @@ class WeddingRSVP {
                 
                 // Insert guest data
                 $guest_data = [
+                    'family_id' => 0, // Will be updated after insert
                     'primary_guest_name' => sanitize_text_field($guest_name),
                     'phone_number' => sanitize_text_field($csv_data['phone_num'] ?? ''),
                     'pax_num' => intval($csv_data['pax_num'] ?? 1),
-                    'invitation_type' => sanitize_text_field($csv_data['type'] ?? 'Digital'),
-                    'relationship_type' => $relationship_type,
-                    'is_primary' => true,
+                    'invitation_type' => ucfirst(strtolower(sanitize_text_field($csv_data['type'] ?? 'digital'))),
+                    'is_primary_contact' => true,
                     'family_members' => !empty($family_members) ? json_encode($family_members) : null
                 ];
                 
                 $result = $wpdb->insert('wp_wedding_guests', $guest_data);
+                $guest_id = $wpdb->insert_id;
                 
-                if ($result) {
+                if ($result && $guest_id) {
+                    // Update family_id to be the same as guest_id for primary guests
+                    $wpdb->update('wp_wedding_guests', ['family_id' => $guest_id], ['id' => $guest_id]);
+                    
+                    // Insert event invitations based on CSV data
+                    $events = [
+                        'church' => ['inv' => $csv_data['church_inv'] ?? 'no', 'souvenir' => $csv_data['church_souvenir'] ?? 'no'],
+                        'teapai' => ['inv' => $csv_data['teapai_inv'] ?? 'no', 'souvenir' => $csv_data['teapai_souvenir'] ?? 'no'],
+                        'reception' => ['inv' => $csv_data['reception_inv'] ?? 'no', 'souvenir' => $csv_data['reception_souvenir'] ?? 'no']
+                    ];
+                    
+                    foreach ($events as $event_type => $event_data) {
+                        // Get event ID
+                        $event_id = $wpdb->get_var($wpdb->prepare(
+                            "SELECT id FROM wp_wedding_events WHERE event_type = %s",
+                            $event_type
+                        ));
+                        
+                        if ($event_id) {
+                            $invitation_data = [
+                                'guest_id' => $guest_id,
+                                'event_id' => $event_id,
+                                'is_invited' => strtolower($event_data['inv']) === 'yes' ? 'yes' : 'no',
+                                'gets_souvenir' => strtolower($event_data['souvenir']) === 'yes' ? 'yes' : 'no'
+                            ];
+                            
+                            $wpdb->insert('wp_wedding_guest_invitations', $invitation_data);
+                        }
+                    }
+                    
                     $imported++;
                 } else {
-                    $errors[] = "Failed to import: " . $guest_name;
+                    $errors[] = "Failed to import: " . $guest_name . " - " . $wpdb->last_error;
                 }
             }
             fclose($handle);
@@ -1439,6 +1513,21 @@ function format_smart_wedding_greeting($guest_data) {
     
     // Fallback
     return 'DEAR ' . strtoupper($primary_guest->primary_guest_name) . ',';
+}
+
+// Utility function to safely decode JSON or return array if already an array
+function safe_json_decode_family_members($data) {
+    if (is_array($data)) {
+        return $data;
+    } else if (is_string($data) && !empty($data)) {
+        $decoded = json_decode($data, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+            return $decoded;
+        }
+        // If JSON decode failed but it's a non-empty string, treat as single member
+        return [$data];
+    }
+    return [];
 }
 
 // Initialize the plugin

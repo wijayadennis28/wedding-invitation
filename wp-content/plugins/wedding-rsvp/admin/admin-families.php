@@ -32,7 +32,6 @@ if (isset($_POST['action'])) {
             'phone_number' => sanitize_text_field($_POST['phone_number']),
             'pax_num' => intval($_POST['pax_num']),
             'invitation_type' => sanitize_text_field($_POST['invitation_type']),
-            'relationship_type' => sanitize_text_field($_POST['relationship_type']),
             'family_members' => json_encode($family_member_data)
         ];
         
@@ -91,7 +90,6 @@ if (isset($_POST['action'])) {
             'phone_number' => sanitize_text_field($_POST['phone_number']),
             'pax_num' => intval($_POST['pax_num']),
             'invitation_type' => sanitize_text_field($_POST['invitation_type']),
-            'relationship_type' => sanitize_text_field($_POST['relationship_type']),
             'family_members' => json_encode($family_member_data)
         ];
         
@@ -177,9 +175,9 @@ $families = $wpdb->get_results($wpdb->prepare("
 $total_families = $wpdb->get_var("SELECT COUNT(*) FROM wp_wedding_guests");
 $total_guests = $wpdb->get_var("SELECT SUM(pax_num) FROM wp_wedding_guests");
 
-// Relationship type statistics
-$family_count = $wpdb->get_var("SELECT COUNT(*) FROM wp_wedding_guests WHERE relationship_type = 'Family'");
-$friend_count = $wpdb->get_var("SELECT COUNT(*) FROM wp_wedding_guests WHERE relationship_type = 'Friend' OR relationship_type IS NULL");
+// Since relationship_type column doesn't exist, set these to 0 or calculate differently
+$family_count = 0;
+$friend_count = $total_families;
 
 $church_invited = $wpdb->get_var("
     SELECT COUNT(DISTINCT gi.guest_id) 
@@ -609,7 +607,6 @@ $reception_invited = $wpdb->get_var("
                     <th>Phone</th>
                     <th>Guests</th>
                     <th>Type</th>
-                    <th>Relation</th>
                     <th>Church</th>
                     <th>Teapai</th>
                     <th>Reception</th>
@@ -636,7 +633,7 @@ $reception_invited = $wpdb->get_var("
                     }
                     
                     // Count family members
-                    $family_members = json_decode($family->family_members, true);
+                    $family_members = is_array($family->family_members) ? $family->family_members : (is_string($family->family_members) ? json_decode($family->family_members, true) : []);
                     $member_count = 1; // Primary guest
                     if ($family_members) {
                         foreach ($family_members as $member) {
@@ -650,7 +647,6 @@ $reception_invited = $wpdb->get_var("
                         <td><?php echo htmlspecialchars($family->phone_number ?: '-'); ?></td>
                         <td><?php echo $member_count; ?> / <?php echo $family->pax_num; ?></td>
                         <td><span style="background: <?php echo $family->invitation_type == 'Printed' ? '#ffc107' : '#17a2b8'; ?>; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px;"><?php echo $family->invitation_type; ?></span></td>
-                        <td><span style="background: <?php echo ($family->relationship_type ?? 'Friend') == 'Family' ? '#28a745' : '#6c757d'; ?>; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px;"><?php echo htmlspecialchars($family->relationship_type ?? 'Friend'); ?></span></td>
                         <td class="event-status">
                             <?php if (isset($events_info['church'])): ?>
                                 <span class="<?php echo $events_info['church']['invited'] == 'yes' ? 'status-yes' : 'status-no'; ?>">
@@ -739,13 +735,6 @@ $reception_invited = $wpdb->get_var("
                                 <option value="Printed">Printed</option>
                             </select>
                         </div>
-                        
-                        <div class="form-group">
-                            <label>Relationship Type *</label>
-                            <select name="relationship_type" required>
-                                <option value="Friend">Friend</option>
-                                <option value="Family">Family</option>
-                            </select>
                         </div>
                     </div>
                     
@@ -833,14 +822,6 @@ $reception_invited = $wpdb->get_var("
                             <select name="invitation_type" id="edit_invitation_type" required>
                                 <option value="Digital">Digital</option>
                                 <option value="Printed">Printed</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Relationship Type *</label>
-                            <select name="relationship_type" id="edit_relationship_type" required>
-                                <option value="Friend">Friend</option>
-                                <option value="Family">Family</option>
                             </select>
                         </div>
                     </div>
@@ -989,7 +970,6 @@ $reception_invited = $wpdb->get_var("
                     document.getElementById('edit_primary_guest_name').value = family.primary_guest_name || '';
                     document.getElementById('edit_phone_number').value = family.phone_number || '';
                     document.getElementById('edit_invitation_type').value = family.invitation_type || 'Digital';
-                    document.getElementById('edit_relationship_type').value = family.relationship_type || 'Friend';
                     
                     // Populate family members
                     if (family.family_members && family.family_members.length > 0) {

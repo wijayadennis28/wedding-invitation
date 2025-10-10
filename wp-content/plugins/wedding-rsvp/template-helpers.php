@@ -24,9 +24,24 @@ function render_wedding_rsvp_form() {
     // Get the main guest record
     $main_guest = $guests_data[0];
     
-    // Extract family members from JSON
-    $family_members = json_decode($main_guest->family_members, true);
-    if (!$family_members) {
+    // Extract family members with proper type checking
+    if (is_array($main_guest->family_members)) {
+        // Already an array, use as-is
+        $family_members = $main_guest->family_members;
+    } else if (is_string($main_guest->family_members) && !empty($main_guest->family_members)) {
+        // It's a JSON string, decode it
+        $family_members = json_decode($main_guest->family_members, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            // JSON decode failed, treat as single name
+            $family_members = [$main_guest->family_members];
+        }
+    } else {
+        // Empty or null, use primary guest name as fallback
+        $family_members = [$main_guest->primary_guest_name];
+    }
+    
+    // Ensure we have an array
+    if (!is_array($family_members) || empty($family_members)) {
         $family_members = [$main_guest->primary_guest_name];
     }
     
@@ -187,10 +202,27 @@ function get_family_display_info() {
         return null;
     }
     
-    // Get family members from JSON
+    // Get family members from JSON - with proper type checking
     $main_guest = $guests_data[0];
-    $family_members = json_decode($main_guest->family_members, true);
-    if (!$family_members) {
+    
+    // Check if family_members is already an array or needs JSON decoding
+    if (is_array($main_guest->family_members)) {
+        // Already an array, use as-is
+        $family_members = $main_guest->family_members;
+    } else if (is_string($main_guest->family_members) && !empty($main_guest->family_members)) {
+        // It's a JSON string, decode it
+        $family_members = json_decode($main_guest->family_members, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            // JSON decode failed, treat as single name
+            $family_members = [$main_guest->family_members];
+        }
+    } else {
+        // Empty or null, use primary guest name as fallback
+        $family_members = [$main_guest->primary_guest_name];
+    }
+    
+    // Ensure we have an array
+    if (!is_array($family_members) || empty($family_members)) {
         $family_members = [$main_guest->primary_guest_name];
     }
     

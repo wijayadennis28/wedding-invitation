@@ -25,31 +25,44 @@ $total_responses = (int) $wpdb->get_var("
     WHERE f.is_active = 1
 ") ?: 0;
 
-// Get responses by event - simplified approach
+// Get responses by event - fixed to work with JSON selected_events
 // First get all active events
 $events = $wpdb->get_results("SELECT * FROM $table_events WHERE is_active = 1 ORDER BY event_date, event_time");
 
+echo "<!-- Debug: Table name being used: $table_rsvp -->";
+echo "<!-- Debug: Total records in RSVP table: " . $wpdb->get_var("SELECT COUNT(*) FROM $table_rsvp") . " -->";
+
 $event_stats = array();
 foreach ($events as $event) {
-    // Get responses for this specific event
-    $attending = (int) $wpdb->get_var($wpdb->prepare("
-        SELECT COUNT(*) FROM $table_rsvp r 
-        INNER JOIN $table_guests g ON r.guest_id = g.id 
-        INNER JOIN $table_families f ON g.family_id = f.id 
-        WHERE f.is_active = 1 AND r.event_type = %s AND r.attendance_status = 'yes'
-    ", $event->event_type));
-
-    var_dump("SELECT COUNT(*) FROM $table_rsvp r 
-        INNER JOIN $table_guests g ON r.guest_id = g.id 
-        INNER JOIN $table_families f ON g.family_id = f.id 
-        WHERE f.is_active = 1 AND r.event_type = %s AND r.attendance_status = 'yes'");exit; // Debug line to check the value of $attending
+    echo "<!-- Debug: Processing event: " . $event->event_name . " (type: " . $event->event_type . ") -->";
     
-    $not_attending = (int) $wpdb->get_var($wpdb->prepare("
-        SELECT COUNT(*) FROM $table_rsvp r 
-        INNER JOIN $table_guests g ON r.guest_id = g.id 
-        INNER JOIN $table_families f ON g.family_id = f.id 
-        WHERE f.is_active = 1 AND r.event_type = %s AND r.attendance_status = 'no'
-    ", $event->event_type));
+    // Get all RSVP submissions - simplified for debugging
+    $all_submissions = $wpdb->get_results("
+        SELECT selected_events, attendance_status 
+        FROM $table_rsvp
+    ");
+    
+    echo "<!-- Debug: Found " . count($all_submissions) . " total submissions for processing -->";
+    
+    $attending = 0;
+    $not_attending = 0;
+    
+    foreach ($all_submissions as $submission) {
+        // 🔧 FIXED LOGIC: Handle attendance status properly
+        if ($submission->attendance_status === 'no') {
+            // If not attending overall, count as "not attending" for ALL events
+            $not_attending++;
+        } else if ($submission->attendance_status === 'yes') {
+            // If attending overall, check which specific events they selected
+            $selected_events = json_decode($submission->selected_events, true);
+            
+            if (is_array($selected_events) && in_array($event->event_type, $selected_events)) {
+                // They're attending AND this event is selected
+                $attending++;
+            }
+            // Note: If they're attending but this event is NOT selected, we don't count them for this event
+        }
+    }
     
     $total_responses = $attending + $not_attending;
     
@@ -63,6 +76,17 @@ foreach ($events as $event) {
 }
 
 echo "<!-- Debug: Found " . count($event_stats) . " events -->";
+echo "<!-- Debug: Event stats: " . json_encode($event_stats) . " -->";
+
+// Debug: Let's also see the raw submissions data
+$debug_submissions = $wpdb->get_results("
+    SELECT selected_events, attendance_status 
+    FROM $table_rsvp
+");
+echo "<!-- Debug: Raw submissions count: " . count($debug_submissions) . " -->";
+foreach($debug_submissions as $i => $sub) {
+    echo "<!-- Debug submission $i: selected_events=" . $sub->selected_events . ", attendance=" . $sub->attendance_status . " -->";
+}
 
 // Get families with response status
 $family_responses = $wpdb->get_results("
