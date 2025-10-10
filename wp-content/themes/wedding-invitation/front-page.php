@@ -2105,6 +2105,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Handle event selection buttons for family
         if (e.target.classList.contains('event-btn')) {
+            console.log('🎯 Event button clicked!', e.target);
+            console.log('🎯 Button classes:', e.target.classList.toString());
+            console.log('🎯 Button data-event:', e.target.dataset.event);
+            
             // Remove selection from all event buttons
             document.querySelectorAll('.event-btn').forEach(btn => {
                 btn.classList.remove('selected', 'bg-white', 'text-black');
@@ -2114,6 +2118,19 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add selection to clicked button
             e.target.classList.add('selected', 'bg-white', 'text-black');
             e.target.classList.remove('bg-white/10');
+            
+            // Store selected events in familyRsvpData
+            const event = e.target.dataset.event;
+            console.log('🎯 Event selected:', event);
+            
+            if (event === 'both') {
+                familyRsvpData.selectedEvents = ['church', 'reception'];
+            } else {
+                familyRsvpData.selectedEvents = [event];
+            }
+            
+            console.log('📝 Stored selectedEvents:', familyRsvpData.selectedEvents);
+            console.log('📝 Full familyRsvpData:', familyRsvpData);
             
             // Continue to guest list
             setTimeout(() => {
@@ -2660,18 +2677,35 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             console.log('🚀 Family submit button clicked!');
             
-            // Collect form data from current step
-            const checkedMembers = document.querySelectorAll('#family-members-list input[type="checkbox"]:checked');
-            familyRsvpData.attendingMembers = Array.from(checkedMembers).map(cb => cb.value);
+            // Collect form data from current step (step 3)
+            console.log('🔍 Looking for family members in #family-members-list...');
+            const familyMembersList = document.getElementById('family-members-list');
+            console.log('🔍 Family members list element:', familyMembersList);
             
-            // Collect events from step 2
-            const selectedEventBtn = document.querySelector('.event-btn.selected');
-            if (selectedEventBtn) {
-                const event = selectedEventBtn.dataset.event;
-                if (event === 'both') {
-                    familyRsvpData.selectedEvents = ['church', 'reception'];
-                } else {
-                    familyRsvpData.selectedEvents = [event];
+            const checkedMembers = document.querySelectorAll('#family-members-list input[type="checkbox"]:checked');
+            console.log('🔍 Found checked members:', checkedMembers.length);
+            checkedMembers.forEach((member, index) => {
+                console.log(`🔍 Member ${index + 1}:`, member.value, 'checked:', member.checked);
+            });
+            
+            familyRsvpData.attendingMembers = Array.from(checkedMembers).map(cb => cb.value);
+            console.log('📝 Collected attendingMembers:', familyRsvpData.attendingMembers);
+            
+            // selectedEvents should already be set from step 2, but verify
+            console.log('🔍 Current selectedEvents:', familyRsvpData.selectedEvents);
+            if (!familyRsvpData.selectedEvents || familyRsvpData.selectedEvents.length === 0) {
+                console.warn('⚠️ No events selected! Checking for selected event button...');
+                const selectedEventBtn = document.querySelector('.event-btn.selected');
+                console.log('🔍 Selected event button:', selectedEventBtn);
+                if (selectedEventBtn) {
+                    const event = selectedEventBtn.dataset.event;
+                    console.log('🔍 Event from button:', event);
+                    if (event === 'both') {
+                        familyRsvpData.selectedEvents = ['church', 'reception'];
+                    } else {
+                        familyRsvpData.selectedEvents = [event];
+                    }
+                    console.log('✅ Recovered selectedEvents:', familyRsvpData.selectedEvents);
                 }
             }
             
