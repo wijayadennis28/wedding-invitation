@@ -181,8 +181,6 @@ class WeddingRSVP {
             event_type varchar(50) NOT NULL,
             attendance_status enum('yes','no') DEFAULT 'no',
             attending_members text,
-            dietary_requirements text,
-            additional_notes text,
             responded_at timestamp DEFAULT CURRENT_TIMESTAMP,
             updated_at timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
@@ -227,8 +225,6 @@ class WeddingRSVP {
             attendance_status enum('yes','no') DEFAULT 'no',
             selected_events text NOT NULL COMMENT 'JSON array of selected events',
             attending_members text NOT NULL COMMENT 'JSON array of attending family member names',
-            dietary_requirements text,
-            additional_notes text,
             wishes text COMMENT 'Wedding wishes/messages',
             submitted_at timestamp DEFAULT CURRENT_TIMESTAMP,
             updated_at timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -576,9 +572,7 @@ class WeddingRSVP {
                 array(
                     'guest_id' => $guest_id,
                     'event_type' => $event_type,
-                    'attendance_status' => $response_data['status'],
-                    'dietary_requirements' => sanitize_textarea_field($response_data['dietary']),
-                    'additional_notes' => sanitize_textarea_field($response_data['notes'])
+                    'attendance_status' => $response_data['status']
                 )
             );
         }
@@ -698,8 +692,6 @@ class WeddingRSVP {
             }
         }
         
-        $dietary_requirements = sanitize_textarea_field($_POST['dietary_requirements'] ?? '');
-        $additional_notes = sanitize_textarea_field($_POST['additional_notes'] ?? '');
         $wedding_wishes = sanitize_textarea_field($_POST['wedding_wishes'] ?? '');
         
         error_log('Sanitized data:');
@@ -794,8 +786,6 @@ class WeddingRSVP {
                     'attendance_status' => $attendance_status,
                     'selected_events' => $final_events_json,
                     'attending_members' => $final_members_json,
-                    'dietary_requirements' => $dietary_requirements,
-                    'additional_notes' => $additional_notes,
                     'wishes' => $wedding_wishes
                 ),
                 array('%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')
@@ -841,8 +831,6 @@ class WeddingRSVP {
         $guest_email = sanitize_email($_POST['guest_email']);
         $guest_count = intval($_POST['guest_count']);
         $events = isset($_POST['events']) ? array_map('sanitize_text_field', $_POST['events']) : array();
-        $dietary_requirements = sanitize_textarea_field($_POST['dietary_requirements']);
-        $additional_notes = sanitize_textarea_field($_POST['additional_notes']);
         
         // Validate required fields
         if (empty($guest_name) || empty($guest_email) || $guest_count < 1) {
@@ -916,8 +904,6 @@ class WeddingRSVP {
                         'guest_id' => $guest_id,
                         'event_type' => $event_type,
                         'attendance_status' => 'yes',
-                        'dietary_requirements' => $dietary_requirements,
-                        'additional_notes' => $additional_notes,
                         'created_at' => current_time('mysql'),
                         'updated_at' => current_time('mysql')
                     )

@@ -169,20 +169,6 @@ $events = $wpdb->get_results("SELECT event_type, event_name FROM $table_events W
                         </span>
                     </td>
                     <td>
-                        <?php if ($response->dietary_requirements): ?>
-                            <?php echo esc_html($response->dietary_requirements); ?>
-                        <?php else: ?>
-                            <em>None specified</em>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <?php if ($response->additional_notes): ?>
-                            <?php echo esc_html($response->additional_notes); ?>
-                        <?php else: ?>
-                            <em>No notes</em>
-                        <?php endif; ?>
-                    </td>
-                    <td>
                         <?php echo date('M j, Y g:i A', strtotime($response->responded_at)); ?>
                     </td>
                 </tr>

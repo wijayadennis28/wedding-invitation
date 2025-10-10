@@ -8,7 +8,7 @@ global $wpdb;
 
 $table_families = $wpdb->prefix . 'wedding_families';
 $table_guests = $wpdb->prefix . 'wedding_guests';
-$table_rsvp = $wpdb->prefix . 'wedding_rsvp_responses';
+$table_rsvp = $wpdb->prefix . 'wedding_rsvp_submissions';
 $table_events = $wpdb->prefix . 'wedding_events';
 
 // Get RSVP statistics (ensure we always get at least 0)
@@ -38,6 +38,11 @@ foreach ($events as $event) {
         INNER JOIN $table_families f ON g.family_id = f.id 
         WHERE f.is_active = 1 AND r.event_type = %s AND r.attendance_status = 'yes'
     ", $event->event_type));
+
+    var_dump("SELECT COUNT(*) FROM $table_rsvp r 
+        INNER JOIN $table_guests g ON r.guest_id = g.id 
+        INNER JOIN $table_families f ON g.family_id = f.id 
+        WHERE f.is_active = 1 AND r.event_type = %s AND r.attendance_status = 'yes'");exit; // Debug line to check the value of $attending
     
     $not_attending = (int) $wpdb->get_var($wpdb->prepare("
         SELECT COUNT(*) FROM $table_rsvp r 
@@ -178,8 +183,6 @@ if (!is_array($event_stats)) {
                             echo '<span style="color: #999; font-style: italic;">No Events</span>';
                         } elseif ($family->response_count == 0) {
                             echo '<span style="color: #d63638; font-weight: bold;">No Response</span>';
-                        } elseif ($family->response_count < $expected_responses) {
-                            echo '<span style="color: #dba617; font-weight: bold;">Partial</span>';
                         } else {
                             echo '<span style="color: #00a32a; font-weight: bold;">Complete</span>';
                         }

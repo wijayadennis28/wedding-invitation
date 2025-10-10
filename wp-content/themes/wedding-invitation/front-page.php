@@ -555,27 +555,6 @@ get_header(); ?>
                             }
                             ?>
                         </div>
-                        
-                        <div class="additional-info-section !mt-8 !xs:mt-10 mb-6 xs:mb-8">
-                            <h4 class="additional-info-title text-sm xs:text-base md:text-lg text-white mb-3 xs:mb-4 font-light tracking-wide">
-                                Additional Information
-                            </h4>
-                            <div class="form-group mb-4">
-                                <textarea id="family-dietary-requirements" 
-                                          name="dietary_requirements" 
-                                          placeholder="Dietary requirements or food allergies..." 
-                                          rows="3" 
-                                          class="w-full px-4 py-3 bg-white/20 backdrop-blur-sm border-2 border-white/50 rounded-lg text-white placeholder-white/80 text-xs xs:text-sm font-light tracking-wider resize-none focus:outline-none focus:ring-2 focus:ring-white/70 focus:border-white hover:bg-white/30 transition-all duration-300"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <textarea id="family-additional-notes" 
-                                          name="additional_notes" 
-                                          placeholder="Special requests or additional notes..." 
-                                          rows="3" 
-                                          class="w-full px-4 py-3 bg-white/20 backdrop-blur-sm border-2 border-white/50 rounded-lg text-white placeholder-white/80 text-xs xs:text-sm font-light tracking-wider resize-none focus:outline-none focus:ring-2 focus:ring-white/70 focus:border-white hover:bg-white/30 transition-all duration-300"></textarea>
-                            </div>
-                        </div>
-                        
                         <div class="wishes-section !mt-8 !xs:mt-10 !md:mt-12 mb-6 xs:mb-8">
                             <h4 class="wishes-title text-sm xs:text-base md:text-lg text-white mb-3 xs:mb-4 font-light tracking-wide">
                                 Wedding Wishes
@@ -696,21 +675,6 @@ get_header(); ?>
                             <!-- Dynamic Guest Name Fields -->
                             <div id="general-guest-names" class="guest-names-section space-y-2 xs:space-y-3">
                                 <!-- Guest name inputs will be populated by JavaScript -->
-                            </div>
-                            
-                            <!-- Additional Information -->
-                            <div class="additional-info space-y-3 xs:space-y-4">
-                                <textarea id="general-dietary-requirements" 
-                                          name="dietary_requirements" 
-                                          placeholder="Dietary requirements or allergies" 
-                                          rows="3" 
-                                          class="w-full px-3 xs:px-4 py-2 xs:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded text-white placeholder-white/70 text-2xs xs:text-xs resize-none focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"></textarea>
-                                
-                                <textarea id="general-additional-notes" 
-                                          name="additional_notes" 
-                                          placeholder="Additional notes or special requests" 
-                                          rows="3" 
-                                          class="w-full px-3 xs:px-4 py-2 xs:py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded text-white placeholder-white/70 text-2xs xs:text-xs resize-none focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"></textarea>
                             </div>
                         </div>
                         
@@ -1997,9 +1961,15 @@ document.addEventListener('DOMContentLoaded', function() {
     gsap.set('#rsvp .general-event-btn', { opacity: 1, y: 0, pointerEvents: 'auto' });
     gsap.set('#rsvp .guest-list-title', { opacity: 1, y: 0 });
     gsap.set('#rsvp .family-member-checkbox', { opacity: 1, y: 0 });
-    gsap.set('#rsvp input', { opacity: 0, y: 30 });
-    gsap.set('#rsvp textarea', { opacity: 0, y: 30 });
-    gsap.set('#rsvp .rsvp-submit-btn', { opacity: 0, y: 30 });
+    
+    // 🔧 FIX: Only hide inputs/textareas in step 3, not all inputs/textareas
+    gsap.set('#family-step-3 input', { opacity: 0, y: 30 });
+    gsap.set('#family-step-3 textarea', { opacity: 0, y: 30 });
+    gsap.set('#family-step-3 .rsvp-submit-btn', { opacity: 0, y: 30 });
+    
+    // Make sure all other form elements remain interactive
+    gsap.set('#family-step-1 input, #family-step-2 input', { opacity: 1, y: 0, pointerEvents: 'auto' });
+    gsap.set('#general-rsvp-container input, #general-rsvp-container textarea', { opacity: 1, y: 0, pointerEvents: 'auto' });
     
     // RSVP Form Functions
     window.showFamilyStep = function(step) {
@@ -2609,6 +2579,39 @@ document.addEventListener('DOMContentLoaded', function() {
                 { opacity: 0, y: 20 },
                 { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
             );
+            
+            // 🔧 FIX: Animate form inputs and textareas when showing step 3
+            if (stepNumber === 3) {
+                console.log('🎬 Animating form inputs and textareas for step 3');
+                
+                // Animate inputs and textareas in step 3
+                const stepInputs = targetStep.querySelectorAll('input, textarea');
+                const submitButton = targetStep.querySelector('.rsvp-submit-btn');
+                
+                if (stepInputs.length > 0) {
+                    gsap.to(stepInputs, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.6,
+                        ease: "power2.out",
+                        delay: 0.2,
+                        stagger: 0.1,
+                        onComplete: function() {
+                            console.log('✅ Form inputs and textareas are now visible and interactive');
+                        }
+                    });
+                }
+                
+                if (submitButton) {
+                    gsap.to(submitButton, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.6,
+                        ease: "power2.out",
+                        delay: 0.4
+                    });
+                }
+            }
         }
     }
     
@@ -2760,8 +2763,6 @@ document.addEventListener('DOMContentLoaded', function() {
             attendance_status: 'no',
             selected_events: [],
             attending_members: [],
-            dietary_requirements: '',
-            additional_notes: '',
             wedding_wishes: '',
             nonce: '<?php echo wp_create_nonce('wedding_rsvp_nonce'); ?>'
         };
@@ -2775,8 +2776,6 @@ document.addEventListener('DOMContentLoaded', function() {
         urlSearchParams.append('family_code', formData.family_code);
         urlSearchParams.append('guest_id', formData.guest_id);
         urlSearchParams.append('attendance_status', formData.attendance_status);
-        urlSearchParams.append('dietary_requirements', formData.dietary_requirements);
-        urlSearchParams.append('additional_notes', formData.additional_notes);
         urlSearchParams.append('wedding_wishes', formData.wedding_wishes);
         urlSearchParams.append('nonce', formData.nonce);
         urlSearchParams.append('selected_events', JSON.stringify(formData.selected_events));
@@ -2873,8 +2872,6 @@ document.addEventListener('DOMContentLoaded', function() {
             attendance_status: 'yes',
             selected_events: selectedEvents,
             attending_members: attendingMembers,
-            dietary_requirements: '',
-            additional_notes: '',
             wedding_wishes: '',
             nonce: '<?php echo wp_create_nonce('wedding_rsvp_nonce'); ?>'
         };
@@ -2888,9 +2885,6 @@ document.addEventListener('DOMContentLoaded', function() {
         urlSearchParams.append('family_code', formData.family_code);
         urlSearchParams.append('guest_id', formData.guest_id);
         urlSearchParams.append('attendance_status', formData.attendance_status);
-        urlSearchParams.append('dietary_requirements', formData.dietary_requirements);
-        urlSearchParams.append('additional_notes', formData.additional_notes);
-        urlSearchParams.append('wedding_wishes', formData.wedding_wishes);
         urlSearchParams.append('nonce', formData.nonce);
         urlSearchParams.append('selected_events', JSON.stringify(formData.selected_events));
         urlSearchParams.append('attending_members', JSON.stringify(formData.attending_members));
@@ -3065,8 +3059,6 @@ document.addEventListener('DOMContentLoaded', function() {
             attendance_status: familyRsvpData.attendance,
             selected_events: familyRsvpData.selectedEvents,
             attending_members: familyRsvpData.attendingMembers,
-            dietary_requirements: familyRsvpData.dietaryRequirements || '',
-            additional_notes: familyRsvpData.additionalNotes || '',
             wedding_wishes: familyRsvpData.weddingWishes || '',
             nonce: '<?php echo wp_create_nonce('wedding_rsvp_nonce'); ?>'
         };
@@ -3086,8 +3078,6 @@ document.addEventListener('DOMContentLoaded', function() {
         urlSearchParams.append('family_code', formData.family_code);
         urlSearchParams.append('guest_id', formData.guest_id);
         urlSearchParams.append('attendance_status', formData.attendance_status);
-        urlSearchParams.append('dietary_requirements', formData.dietary_requirements);
-        urlSearchParams.append('additional_notes', formData.additional_notes);
         urlSearchParams.append('wedding_wishes', formData.wedding_wishes);
         urlSearchParams.append('nonce', formData.nonce);
         
@@ -3247,8 +3237,6 @@ document.addEventListener('DOMContentLoaded', function() {
             guest_count: generalRsvpData.guestInfo.count,
             guest_names: generalRsvpData.guestNames,
             events: generalRsvpData.selectedEvents,
-            dietary_requirements: generalRsvpData.dietaryRequirements,
-            additional_notes: generalRsvpData.additionalNotes,
             nonce: '<?php echo wp_create_nonce('wedding_rsvp_nonce'); ?>'
         };
         
@@ -3258,8 +3246,6 @@ document.addEventListener('DOMContentLoaded', function() {
         urlSearchParams.append('guest_name', formData.guest_name);
         urlSearchParams.append('guest_email', formData.guest_email);
         urlSearchParams.append('guest_count', formData.guest_count);
-        urlSearchParams.append('dietary_requirements', formData.dietary_requirements);
-        urlSearchParams.append('additional_notes', formData.additional_notes);
         urlSearchParams.append('nonce', formData.nonce);
         urlSearchParams.append('guest_names', JSON.stringify(formData.guest_names));
         urlSearchParams.append('events', JSON.stringify(formData.events));
