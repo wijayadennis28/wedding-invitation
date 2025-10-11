@@ -388,6 +388,24 @@ class WeddingRSVP {
     }
     
     /**
+     * Generate consistent URL slug from guest name
+     */
+    private function generate_guest_url_slug($guest_name) {
+        // Convert to lowercase
+        $slug = strtolower($guest_name);
+        // Remove dots, commas, and other special characters
+        $slug = preg_replace('/[.,\'"()&]/', '', $slug);
+        // Replace spaces with dashes
+        $slug = str_replace(' ', '-', $slug);
+        // Remove multiple dashes
+        $slug = preg_replace('/-+/', '-', $slug);
+        // Trim dashes from ends
+        $slug = trim($slug, '-');
+        
+        return $slug;
+    }
+    
+    /**
      * Handle family-specific URLs
      */
     public function handle_wedding_urls() {
@@ -422,18 +440,59 @@ class WeddingRSVP {
         
         // If we found a URL slug, process it
         if (!empty($url_slug)) {
-            // Convert URL slug back to name format (dennis-wijaya -> Dennis Wijaya)
-            $guest_name = str_replace('-', ' ', $url_slug);
-            $guest_name = ucwords($guest_name); // Dennis Wijaya
+            error_log("Wedding URL Debug - Processing URL slug: " . $url_slug);
             
-            error_log("Wedding URL Debug - Looking for guest: " . $guest_name);
-            
-            // Find guest by name
+            // Try multiple approaches to find the matching guest
             global $wpdb;
+            $guest = null;
+            
+            // Approach 1: Convert URL slug back to name format (dennis-wijaya -> Dennis Wijaya)
+            $guest_name = str_replace('-', ' ', $url_slug);
+            $guest_name = ucwords($guest_name);
+            
+            error_log("Wedding URL Debug - Approach 1, looking for guest: " . $guest_name);
+            
             $guest = $wpdb->get_row($wpdb->prepare(
                 "SELECT * FROM {$this->table_guests} WHERE primary_guest_name = %s",
                 $guest_name
             ));
+            
+            // Approach 2: If not found, try fuzzy matching by removing dots and special chars
+            if (!$guest) {
+                error_log("Wedding URL Debug - Approach 1 failed, trying fuzzy matching");
+                
+                // Create a URL-friendly version of all guest names to compare
+                $all_guests = $wpdb->get_results("SELECT * FROM {$this->table_guests}");
+                
+                foreach ($all_guests as $potential_guest) {
+                    // Use the same URL generation logic for consistency
+                    $name_for_url = $this->generate_guest_url_slug($potential_guest->primary_guest_name);
+                    
+                    error_log("Wedding URL Debug - Comparing URL '$url_slug' with generated '$name_for_url' from '{$potential_guest->primary_guest_name}'");
+                    
+                    if ($name_for_url === $url_slug) {
+                        $guest = $potential_guest;
+                        error_log("Wedding URL Debug - Found match via fuzzy matching: " . $potential_guest->primary_guest_name);
+                        break;
+                    }
+                }
+            }
+            
+            // Approach 3: If still not found, try partial matching
+            if (!$guest) {
+                error_log("Wedding URL Debug - Fuzzy matching failed, trying partial matching");
+                
+                // Try LIKE search with wildcards
+                $search_pattern = str_replace('-', '%', $url_slug);
+                $guest = $wpdb->get_row($wpdb->prepare(
+                    "SELECT * FROM {$this->table_guests} WHERE LOWER(REPLACE(REPLACE(primary_guest_name, '.', ''), ' ', '')) LIKE %s",
+                    '%' . str_replace('-', '', $url_slug) . '%'
+                ));
+                
+                if ($guest) {
+                    error_log("Wedding URL Debug - Found match via partial matching: " . $guest->primary_guest_name);
+                }
+            }
             
             if ($guest) {
                 error_log("Wedding URL Debug - Guest found: " . $guest->primary_guest_name);
@@ -1049,9 +1108,8 @@ class WeddingRSVP {
             $greeting = str_replace(['DEAR ', ','], '', $greeting);
         }
         
-        // Generate invitation URL
-        $guest_url_name = strtolower(str_replace(' ', '-', $family->primary_guest_name));
-        $guest_url_name = preg_replace('/[^a-z0-9\-]/', '', $guest_url_name);
+        // Generate invitation URL using consistent URL generation
+        $guest_url_name = $this->generate_guest_url_slug($family->primary_guest_name);
         $invitation_url = home_url('/' . $guest_url_name);
         
         // Create WhatsApp message with simple emojis for testing
@@ -1404,6 +1462,18 @@ function get_wedding_guests_data() {
 
 function get_wedding_events_data() {
     return WeddingRSVP::get_instance()->get_wedding_events();
+}
+
+function get_guest_invitation_url($guest_name) {
+    $wedding_rsvp = WeddingRSVP::get_instance();
+    
+    // Use reflection to access the private method
+    $reflection = new ReflectionClass($wedding_rsvp);
+    $method = $reflection->getMethod('generate_guest_url_slug');
+    $method->setAccessible(true);
+    
+    $slug = $method->invoke($wedding_rsvp, $guest_name);
+    return home_url('/' . $slug);
 }
 
 function get_wedding_section_image($section_key, $default = 's.jpg') {

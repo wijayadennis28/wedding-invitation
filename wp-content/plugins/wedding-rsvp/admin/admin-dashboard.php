@@ -176,53 +176,6 @@ if (!is_array($event_stats)) {
         </table>
     </div>
     
-    <!-- Family Response Overview -->
-    <div class="card">
-        <h2>Family Response Status</h2>
-        <table class="wp-list-table widefat fixed striped">
-            <thead>
-                <tr>
-                    <th>Family Name</th>
-                    <th>Family Code</th>
-                    <th>Guests</th>
-                    <th>Max Guests</th>
-                    <th>Responses</th>
-                    <th>Status</th>
-                    <th>Wedding URL</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($family_responses as $family): ?>
-                <tr>
-                    <td><strong><?php echo esc_html($family->family_name); ?></strong></td>
-                    <td><code><?php echo esc_html($family->family_code); ?></code></td>
-                    <td><?php echo $family->guest_count; ?></td>
-                    <td><?php echo $family->max_guests; ?></td>
-                    <td><?php echo $family->response_count; ?></td>
-                    <td>
-                        <?php 
-                        $event_count = is_array($event_stats) ? count($event_stats) : 0;
-                        $expected_responses = $family->guest_count * $event_count;
-                        if ($event_count == 0) {
-                            echo '<span style="color: #999; font-style: italic;">No Events</span>';
-                        } elseif ($family->response_count == 0) {
-                            echo '<span style="color: #d63638; font-weight: bold;">No Response</span>';
-                        } else {
-                            echo '<span style="color: #00a32a; font-weight: bold;">Complete</span>';
-                        }
-                        ?>
-                    </td>
-                    <td>
-                        <a href="<?php echo home_url('/' . $family->family_code); ?>" target="_blank" class="button button-small">
-                            View Site
-                        </a>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-    
     <!-- Quick Actions -->
     <div style="margin-top: 30px;">
         <h2>Quick Actions</h2>

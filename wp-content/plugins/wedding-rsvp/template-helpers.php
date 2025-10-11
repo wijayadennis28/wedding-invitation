@@ -206,32 +206,40 @@ function get_family_display_info() {
     $main_guest = $guests_data[0];
     
     // Check if family_members is already an array or needs JSON decoding
+    $additional_family_members = [];
     if (is_array($main_guest->family_members)) {
         // Already an array, use as-is
-        $family_members = $main_guest->family_members;
+        $additional_family_members = $main_guest->family_members;
     } else if (is_string($main_guest->family_members) && !empty($main_guest->family_members)) {
         // It's a JSON string, decode it
-        $family_members = json_decode($main_guest->family_members, true);
+        $additional_family_members = json_decode($main_guest->family_members, true);
         if (json_last_error() !== JSON_ERROR_NONE) {
             // JSON decode failed, treat as single name
-            $family_members = [$main_guest->family_members];
+            $additional_family_members = [$main_guest->family_members];
         }
-    } else {
-        // Empty or null, use primary guest name as fallback
-        $family_members = [$main_guest->primary_guest_name];
     }
     
-    // Ensure we have an array
-    if (!is_array($family_members) || empty($family_members)) {
-        $family_members = [$main_guest->primary_guest_name];
+    // Ensure additional_family_members is an array and filter out empty values
+    if (!is_array($additional_family_members)) {
+        $additional_family_members = [];
     }
+    $additional_family_members = array_filter($additional_family_members, function($member) {
+        return !empty(trim($member));
+    });
+    
+    // Build complete guest names list: primary guest FULL NAME first, then additional family members
+    $all_guest_names = [$main_guest->primary_guest_name]; // Always start with full primary guest name
+    $all_guest_names = array_merge($all_guest_names, $additional_family_members); // Add additional members
+    
+    // Total guest count includes primary + additional members
+    $total_guest_count = count($all_guest_names);
     
     return array(
         'family_name' => $family_data->family_name,
         'family_code' => $family_data->family_code,
         'max_guests' => $family_data->max_guests,
-        'guest_count' => count($family_members),
-        'guest_names' => $family_members,
+        'guest_count' => $total_guest_count,
+        'guest_names' => $all_guest_names,
         'primary_guest' => $main_guest->primary_guest_name,
         'pax_num' => $main_guest->pax_num,
         'invitation_type' => $main_guest->invitation_type
@@ -262,7 +270,9 @@ function get_formatted_guest_names($style = 'and') {
     } elseif (count($names) === 2) {
         return implode(' ' . $style . ' ', $names);
     } else {
-        return implode(', ', array_slice($names, 0, -1)) . ', ' . $style . ' ' . end($names);
+        // For 3+ people, use "Primary Guest and Family" format
+        $family_info = get_family_display_info();
+        return $family_info['primary_guest'] . ' ' . $style . ' Family';
     }
 }
 

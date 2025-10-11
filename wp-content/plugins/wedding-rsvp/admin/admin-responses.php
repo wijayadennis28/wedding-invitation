@@ -6,13 +6,12 @@ if (!defined('ABSPATH')) {
 
 global $wpdb;
 
-$table_families = $wpdb->prefix . 'wedding_families';
 $table_guests = $wpdb->prefix . 'wedding_guests';
-$table_rsvp = $wpdb->prefix . 'wedding_rsvp_responses';
+$table_rsvp = $wpdb->prefix . 'wedding_rsvp_submissions';
 $table_events = $wpdb->prefix . 'wedding_events';
 
 // Get filter parameters
-$selected_family = isset($_GET['family_filter']) ? intval($_GET['family_filter']) : '';
+$selected_family = isset($_GET['family_filter']) ? sanitize_text_field($_GET['family_filter']) : '';
 $selected_event = isset($_GET['event_filter']) ? sanitize_text_field($_GET['event_filter']) : '';
 
 // Build query
@@ -20,34 +19,24 @@ $where_conditions = array();
 $where_params = array();
 
 if ($selected_family) {
-    $where_conditions[] = "r.family_id = %d";
+    $where_conditions[] = "r.family_code = %s";
     $where_params[] = $selected_family;
 }
 
-if ($selected_event) {
-    $where_conditions[] = "r.event_type = %s";
-    $where_params[] = $selected_event;
+if ($selected_event && $selected_event !== 'all') {
+    $where_conditions[] = "JSON_CONTAINS(r.selected_events, %s)";
+    $where_params[] = '"' . $selected_event . '"';
 }
 
 $where_clause = !empty($where_conditions) ? "WHERE " . implode(" AND ", $where_conditions) : "";
 
-// Get RSVP responses
+// Get RSVP responses from the submissions table (it has all the data we need)
 $query = "
     SELECT 
-        r.*,
-        f.family_name,
-        f.family_code,
-        g.guest_name,
-        g.phone_number,
-        e.event_name,
-        e.event_date,
-        e.event_time
+        r.*
     FROM $table_rsvp r
-    JOIN $table_families f ON r.family_id = f.id
-    JOIN $table_guests g ON r.guest_id = g.id
-    JOIN $table_events e ON r.event_type = e.event_type
     $where_clause
-    ORDER BY r.responded_at DESC
+    ORDER BY r.submitted_at DESC
 ";
 
 if (!empty($where_params)) {
@@ -56,8 +45,13 @@ if (!empty($where_params)) {
     $responses = $wpdb->get_results($query);
 }
 
-// Get families for filter dropdown
-$families = $wpdb->get_results("SELECT id, family_name FROM $table_families WHERE is_active = 1 ORDER BY family_name");
+// Get families for filter dropdown (from submissions table - get unique family names/codes)
+$families = $wpdb->get_results("
+    SELECT DISTINCT primary_guest_name as family_name, family_code 
+    FROM $table_rsvp 
+    WHERE family_code IS NOT NULL AND family_code != '' 
+    ORDER BY primary_guest_name
+");
 
 // Get events for filter dropdown
 $events = $wpdb->get_results("SELECT event_type, event_name FROM $table_events WHERE is_active = 1 ORDER BY event_date");
@@ -74,7 +68,7 @@ $events = $wpdb->get_results("SELECT event_type, event_name FROM $table_events W
                 <select name="family_filter">
                     <option value="">All Families</option>
                     <?php foreach ($families as $family): ?>
-                    <option value="<?php echo $family->id; ?>" <?php selected($selected_family, $family->id); ?>>
+                    <option value="<?php echo esc_attr($family->family_code); ?>" <?php selected($selected_family, $family->family_code); ?>>
                         <?php echo esc_html($family->family_name); ?>
                     </option>
                     <?php endforeach; ?>
@@ -114,11 +108,11 @@ $events = $wpdb->get_results("SELECT event_type, event_name FROM $table_events W
         <thead>
             <tr>
                 <th scope="col">Family</th>
-                <th scope="col">Guest Name</th>
-                <th scope="col">Event</th>
+                <th scope="col">Primary Guest</th>
+                <th scope="col">Events</th>
                 <th scope="col">Attendance</th>
-                <th scope="col">Dietary Requirements</th>
-                <th scope="col">Notes</th>
+                <th scope="col">Attending Members</th>
+                <th scope="col">Wishes</th>
                 <th scope="col">Responded</th>
             </tr>
         </thead>
@@ -133,23 +127,21 @@ $events = $wpdb->get_results("SELECT event_type, event_name FROM $table_events W
                 <?php foreach ($responses as $response): ?>
                 <tr>
                     <td>
-                        <strong><?php echo esc_html($response->family_name); ?></strong><br>
+                        <strong><?php echo esc_html($response->primary_guest_name); ?></strong><br>
                         <small><code><?php echo esc_html($response->family_code); ?></code></small>
                     </td>
                     <td>
-                        <?php echo esc_html($response->guest_name); ?>
-                        <?php if ($response->phone_number): ?>
-                        <br><small><?php echo esc_html($response->phone_number); ?></small>
-                        <?php endif; ?>
+                        <?php echo esc_html($response->primary_guest_name); ?>
                     </td>
                     <td>
-                        <strong><?php echo esc_html($response->event_name); ?></strong><br>
-                        <small>
-                            <?php echo date('M j, Y', strtotime($response->event_date)); ?>
-                            <?php if ($response->event_time): ?>
-                            at <?php echo date('g:i A', strtotime($response->event_time)); ?>
-                            <?php endif; ?>
-                        </small>
+                        <?php 
+                        $selected_events = json_decode($response->selected_events, true);
+                        if (is_array($selected_events) && !empty($selected_events)) {
+                            echo '<strong>' . implode(', ', array_map('ucfirst', $selected_events)) . '</strong>';
+                        } else {
+                            echo '<em>No events selected</em>';
+                        }
+                        ?>
                     </td>
                     <td>
                         <?php
@@ -169,7 +161,20 @@ $events = $wpdb->get_results("SELECT event_type, event_name FROM $table_events W
                         </span>
                     </td>
                     <td>
-                        <?php echo date('M j, Y g:i A', strtotime($response->responded_at)); ?>
+                        <?php 
+                        $attending_members = json_decode($response->attending_members, true);
+                        if (is_array($attending_members) && !empty($attending_members)) {
+                            echo esc_html(implode(', ', $attending_members));
+                        } else {
+                            echo '<em>None specified</em>';
+                        }
+                        ?>
+                    </td>
+                    <td>
+                        <?php echo $response->wishes ? esc_html($response->wishes) : '<em>No message</em>'; ?>
+                    </td>
+                    <td>
+                        <?php echo date('M j, Y g:i A', strtotime($response->submitted_at)); ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>
