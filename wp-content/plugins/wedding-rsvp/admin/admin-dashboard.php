@@ -78,6 +78,45 @@ foreach ($events as $event) {
 echo "<!-- Debug: Found " . count($event_stats) . " events -->";
 echo "<!-- Debug: Event stats: " . json_encode($event_stats) . " -->";
 
+// NEW: Calculate attending members and souvenir counts for Holy Matrimony and Reception
+// Get all accepted RSVP submissions (attendance_status = 'yes')
+$accepted_submissions = $wpdb->get_results("
+    SELECT selected_events, attending_members 
+    FROM $table_rsvp 
+    WHERE attendance_status = 'yes'
+");
+
+// Initialize counters
+$holy_matrimony_attending_members = 0;
+$reception_attending_members = 0;
+$holy_matrimony_souvenirs = 0;
+$reception_souvenirs = 0;
+
+foreach ($accepted_submissions as $submission) {
+    $selected_events = json_decode($submission->selected_events, true);
+    $attending_members = json_decode($submission->attending_members, true);
+    
+    // Ensure we have valid arrays
+    $selected_events = is_array($selected_events) ? $selected_events : array();
+    $attending_members = is_array($attending_members) ? $attending_members : array();
+    $member_count = count($attending_members);
+    
+    // Count attending members and souvenirs for Holy Matrimony (church)
+    if (in_array('church', $selected_events)) {
+        $holy_matrimony_attending_members += $member_count;
+        $holy_matrimony_souvenirs++; // 1 souvenir per family/response
+    }
+    
+    // Count attending members and souvenirs for Reception
+    if (in_array('reception', $selected_events)) {
+        $reception_attending_members += $member_count;
+        $reception_souvenirs++; // 1 souvenir per family/response
+    }
+}
+
+echo "<!-- Debug: Holy Matrimony - Attending Members: $holy_matrimony_attending_members, Souvenirs: $holy_matrimony_souvenirs -->";
+echo "<!-- Debug: Reception - Attending Members: $reception_attending_members, Souvenirs: $reception_souvenirs -->";
+
 // Debug: Let's also see the raw submissions data
 $debug_submissions = $wpdb->get_results("
     SELECT selected_events, attendance_status 
@@ -141,6 +180,36 @@ if (!is_array($event_stats)) {
             ?>
             <h2 style="margin: 0; color: #8f5a00; font-size: 2.5em;"><?php echo $response_rate; ?>%</h2>
             <p style="margin: 5px 0 0 0; font-weight: bold;">Response Rate</p>
+        </div>
+    </div>
+    
+    <!-- NEW: Holy Matrimony & Reception Statistics -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
+        <div class="card" style="text-align: center; padding: 20px; border-left: 4px solid #8b5a2b;">
+            <h3 style="margin: 0 0 15px 0; color: #8b5a2b; font-size: 1.2em; font-weight: bold;">Holy Matrimony</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h2 style="margin: 0; color: #8b5a2b; font-size: 2em;"><?php echo $holy_matrimony_attending_members; ?></h2>
+                    <p style="margin: 5px 0 0 0; font-size: 0.9em;">Attending Members</p>
+                </div>
+                <div>
+                    <h2 style="margin: 0; color: #8b5a2b; font-size: 2em;"><?php echo $holy_matrimony_souvenirs; ?></h2>
+                    <p style="margin: 5px 0 0 0; font-size: 0.9em;">Souvenirs Needed</p>
+                </div>
+            </div>
+        </div>
+        <div class="card" style="text-align: center; padding: 20px; border-left: 4px solid #c8102e;">
+            <h3 style="margin: 0 0 15px 0; color: #c8102e; font-size: 1.2em; font-weight: bold;">Reception</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h2 style="margin: 0; color: #c8102e; font-size: 2em;"><?php echo $reception_attending_members; ?></h2>
+                    <p style="margin: 5px 0 0 0; font-size: 0.9em;">Attending Members</p>
+                </div>
+                <div>
+                    <h2 style="margin: 0; color: #c8102e; font-size: 2em;"><?php echo $reception_souvenirs; ?></h2>
+                    <p style="margin: 5px 0 0 0; font-size: 0.9em;">Souvenirs Needed</p>
+                </div>
+            </div>
         </div>
     </div>
     
